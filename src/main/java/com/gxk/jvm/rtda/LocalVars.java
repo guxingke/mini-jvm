@@ -59,4 +59,10 @@ public class LocalVars {
   public Object getRef(Integer index) {
     return slots[index].ref;
   }
+
+  public void debug() {
+    for (Slot slot : this.slots) {
+      System.out.println("slot = " + slot);
+    }
+  }
 }

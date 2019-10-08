@@ -58,4 +58,10 @@ public class OperandStack {
   public Object popRef() {
     return this.slots.pop().ref;
   }
+
+  public void debug() {
+    for (Slot slot : this.slots) {
+      System.out.println("slot = " + slot);
+    }
+  }
 }
