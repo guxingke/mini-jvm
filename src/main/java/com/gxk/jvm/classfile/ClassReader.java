@@ -1,6 +1,7 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.classfile.attribute.LineNumberTable;
 import com.gxk.jvm.classfile.attribute.SourceFile;
 import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
@@ -10,6 +11,7 @@ import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.util.Utils;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -23,8 +25,8 @@ public abstract class ClassReader {
   public static ClassFile read(Path path) throws IOException {
 
     try (InputStream is = Files.newInputStream(path);
-        BufferedInputStream bis = new BufferedInputStream(is);
-        DataInputStream stream = new DataInputStream(bis)) {
+         BufferedInputStream bis = new BufferedInputStream(is);
+         DataInputStream stream = new DataInputStream(bis)) {
       return read(stream);
     }
   }
@@ -54,22 +56,22 @@ public abstract class ClassReader {
     Attributes attributes = readAttributes(is, attributeCount, constantPool);
 
     return new ClassFile(
-        magic,
-        minorVersion,
-        majorVersion,
-        cpSize,
-        constantPool,
-        accessFlag,
-        thisClass,
-        superClass,
-        interfaceCount,
-        interfaces,
-        fieldCount,
-        fields,
-        methodCount,
-        methods,
-        attributeCount,
-        attributes
+      magic,
+      minorVersion,
+      majorVersion,
+      cpSize,
+      constantPool,
+      accessFlag,
+      thisClass,
+      superClass,
+      interfaceCount,
+      interfaces,
+      fieldCount,
+      fields,
+      methodCount,
+      methods,
+      attributeCount,
+      attributes
     );
   }
 
@@ -89,7 +91,7 @@ public abstract class ClassReader {
 //    attribute_info attributes[attributes_count];
 //    }
   private static Methods readMethods(DataInputStream is, int methodCount,
-      ConstantPool constantPool) throws IOException {
+                                     ConstantPool constantPool) throws IOException {
     Methods methods = new Methods(methodCount);
 
     for (int i = 0; i < methodCount; i++) {
@@ -204,7 +206,7 @@ public abstract class ClassReader {
 //    u1 info[attribute_length];
 //  }
   private static Attributes readAttributes(DataInputStream is, int attributeCount, ConstantPool constantPool)
-      throws IOException {
+    throws IOException {
     Attributes attributes = new Attributes(attributeCount);
 
     for (int i = 0; i < attributeCount; i++) {
@@ -235,14 +237,17 @@ public abstract class ClassReader {
           }
 
           int codeAttributeCount = is.readUnsignedShort();
-          for (int i2 = 0; i2 < codeAttributeCount; i2++) {
-            int codeAttributeNameIndex = is.readUnsignedShort();
-            int codeAttributeLength = is.readInt();
-            byte[] bytes1 = Utils.readNBytes(is, codeAttributeLength);
-            System.out.println("byteArrayToHex(bytes1) = " + byteArrayToHex(bytes1));
-          }
+          Attributes codeAttributes = readAttributes(is, codeAttributeCount, constantPool);
 
-          attribute = new Code(maxStack, maxLocals, byteCode, null, null);
+          attribute = new Code(maxStack, maxLocals, byteCode, null, codeAttributes);
+          break;
+        case LineNumberTable:
+          int length = is.readUnsignedShort();
+          LineNumberTable.Line[] lines = new LineNumberTable.Line[length];
+          for (int i1 = 0; i1 < length; i1++) {
+            lines[i1] = new LineNumberTable.Line(is.readUnsignedShort(), is.readUnsignedShort());
+          }
+          attribute = new LineNumberTable(lines);
           break;
         default:
           byte[] bytes = Utils.readNBytes(is, attributeLength);
