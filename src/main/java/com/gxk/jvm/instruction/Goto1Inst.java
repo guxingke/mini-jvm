@@ -18,6 +18,5 @@ public class Goto1Inst implements Instruction {
   @Override
   public void execute(Frame frame) {
     frame.nextPc = offset;
-    debug(frame);
   }
 }

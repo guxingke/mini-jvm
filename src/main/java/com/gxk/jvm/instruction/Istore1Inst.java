@@ -8,6 +8,5 @@ public class Istore1Inst implements Instruction {
   public void execute(Frame frame) {
     Integer tmp = frame.operandStack.popInt();
     frame.localVars.setInt(1, tmp);
-    debug(frame);
   }
 }

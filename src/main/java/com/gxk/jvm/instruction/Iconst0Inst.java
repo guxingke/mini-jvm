@@ -7,6 +7,5 @@ public class Iconst0Inst implements Instruction {
   @Override
   public void execute(Frame frame) {
     frame.operandStack.pushInt(0);
-    debug(frame);
   }
 }

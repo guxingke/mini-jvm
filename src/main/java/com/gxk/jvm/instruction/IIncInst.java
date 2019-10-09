@@ -21,6 +21,5 @@ public class IIncInst implements Instruction {
     Integer tmp = frame.localVars.getInt(index);
     tmp += val;
     frame.localVars.setInt(index, tmp);
-    debug(frame);
   }
 }

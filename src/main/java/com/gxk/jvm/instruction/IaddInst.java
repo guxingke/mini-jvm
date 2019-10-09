@@ -9,6 +9,5 @@ public class IaddInst implements Instruction {
     Integer a1 = frame.operandStack.popInt();
     Integer a2 = frame.operandStack.popInt();
     frame.operandStack.pushInt(a1 + a2);
-    debug(frame);
   }
 }

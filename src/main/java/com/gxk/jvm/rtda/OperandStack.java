@@ -60,6 +60,7 @@ public class OperandStack {
   }
 
   public void debug() {
+    System.out.println("OperandStack: ");
     for (Slot slot : this.slots) {
       System.out.println("slot = " + slot);
     }

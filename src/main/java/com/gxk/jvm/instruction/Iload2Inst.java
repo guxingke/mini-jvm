@@ -8,6 +8,5 @@ public class Iload2Inst implements Instruction {
   public void execute(Frame frame) {
     Integer tmp = frame.localVars.getInt(2);
     frame.operandStack.pushInt(tmp);
-    debug(frame);
   }
 }

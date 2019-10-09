@@ -13,8 +13,4 @@ public interface Instruction {
 
   void execute(Frame frame);
 
-  default void debug(Frame frame) {
-    System.out.println(this.getClass());
-    frame.debug();
-  }
 }

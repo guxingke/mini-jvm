@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.Code;
 import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
+import com.gxk.jvm.instruction.IreturnInst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
 
@@ -15,7 +16,6 @@ public class Interpreter {
     int maxLocals = codeAttribute.maxLocals;
     int maxStacks = codeAttribute.maxStacks;
     Code code = codeAttribute.code;
-
 
     Thread thread = new Thread(1024);
     Frame frame = new Frame(maxLocals, maxStacks, thread);
@@ -36,6 +36,19 @@ public class Interpreter {
 
       inst.fetchOperands();
       inst.execute(frame);
+
+      debug(inst, frame);
+
+      if (inst instanceof IreturnInst) {
+        break;
+      }
     }
+  }
+
+  void debug(Instruction inst, Frame frame) {
+    System.out.println("==============================");
+    System.out.println(inst.getClass());
+    frame.debug();
+//    System.out.println("==============================");
   }
 }

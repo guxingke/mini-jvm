@@ -61,6 +61,7 @@ public class LocalVars {
   }
 
   public void debug() {
+    System.out.println("LocalVars: ");
     for (Slot slot : this.slots) {
       System.out.println("slot = " + slot);
     }
