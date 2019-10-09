@@ -1,107 +1,140 @@
 package com.gxk.jvm.classfile;
 
-
+import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.classfile.attribute.SourceFile;
+import com.gxk.jvm.classfile.cp.ClassCp;
+import com.gxk.jvm.classfile.cp.FieldDef;
+import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
+import com.gxk.jvm.classfile.cp.MethodDef;
+import com.gxk.jvm.classfile.cp.NameAndType;
+import com.gxk.jvm.classfile.cp.StringCp;
+import com.gxk.jvm.classfile.cp.Utf8;
+import com.gxk.jvm.util.Utils;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
-public class ClassReader {
+public abstract class ClassReader {
 
-  public ClassFile read(InputStream inputStream) throws IOException {
-    DataInputStream is = new DataInputStream(new BufferedInputStream(inputStream));
+  public static ClassFile read(Path path) throws IOException {
 
-    int magic = is.readInt();
-    System.out.println("magic = " + magic);
-    System.out.println("Integer.toHexString(magic) = " + Integer.toHexString(magic));
-
-    int minorVersion = is.readUnsignedShort();
-    System.out.println("minorVersion = " + minorVersion);
-
-    int majorVersion = is.readUnsignedShort();
-    System.out.println("majorVersion = " + majorVersion);
-
-    int cpSize = is.readUnsignedShort();
-    System.out.println("cpSize = " + cpSize);
-
-    // read constants pool
-    readConstantPool(is, cpSize);
-
-    // read access_flag
-    int accessFlag = is.readUnsignedShort();
-    System.out.println("accessFlag = " + accessFlag);
-    System.out.println("Integer.toHexString(accessFlag) = " + Integer.toHexString(accessFlag));
-
-    // this_class
-    int thisClass = is.readUnsignedShort();
-    System.out.println("thisClass = " + thisClass);
-
-    // superClass
-    int superClass = is.readUnsignedShort();
-    System.out.println("superClass = " + superClass);
-
-    // interfaces
-    int interfaceCount = is.readUnsignedShort();
-    System.out.println("interfaceCount = " + interfaceCount);
-
-    // fields
-    int fieldCount = is.readUnsignedShort();
-    System.out.println("fieldCount = " + fieldCount);
-
-    // methods
-    int methodCount = is.readUnsignedShort();
-    System.out.println("methodCount = " + methodCount);
-    readMethods(is, methodCount);
-
-    // attribute
-    int attributeCount = is.readUnsignedShort();
-    System.out.println("attributeCount = " + attributeCount);
-
-    for (int i = 0; i < attributeCount; i++) {
-      int attributeNameIndex = is.readUnsignedShort();
-      System.out.println("attributeNameIndex = " + attributeNameIndex);
-      int attributeLength = is.readInt();
-      System.out.println("attributeLength = " + attributeLength);
-//      byte[] bytes = is.readNBytes(attributeLength);
-//      System.out.println("bytes = " + byteArrayToHex(bytes));
+    try (InputStream is = Files.newInputStream(path);
+        BufferedInputStream bis = new BufferedInputStream(is);
+        DataInputStream stream = new DataInputStream(bis)) {
+      return read(stream);
     }
-    
-    return new ClassFile();
   }
 
-  private void readMethods(DataInputStream is, int methodCount) throws IOException {
+  public static ClassFile read(DataInputStream is) throws IOException {
+    int magic = is.readInt();
+    int minorVersion = is.readUnsignedShort();
+    int majorVersion = is.readUnsignedShort();
+
+    int cpSize = is.readUnsignedShort();
+    ConstantPool constantPool = readConstantPool(is, cpSize - 1);
+
+    int accessFlag = is.readUnsignedShort();
+    int thisClass = is.readUnsignedShort();
+    int superClass = is.readUnsignedShort();
+
+    int interfaceCount = is.readUnsignedShort();
+    Interfaces interfaces = readInterfaces(is, interfaceCount);
+
+    int fieldCount = is.readUnsignedShort();
+    Fields fields = readFields(is, fieldCount);
+
+    int methodCount = is.readUnsignedShort();
+    Methods methods = readMethods(is, methodCount, constantPool);
+
+    int attributeCount = is.readUnsignedShort();
+    Attributes attributes = readAttributes(is, attributeCount, constantPool);
+
+    return new ClassFile(
+        magic,
+        minorVersion,
+        majorVersion,
+        cpSize,
+        constantPool,
+        accessFlag,
+        thisClass,
+        superClass,
+        interfaceCount,
+        interfaces,
+        fieldCount,
+        fields,
+        methodCount,
+        methods,
+        attributeCount,
+        attributes
+    );
+  }
+
+  private static Fields readFields(DataInputStream is, int fieldCount) {
+    return null;
+  }
+
+  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) {
+    return null;
+  }
+
+  //method_info {
+//    u2             access_flags;
+//    u2             name_index;
+//    u2             descriptor_index;
+//    u2             attributes_count;
+//    attribute_info attributes[attributes_count];
+//    }
+  private static Methods readMethods(DataInputStream is, int methodCount,
+      ConstantPool constantPool) throws IOException {
+    Methods methods = new Methods(methodCount);
+
     for (int i = 0; i < methodCount; i++) {
       int accessFlag = is.readUnsignedShort();
       int nameIndex = is.readUnsignedShort();
       int descriptorIndex = is.readUnsignedShort();
       int attributesCount = is.readUnsignedShort();
 
-      System.out.println("attributesCount = " + attributesCount);
+      Attributes attributes = readAttributes(is, attributesCount, constantPool);
 
-      for (int i1 = 0; i1 < attributesCount; i1++) {
-        int attributeNameIndex = is.readUnsignedShort();
-        // ignore, 暂时只是 code
-        int attributeLength = is.readInt();
-        int maxStack = is.readUnsignedShort();
-        int maxLocals = is.readUnsignedShort();
-        int codeLength = is.readInt();
-        // read code
-//        byte[] bytes = is.readNBytes(codeLength);
+      ConstantInfo info = constantPool.getInfos()[nameIndex - 1];
+      String name = ((Utf8) info).getString();
 
-        int exceptionTableLength = is.readUnsignedShort();
+      String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();
 
-        int codeAttributeCount = is.readUnsignedShort();
-        for (int i2 = 0; i2 < codeAttributeCount; i2++) {
-          int codeAttributeNameIndex = is.readUnsignedShort();
-          int codeAttributeLength = is.readInt();
-//          byte[] bytes1 = is.readNBytes(codeAttributeLength);
-        }
-      }
+      methods.methods[i] = new Method(accessFlag, name, new Descriptor(descriptor), attributes);
+
+//      System.out.println("attributesCount = " + attributesCount);
+//
+//      for (int i1 = 0; i1 < attributesCount; i1++) {
+//        int attributeNameIndex = is.readUnsignedShort();
+//         ignore, 暂时只是 code
+//        int attributeLength = is.readInt();
+//        int maxStack = is.readUnsignedShort();
+//        int maxLocals = is.readUnsignedShort();
+//        int codeLength = is.readInt();
+//         read code
+//        byte[] bytes = Utils.readNBytes(is, codeLength);
+//
+//        int exceptionTableLength = is.readUnsignedShort();
+//
+//        int codeAttributeCount = is.readUnsignedShort();
+//        for (int i2 = 0; i2 < codeAttributeCount; i2++) {
+//          int codeAttributeNameIndex = is.readUnsignedShort();
+//          int codeAttributeLength = is.readInt();
+//          byte[] bytes1 = Utils.readNBytes(is, codeAttributeLength);
+//        }
+//      }
     }
+    return methods;
   }
 
-  private ConstantInfo[] readConstantPool(DataInputStream is, int cpSize) throws IOException {
-    for (int i = 0; i < cpSize - 1; i++) {
+  private static ConstantPool readConstantPool(DataInputStream is, int cpSize) throws IOException {
+    ConstantPool constantPool = new ConstantPool(cpSize);
+    for (int i = 0; i < cpSize; i++) {
       int tag = is.readUnsignedByte();
 
       ConstantPoolInfoEnum infoEnum = ConstantPoolInfoEnum.of(tag);
@@ -109,43 +142,116 @@ public class ClassReader {
         throw new IllegalStateException();
       }
 
-      System.out.print(String.format("#%02d  ", i + 1));
+      ConstantInfo info = null;
       switch (infoEnum) {
         case CONSTANT_Fieldref:
+          info = new FieldDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
+          break;
         case CONSTANT_Methodref:
+          info = new MethodDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
+          break;
         case CONSTANT_InterfaceMethodref:
-          int classIndex = is.readUnsignedShort();
-          int nameAndTypeIndex = is.readUnsignedShort();
-          System.out.println(String.format("tag: %d %s , class_index: %d , name_and_type_index: %d", tag, infoEnum.name(), classIndex, nameAndTypeIndex));
+          info = new InterfaceMethodDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
         case CONSTANT_String:
-          int stringIndex = is.readUnsignedShort();
-          System.out.println(String.format("tag: %d %s , string_index: %d", tag, infoEnum.name(), stringIndex));
+          info = new StringCp(infoEnum, is.readUnsignedShort());
           break;
         case CONSTANT_Class:
-          int nameIndex = is.readUnsignedShort();
-          System.out.println(String.format("tag: %d %s , name_index: %d", tag, infoEnum.name(), nameIndex));
+          info = new ClassCp(infoEnum, is.readUnsignedShort());
           break;
         case CONSTANT_NameAndType:
-          int nameIndex2 = is.readUnsignedShort();
-          int descriptorIndex = is.readUnsignedShort();
-          System.out.println(String.format("tag: %d %s , name_index: %d , descriptor_index: %d", tag, infoEnum.name(), nameIndex2, descriptorIndex));
+          info = new NameAndType(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
         case CONSTANT_Utf8:
           int length = is.readUnsignedShort();
-//          byte[] bytes = is.readNBytes(length);
-//          String str = new String(bytes);
-//          System.out.println(String.format("tag: %d %s , length: %d , str: %s", tag, infoEnum.name(), length, str));
+          byte[] bytes = Utils.readNBytes(is, length);
+          info = new Utf8(infoEnum, bytes);
+          break;
+        case CONSTANT_MethodHandle:
+          break;
+        case CONSTANT_MethodType:
+          break;
+        case CONSTANT_InvokeDynamic:
+          break;
+        case CONSTANT_Integer:
+          break;
+        case CONSTANT_Long:
+          break;
+        case CONSTANT_Float:
+          break;
+        case CONSTANT_Double:
           break;
       }
+      if (info == null) {
+        throw new UnsupportedOperationException("un parse cp");
+      }
+      constantPool.infos[i] = info;
     }
-    return null;
+    return constantPool;
   }
 
   public static String byteArrayToHex(byte[] a) {
     StringBuilder sb = new StringBuilder(a.length * 2);
-    for(byte b: a)
+    for (byte b : a) {
       sb.append(String.format("%02x", b));
+    }
     return sb.toString();
+  }
+
+  //  attribute_info {
+//    u2 attribute_name_index;
+//    u4 attribute_length;
+//    u1 info[attribute_length];
+//  }
+  private static Attributes readAttributes(DataInputStream is, int attributeCount, ConstantPool constantPool)
+      throws IOException {
+    Attributes attributes = new Attributes(attributeCount);
+
+    for (int i = 0; i < attributeCount; i++) {
+      Attribute attribute = null;
+      int attributeNameIndex = is.readUnsignedShort();
+      String attributeName = Utils.getString(constantPool, attributeNameIndex);
+
+      AttributeEnum attributeEnum = AttributeEnum.valueOf(attributeName);
+      int attributeLength = is.readInt();
+      switch (attributeEnum) {
+        case SourceFile:
+          int sourceFileIndex = is.readUnsignedShort();
+          String file = Utils.getString(constantPool, sourceFileIndex);
+          attribute = new SourceFile(file);
+          break;
+        case Code:
+          int maxStack = is.readUnsignedShort();
+          int maxLocals = is.readUnsignedShort();
+
+          int codeLength = is.readInt();
+          byte[] byteCode = Utils.readNBytes(is, codeLength);
+          System.out.println("byteCode = " + byteArrayToHex(byteCode));
+
+          int exceptionTableLength = is.readUnsignedShort();
+          if (exceptionTableLength > 0) {
+            byte[] bytes1 = Utils.readNBytes(is, exceptionTableLength);
+            System.out.println("byteArrayToHex(bytes) = " + byteArrayToHex(bytes1));
+          }
+
+          int codeAttributeCount = is.readUnsignedShort();
+          for (int i2 = 0; i2 < codeAttributeCount; i2++) {
+            int codeAttributeNameIndex = is.readUnsignedShort();
+            int codeAttributeLength = is.readInt();
+            byte[] bytes1 = Utils.readNBytes(is, codeAttributeLength);
+            System.out.println("byteArrayToHex(bytes1) = " + byteArrayToHex(bytes1));
+          }
+
+          attribute = new Code(maxStack, maxLocals, byteCode, null, null);
+          break;
+        default:
+          byte[] bytes = Utils.readNBytes(is, attributeLength);
+          System.out.println("bytes = " + byteArrayToHex(bytes));
+      }
+
+      attributes.attributes[i] = attribute;
+    }
+
+    return attributes;
   }
 }
