@@ -1,5 +1,6 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.attribute.Code;
 import lombok.Data;
 
 //method_info {
@@ -16,4 +17,13 @@ public class Method {
   public final String name;
   public final Descriptor descriptor;
   public final Attributes attributes;
+
+  public Code getCode() {
+    for (Attribute attribute : attributes.attributes) {
+      if (attribute instanceof Code) {
+        return ((Code) attribute);
+      }
+    }
+    return null;
+  }
 }

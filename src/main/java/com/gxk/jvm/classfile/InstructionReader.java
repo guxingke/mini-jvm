@@ -1,6 +1,8 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.instruction.*;
+import com.gxk.jvm.util.Utils;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -34,6 +36,15 @@ public abstract class InstructionReader {
         return new Goto1Inst(stream.readShort());
       case 0xac:
         return new IreturnInst();
+      case 0xb1:
+        return new ReturnInst();
+      case 0xb2:
+        return new GetstaticInst(stream.readUnsignedShort());
+      case 0x12:
+        return new LdcInst(stream.readUnsignedByte());
+      case 0xb6:
+        return new InvokespecialInst(stream.readUnsignedShort());
+
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");

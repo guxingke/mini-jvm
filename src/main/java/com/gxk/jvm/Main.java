@@ -1,10 +1,10 @@
 package com.gxk.jvm;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
     if (args.length == 0) {
       System.out.println("usage: java [options] class [args]\n");
@@ -18,8 +18,7 @@ public class Main {
       return;
     }
 
-    System.out.println(cmd.classpath);
-    System.out.println(cmd.clazz);
-    System.out.println(Arrays.toString(cmd.args));
+    VirtualMachine vm = new VirtualMachine();
+    vm.run(cmd);
   }
 }

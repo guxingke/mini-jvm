@@ -21,6 +21,8 @@ import com.gxk.jvm.instruction.IreturnInst;
 import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import java.nio.file.Paths;
+
+import com.gxk.jvm.rtda.Env;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -37,7 +39,7 @@ public class InterpreterTest {
     CodeAttribute codeAttr = new CodeAttribute(code, 3, 2);
     MethodInfo method = new MethodInfo(codeAttr);
 
-    interpreter.interpret(method);
+    interpreter.interpret(method, null);
   }
 
   private Map<Integer, Instruction> sum10Instructions() {
@@ -61,6 +63,19 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_hello_main() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Hello.class"));
+    Method main = cf.methods.methods[1];
+
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+
+    MethodInfo method= map(attribute);
+
+    Env env = new Env(cf.cpInfo);
+    new Interpreter().interpret(method, env);
+  }
+
+  @Test
   public void test_with_class() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop1.class"));
     Method main = cf.methods.methods[2];
@@ -69,7 +84,8 @@ public class InterpreterTest {
 
     MethodInfo method= map(attribute);
 
-    new Interpreter().interpret(method);
+    Env env = new Env(cf.cpInfo);
+    new Interpreter().interpret(method, env);
   }
 
   private MethodInfo map(Code attribute) {

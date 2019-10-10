@@ -5,12 +5,14 @@ import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.instruction.IreturnInst;
+import com.gxk.jvm.instruction.ReturnInst;
+import com.gxk.jvm.rtda.Env;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
 
 public class Interpreter {
 
-  public void interpret(MethodInfo method) {
+  public void interpret(MethodInfo method, Env env) {
     CodeAttribute codeAttribute = method.code;
 
     int maxLocals = codeAttribute.maxLocals;
@@ -18,7 +20,7 @@ public class Interpreter {
     CodeFromByte code = codeAttribute.code;
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(maxLocals, maxStacks, thread);
+    Frame frame = new Frame(maxLocals, maxStacks, thread, env);
     thread.pushFrame(frame);
 
     loop(thread, code);
@@ -37,9 +39,9 @@ public class Interpreter {
       inst.fetchOperands();
       inst.execute(frame);
 
-      debug(inst, frame);
+//      debug(inst, frame);
 
-      if (inst instanceof IreturnInst) {
+      if (inst instanceof IreturnInst || inst instanceof ReturnInst) {
         break;
       }
     }
@@ -49,6 +51,5 @@ public class Interpreter {
     System.out.println("==============================");
     System.out.println(inst.getClass());
     frame.debug();
-//    System.out.println("==============================");
   }
 }

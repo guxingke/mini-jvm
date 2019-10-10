@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">
  * </a>https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1</a>
- *
+ * <p>
  * ClassFile { u4             magic; u2             minor_version; u2             major_version; u2
  * constant_pool_count; cp_info        constant_pool[constant_pool_count-1]; u2             access_flags; u2
  * this_class; u2             super_class; u2             interfaces_count; u2             interfaces[interfaces_count];
@@ -36,22 +36,31 @@ public class ClassFile {
   @Override
   public String toString() {
     return "ClassFile{" +
-        "\n, magic=" + magic +
-        "\n, minorVersion=" + minorVersion +
-        "\n, majorVersion=" + majorVersion +
-        "\n, constantPoolSize=" + constantPoolSize +
-        "\n, cpInfo=" + cpInfo +
-        "\n, accessFlags=" + accessFlags +
-        "\n, thisClass=" + thisClass +
-        "\n, superClass=" + superClass +
-        "\n, interfacesCount=" + interfacesCount +
-        "\n, interfaces=" + interfaces +
-        "\n, fieldCount=" + fieldCount +
-        "\n, fields=" + fields +
-        "\n, methodsCount=" + methodsCount +
-        "\n, methods=" + methods +
-        "\n, attributesCount=" + attributesCount +
-        "\n, attributes=" + attributes +
-        "\n}";
+      "\n, magic=" + magic +
+      "\n, minorVersion=" + minorVersion +
+      "\n, majorVersion=" + majorVersion +
+      "\n, constantPoolSize=" + constantPoolSize +
+      "\n, cpInfo=" + cpInfo +
+      "\n, accessFlags=" + accessFlags +
+      "\n, thisClass=" + thisClass +
+      "\n, superClass=" + superClass +
+      "\n, interfacesCount=" + interfacesCount +
+      "\n, interfaces=" + interfaces +
+      "\n, fieldCount=" + fieldCount +
+      "\n, fields=" + fields +
+      "\n, methodsCount=" + methodsCount +
+      "\n, methods=" + methods +
+      "\n, attributesCount=" + attributesCount +
+      "\n, attributes=" + attributes +
+      "\n}";
+  }
+
+  public Method getMainMethod() {
+    for (Method method : this.methods.methods) {
+      if (method.name.equals("main")) {
+        return method;
+      }
+    }
+    return null;
   }
 }
