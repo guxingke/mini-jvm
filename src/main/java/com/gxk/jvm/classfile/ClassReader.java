@@ -243,7 +243,7 @@ public abstract class ClassReader {
           int codeAttributeCount = is.readUnsignedShort();
           Attributes codeAttributes = readAttributes(is, codeAttributeCount, constantPool);
 
-          attribute = new Code(maxStack, maxLocals, byteCode, null, codeAttributes);
+          attribute = new Code(maxStack, maxLocals, instructions, null, codeAttributes);
           break;
         case LineNumberTable:
           int length = is.readUnsignedShort();

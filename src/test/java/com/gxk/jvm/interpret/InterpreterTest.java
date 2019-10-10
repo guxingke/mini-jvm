@@ -1,8 +1,12 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classfile.Code;
+import com.gxk.jvm.classfile.ClassFile;
+import com.gxk.jvm.classfile.ClassReader;
+import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.CodeAttribute;
+import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.MethodInfo;
+import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
@@ -16,6 +20,7 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.instruction.IreturnInst;
 import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
+import java.nio.file.Paths;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -28,8 +33,7 @@ public class InterpreterTest {
     Interpreter interpreter = new Interpreter();
 
     Map<Integer, Instruction> instructions = sum10Instructions();
-    Code code = new Code(instructions);
-
+    CodeFromByte code = new CodeFromByte(instructions);
     CodeAttribute codeAttr = new CodeAttribute(code, 3, 2);
     MethodInfo method = new MethodInfo(codeAttr);
 
@@ -50,9 +54,36 @@ public class InterpreterTest {
     map.put(12, new IaddInst());
     map.put(13, new Istore1Inst());
     map.put(14, new IIncInst(2, 1));
-    map.put(17, new Goto1Inst(4));
+    map.put(17, new Goto1Inst((short)-13));
     map.put(20, new Iload1Inst());
     map.put(21, new IreturnInst());
     return map;
+  }
+
+  @Test
+  public void test_with_class() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop1.class"));
+    Method main = cf.methods.methods[2];
+
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+
+    MethodInfo method= map(attribute);
+
+    new Interpreter().interpret(method);
+  }
+
+  private MethodInfo map(Code attribute) {
+    int maxStacks = attribute.getMaxStacks();
+    int maxLocals = attribute.getMaxLocals();
+    Instruction[] instructions = attribute.getInstructions();
+
+    Map<Integer, Instruction> map = new HashMap<>();
+    int pc = 0;
+    for (Instruction instruction : instructions) {
+      map.put(pc, instruction);
+      pc += instruction.offset();
+    }
+    CodeAttribute codeAttribute = new CodeAttribute(new CodeFromByte(map), maxLocals, maxStacks);
+    return new MethodInfo(codeAttribute);
   }
 }

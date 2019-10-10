@@ -21,7 +21,7 @@ public abstract class InstructionReader {
       case 0x10:
         return new BiPushInst(stream.readByte());
       case 0xa3:
-        return new IfIcmpGtInst(stream.readUnsignedShort());
+        return new IfIcmpGtInst(stream.readShort());
       case 0x1b:
         return new Iload1Inst();
       case 0x1c:
@@ -31,8 +31,8 @@ public abstract class InstructionReader {
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
       case 0xa7:
-        return new Goto1Inst(stream.readUnsignedShort());
-      case 0xb1:
+        return new Goto1Inst(stream.readShort());
+      case 0xac:
         return new IreturnInst();
       default:
         return null;

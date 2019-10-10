@@ -2,6 +2,7 @@ package com.gxk.jvm.classfile.attribute;
 
 import com.gxk.jvm.classfile.Attribute;
 import com.gxk.jvm.classfile.Attributes;
+import com.gxk.jvm.instruction.Instruction;
 import lombok.Data;
 
 @Data
@@ -25,7 +26,7 @@ public class Code extends Attribute {
 //  }
   public final int maxStacks;
   public final int maxLocals;
-  public final byte[] byteCode;
+  public final Instruction[] instructions;
   public final byte[] exceptionTable;
   public final Attributes attributes;
 }

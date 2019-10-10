@@ -19,7 +19,7 @@ public class IfIcmpGtInst implements Instruction {
     Integer val2= frame.operandStack.popInt();
     Integer val1= frame.operandStack.popInt();
     if (val1 > val2) {
-      frame.nextPc = offset;
+      frame.nextPc = frame.thread.getPc() + offset;
     }
   }
 }

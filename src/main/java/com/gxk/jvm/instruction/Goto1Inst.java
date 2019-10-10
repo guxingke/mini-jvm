@@ -4,9 +4,9 @@ import com.gxk.jvm.rtda.Frame;
 
 public class Goto1Inst implements Instruction {
 
-  public final int offset;
+  public final short offset;
 
-  public Goto1Inst(int offset) {
+  public Goto1Inst(short offset) {
     this.offset = offset;
   }
 
@@ -17,6 +17,6 @@ public class Goto1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.nextPc = offset;
+    frame.nextPc = frame.thread.getPc() + offset;
   }
 }

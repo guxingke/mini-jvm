@@ -1,6 +1,6 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classfile.Code;
+import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
@@ -11,11 +11,11 @@ import com.gxk.jvm.rtda.Thread;
 public class Interpreter {
 
   public void interpret(MethodInfo method) {
-    CodeAttribute codeAttribute = method.codeAttribute;
+    CodeAttribute codeAttribute = method.code;
 
     int maxLocals = codeAttribute.maxLocals;
     int maxStacks = codeAttribute.maxStacks;
-    Code code = codeAttribute.code;
+    CodeFromByte code = codeAttribute.code;
 
     Thread thread = new Thread(1024);
     Frame frame = new Frame(maxLocals, maxStacks, thread);
@@ -24,7 +24,7 @@ public class Interpreter {
     loop(thread, code);
   }
 
-  private void loop(Thread thread, Code code) {
+  private void loop(Thread thread, CodeFromByte code) {
     Frame frame = thread.popFrame();
 
     while (true) {
