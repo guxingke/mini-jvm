@@ -10,23 +10,26 @@ import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.classfile.cp.Utf8;
+import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ClassReader {
 
   public static ClassFile read(Path path) throws IOException {
 
     try (InputStream is = Files.newInputStream(path);
-         BufferedInputStream bis = new BufferedInputStream(is);
-         DataInputStream stream = new DataInputStream(bis)) {
+        BufferedInputStream bis = new BufferedInputStream(is);
+        DataInputStream stream = new DataInputStream(bis)) {
       return read(stream);
     }
   }
@@ -56,22 +59,22 @@ public abstract class ClassReader {
     Attributes attributes = readAttributes(is, attributeCount, constantPool);
 
     return new ClassFile(
-      magic,
-      minorVersion,
-      majorVersion,
-      cpSize,
-      constantPool,
-      accessFlag,
-      thisClass,
-      superClass,
-      interfaceCount,
-      interfaces,
-      fieldCount,
-      fields,
-      methodCount,
-      methods,
-      attributeCount,
-      attributes
+        magic,
+        minorVersion,
+        majorVersion,
+        cpSize,
+        constantPool,
+        accessFlag,
+        thisClass,
+        superClass,
+        interfaceCount,
+        interfaces,
+        fieldCount,
+        fields,
+        methodCount,
+        methods,
+        attributeCount,
+        attributes
     );
   }
 
@@ -91,7 +94,7 @@ public abstract class ClassReader {
 //    attribute_info attributes[attributes_count];
 //    }
   private static Methods readMethods(DataInputStream is, int methodCount,
-                                     ConstantPool constantPool) throws IOException {
+      ConstantPool constantPool) throws IOException {
     Methods methods = new Methods(methodCount);
 
     for (int i = 0; i < methodCount; i++) {
@@ -206,7 +209,7 @@ public abstract class ClassReader {
 //    u1 info[attribute_length];
 //  }
   private static Attributes readAttributes(DataInputStream is, int attributeCount, ConstantPool constantPool)
-    throws IOException {
+      throws IOException {
     Attributes attributes = new Attributes(attributeCount);
 
     for (int i = 0; i < attributeCount; i++) {
@@ -228,7 +231,8 @@ public abstract class ClassReader {
 
           int codeLength = is.readInt();
           byte[] byteCode = Utils.readNBytes(is, codeLength);
-          System.out.println("byteCode = " + byteArrayToHex(byteCode));
+
+          Instruction[] instructions = readByteCode(byteCode);
 
           int exceptionTableLength = is.readUnsignedShort();
           if (exceptionTableLength > 0) {
@@ -258,5 +262,22 @@ public abstract class ClassReader {
     }
 
     return attributes;
+  }
+
+  public static Instruction[] readByteCode(byte[] byteCode) throws IOException {
+    List<Instruction> instructions = new ArrayList<>();
+    try (DataInputStream stream = new DataInputStream(new ByteArrayInputStream(byteCode))) {
+      while (stream.available() > 0) {
+        int opCode = stream.readUnsignedByte();
+        Instruction inst = InstructionReader.read(opCode, stream);
+        if (inst == null) {
+          break;
+        }
+        instructions.add(inst);
+      }
+    }
+    Instruction[] ret = new Instruction[instructions.size()];
+    instructions.toArray(ret);
+    return ret;
   }
 }
