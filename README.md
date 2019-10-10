@@ -1,30 +1,27 @@
 # Mini-jvm
+使用 java 1.8 实现 jvm.
 
-# PRE
-- maven 3.3+
-- jdk 1.8+
-- graalvm 1.0+
+## 动机
+1. 尝试了解 Jvm 原理
+2. 纸上得来终觉浅, 实践
 
-# Build
-```bash
-mvn clean package
+## 规划
+- [] class 解析
+- [] 字节码执行
+- [] 类加载
+- [] 方法调用
+- [] ....
 
-./build.sh # build binary executable file named mini-jvm.
+## 局限
+1. 不实现 GC
+2. 不实现 多线程
+3. 个人 Demo.
 
-```
+## 变更记录
+- ...
 
-# Install
-```bash
-mv mini-jvm ~/.local/bin
-```
+## 参考
+- spec: jvm 1.8 spec
+- 掘金: jvm 小册
+- 书: 自己动手实现 JVM
 
-# Showcase
-
-
-
-# Note
-it build for myself, just a demo.
-
-# Changelog
-- =, !=.
-- single query condition.
