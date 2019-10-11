@@ -5,6 +5,7 @@ import com.gxk.jvm.classfile.attribute.LineNumberTable;
 import com.gxk.jvm.classfile.attribute.SourceFile;
 import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
+import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
@@ -179,6 +180,7 @@ public abstract class ClassReader {
         case CONSTANT_InvokeDynamic:
           break;
         case CONSTANT_Integer:
+          info = new IntegerCp(infoEnum, is.readInt());
           break;
         case CONSTANT_Long:
           break;
@@ -188,7 +190,7 @@ public abstract class ClassReader {
           break;
       }
       if (info == null) {
-        throw new UnsupportedOperationException("un parse cp");
+        throw new UnsupportedOperationException("un parse cp " + infoEnum);
       }
       constantPool.infos[i] = info;
     }

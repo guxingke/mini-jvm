@@ -1,6 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.classfile.ConstantInfo;
+import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.util.Utils;
@@ -22,6 +23,9 @@ public class LdcInst implements Instruction {
         int stringIndex = ((StringCp) info).stringIndex;
         String string = Utils.getString(frame.env.constantPool, stringIndex);
         frame.operandStack.pushRef(string);
+        break;
+      case CONSTANT_Integer:
+        frame.operandStack.pushInt(((IntegerCp) info).val);
         break;
       default:
         throw new UnsupportedOperationException("ldc");

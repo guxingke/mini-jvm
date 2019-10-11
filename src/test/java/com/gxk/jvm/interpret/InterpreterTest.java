@@ -99,6 +99,16 @@ public class InterpreterTest {
     new Interpreter().interpret(method, env);
   }
 
+  @Test
+  public void test_loop100() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop100.class"));
+    Method main = cf.getMainMethod();
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+    MethodInfo method= map(attribute);
+    Env env = new Env(cf.cpInfo);
+    new Interpreter().interpret(method, env);
+  }
+
   private MethodInfo map(Code attribute) {
     int maxStacks = attribute.getMaxStacks();
     int maxLocals = attribute.getMaxLocals();

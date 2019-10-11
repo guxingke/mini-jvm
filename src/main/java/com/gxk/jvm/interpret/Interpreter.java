@@ -39,7 +39,7 @@ public class Interpreter {
       inst.fetchOperands();
       inst.execute(frame);
 
-//      debug(inst, frame);
+      debug(inst, frame);
 
       if (inst instanceof IreturnInst || inst instanceof ReturnInst) {
         break;
