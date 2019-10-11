@@ -1,18 +1,17 @@
 package com.gxk.jvm;
 
 import com.gxk.jvm.classfile.ClassFile;
-import com.gxk.jvm.classfile.ClassReader;
 import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.classpath.Classpath;
+import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Env;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +19,8 @@ class VirtualMachine {
 
   void run(Args cmd) throws IOException {
 
-    Path path = Paths.get(cmd.classpath, cmd.clazz + ".class");
-    ClassFile cf = ClassReader.read(path);
+    Entry entry = Classpath.parse(cmd.classpath);
+    ClassFile cf = entry.findClass(cmd.clazz);
 
     Method method = cf.getMainMethod();
     if (method == null) {
