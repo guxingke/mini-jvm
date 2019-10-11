@@ -28,7 +28,7 @@ public class ClassReaderTest {
 
     assertNotNull(cf);
 
-    System.out.println(cf);
+//    System.out.println(cf);
   }
 
   //  int sum = 0;

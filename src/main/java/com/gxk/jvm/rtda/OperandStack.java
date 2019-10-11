@@ -59,6 +59,11 @@ public class OperandStack {
     return this.slots.pop().ref;
   }
 
+  // FIXME for test
+  public Object peekRef() {
+    return this.slots.peek().ref;
+  }
+
   public void debug() {
     System.out.println("OperandStack: ");
     for (Slot slot : this.slots) {

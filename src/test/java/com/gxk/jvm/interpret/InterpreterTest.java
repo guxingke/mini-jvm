@@ -7,6 +7,7 @@ import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
@@ -84,6 +85,16 @@ public class InterpreterTest {
 
     MethodInfo method= map(attribute);
 
+    Env env = new Env(cf.cpInfo);
+    new Interpreter().interpret(method, env);
+  }
+
+  @Test
+  public void test_loop2() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop2.class"));
+    Method main = cf.getMainMethod();
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+    MethodInfo method= map(attribute);
     Env env = new Env(cf.cpInfo);
     new Interpreter().interpret(method, env);
   }

@@ -255,7 +255,7 @@ public abstract class ClassReader {
           break;
         default:
           byte[] bytes = Utils.readNBytes(is, attributeLength);
-          System.out.println("bytes = " + byteArrayToHex(bytes));
+//          System.out.println("bytes = " + byteArrayToHex(bytes));
       }
 
       attributes.attributes[i] = attribute;

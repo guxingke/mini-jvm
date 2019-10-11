@@ -13,6 +13,14 @@ public class InvokespecialInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     // 暂时只执行 sout
-    System.out.println(frame.operandStack.popRef());
+
+    Object obj = frame.operandStack.peekRef();
+    if (obj != null) {
+      System.out.println(frame.operandStack.popRef());
+      return;
+    }
+
+    // TODO 暂时只支持 int
+    System.out.println(frame.operandStack.popInt());
   }
 }
