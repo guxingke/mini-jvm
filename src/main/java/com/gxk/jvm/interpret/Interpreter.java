@@ -27,7 +27,7 @@ public class Interpreter {
   }
 
   private void loop(Thread thread, CodeFromByte code) {
-    Frame frame = thread.popFrame();
+    Frame frame = thread.currentFrame();
 
     while (true) {
       int pc = frame.nextPc;
@@ -39,7 +39,7 @@ public class Interpreter {
       inst.fetchOperands();
       inst.execute(frame);
 
-      debug(inst, frame);
+//      debug(inst, frame);
 
       if (inst instanceof IreturnInst || inst instanceof ReturnInst) {
         break;

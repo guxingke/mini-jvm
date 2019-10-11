@@ -10,10 +10,14 @@ import jdk.nashorn.internal.runtime.ConsString;
 public class LdcInst implements Instruction {
   public final int index;
 
+  @Override
+  public int offset() {
+    return 2;
+  }
+
   public LdcInst(int index) {
     this.index = index;
   }
-
 
   @Override
   public void execute(Frame frame) {
