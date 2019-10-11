@@ -10,16 +10,15 @@ import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Env;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VirtualMachine {
+class VirtualMachine {
 
-  public void run(Args cmd) throws IOException {
+  void run(Args cmd) throws IOException {
 
     Path path = Paths.get(cmd.classpath, cmd.clazz + ".class");
     ClassFile cf = ClassReader.read(path);
@@ -39,7 +38,7 @@ public class VirtualMachine {
     int maxLocals = attribute.getMaxLocals();
     Instruction[] instructions = attribute.getInstructions();
 
-    Map<Integer, Instruction> map = new HashMap<>();
+    Map<Integer, Instruction> map = new HashMap<>(instructions.length);
     int pc = 0;
     for (Instruction instruction : instructions) {
       map.put(pc, instruction);

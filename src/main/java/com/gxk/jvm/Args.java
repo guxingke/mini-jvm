@@ -3,27 +3,30 @@ package com.gxk.jvm;
 /**
  * java -cp target/mini.jar com.gxk.Main xxxxxx
  */
-public class Args {
+class Args {
 
-  public boolean version;
-  public String classpath;
-  public String clazz;
-  public String[] args;
+  private static final String MINUS_VERSION = "-version";
+  private static final String MINUS_CP = "-cp";
+  private static final int ARGS_LIMIT = 3;
+  boolean version;
+  String classpath;
+  String clazz;
+  String[] args;
 
 
-  public static Args parseArgs(String... cliArgs) {
+  static Args parseArgs(String... cliArgs) {
     Args args = new Args();
 
-    if (cliArgs[0].equals("-version")) {
+    if (MINUS_VERSION.equals(cliArgs[0])) {
       args.version = true;
       return args;
     }
 
-    if (cliArgs[0].equals("-cp")) {
+    if (MINUS_CP.equals(cliArgs[0])) {
       args.classpath = cliArgs[1];
       args.clazz = cliArgs[2];
 
-      if (cliArgs.length > 3) {
+      if (cliArgs.length > ARGS_LIMIT) {
         String[] programArgs = new String[cliArgs.length - 3];
         System.arraycopy(cliArgs, 3, programArgs, 0, programArgs.length);
 

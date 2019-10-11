@@ -4,11 +4,13 @@ import com.gxk.jvm.classfile.Attribute;
 import com.gxk.jvm.classfile.Attributes;
 import com.gxk.jvm.instruction.Instruction;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Code extends Attribute {
 
-//  Code_attribute {
+  //  Code_attribute {
 //    u2 attribute_name_index;
 //    u4 attribute_length;
 //    u2 max_stack;
