@@ -1,5 +1,5 @@
 # Mini-jvm
-使用 java 1.8 实现 jvm.
+使用 java 1.8 实现 jvm. [文档](https://jvm.guxingke.com)
 
 ## 动机
 1. 尝试了解 Jvm 原理
