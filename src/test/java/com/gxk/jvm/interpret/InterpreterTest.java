@@ -50,7 +50,7 @@ public class InterpreterTest {
     map.put(3, new Istore2Inst());
     map.put(4, new Iload2Inst());
     map.put(5, new BiPushInst((byte) 10));
-    map.put(7, new IfIcmpGtInst((short) 20));
+    map.put(7, new IfIcmpGtInst((short) 13));
     map.put(10, new Iload1Inst());
     map.put(11, new Iload2Inst());
     map.put(12, new IaddInst());
