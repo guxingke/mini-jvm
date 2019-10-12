@@ -1,7 +1,6 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.instruction.*;
-import com.gxk.jvm.util.Utils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -24,6 +23,8 @@ public abstract class InstructionReader {
         return new BiPushInst(stream.readByte());
       case 0xa3:
         return new IfIcmpGtInst(stream.readShort());
+      case 0x1a:
+        return new Iload0Inst();
       case 0x1b:
         return new Iload1Inst();
       case 0x1c:

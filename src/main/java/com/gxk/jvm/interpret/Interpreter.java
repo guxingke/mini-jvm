@@ -26,7 +26,7 @@ public class Interpreter {
     loop(thread, code);
   }
 
-  private void loop(Thread thread, CodeFromByte code) {
+  public void loop(Thread thread, CodeFromByte code) {
     Frame frame = thread.currentFrame();
 
     while (true) {

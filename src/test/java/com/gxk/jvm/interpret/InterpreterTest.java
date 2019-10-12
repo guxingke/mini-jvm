@@ -2,12 +2,11 @@ package com.gxk.jvm.interpret;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
-import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.CodeAttribute;
+import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
-import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
@@ -21,13 +20,13 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.instruction.IreturnInst;
 import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
-import java.nio.file.Paths;
-
 import com.gxk.jvm.rtda.Env;
-import org.junit.Test;
-
+import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.Thread;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
 
 public class InterpreterTest {
 
@@ -57,7 +56,7 @@ public class InterpreterTest {
     map.put(12, new IaddInst());
     map.put(13, new Istore1Inst());
     map.put(14, new IIncInst(2, 1));
-    map.put(17, new Goto1Inst((short)-13));
+    map.put(17, new Goto1Inst((short) -13));
     map.put(20, new Iload1Inst());
     map.put(21, new IreturnInst());
     return map;
@@ -70,7 +69,7 @@ public class InterpreterTest {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
 
-    MethodInfo method= map(attribute);
+    MethodInfo method = map(attribute);
 
     Env env = new Env(cf.cpInfo);
     new Interpreter().interpret(method, env);
@@ -83,7 +82,7 @@ public class InterpreterTest {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
 
-    MethodInfo method= map(attribute);
+    MethodInfo method = map(attribute);
 
     Env env = new Env(cf.cpInfo);
     new Interpreter().interpret(method, env);
@@ -94,7 +93,7 @@ public class InterpreterTest {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop2.class"));
     Method main = cf.getMainMethod();
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method= map(attribute);
+    MethodInfo method = map(attribute);
     Env env = new Env(cf.cpInfo);
     new Interpreter().interpret(method, env);
   }
@@ -104,9 +103,46 @@ public class InterpreterTest {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop100.class"));
     Method main = cf.getMainMethod();
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method= map(attribute);
+    MethodInfo method = map(attribute);
     Env env = new Env(cf.cpInfo);
     new Interpreter().interpret(method, env);
+  }
+
+  @Test
+  public void test_method_with_args() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
+    Method main = cf.methods.methods[2];
+
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+    MethodInfo method = map(attribute);
+    Env env = new Env(cf.cpInfo);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, thread, env);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 1000);
+
+    new Interpreter().loop(thread, method.code.code);
+  }
+
+  @Test
+  public void test_method_with_add_two_int() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
+    Method main = cf.methods.methods[2];
+
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+    MethodInfo method = map(attribute);
+    Env env = new Env(cf.cpInfo);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, thread, env);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 10);
+    frame.localVars.setInt(1, 20);
+
+    new Interpreter().loop(thread, method.code.code);
   }
 
   private MethodInfo map(Code attribute) {
