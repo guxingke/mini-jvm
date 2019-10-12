@@ -118,12 +118,29 @@ public class InterpreterTest {
     Env env = new Env(cf.cpInfo);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 1000);
 
-    new Interpreter().loop(thread, method.code.code);
+    new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_method_invoke() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop4.class"));
+    Method main = cf.getMainMethod();
+
+    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
+    MethodInfo method = map(attribute);
+    Env env = new Env(cf.cpInfo);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
+
+    thread.pushFrame(frame);
+
+    new Interpreter().loop(thread);
   }
 
   @Test
@@ -136,13 +153,13 @@ public class InterpreterTest {
     Env env = new Env(cf.cpInfo);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 10);
     frame.localVars.setInt(1, 20);
 
-    new Interpreter().loop(thread, method.code.code);
+    new Interpreter().loop(thread);
   }
 
   private MethodInfo map(Code attribute) {

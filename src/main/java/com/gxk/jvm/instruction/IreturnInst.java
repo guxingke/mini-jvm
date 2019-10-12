@@ -6,6 +6,11 @@ public class IreturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    System.out.println("do ret " + frame.operandStack.popInt());
+    Integer tmp = frame.operandStack.popInt();
+    frame.thread.popFrame();
+    if (!frame.thread.empty()) {
+      frame.thread.currentFrame().operandStack.pushInt(tmp);
+    }
+//    System.out.println("do ret " + tmp);
   }
 }

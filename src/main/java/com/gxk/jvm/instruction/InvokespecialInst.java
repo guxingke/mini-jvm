@@ -11,6 +11,11 @@ public class InvokespecialInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 3;
+  }
+
+  @Override
   public void execute(Frame frame) {
     // 暂时只执行 sout
 

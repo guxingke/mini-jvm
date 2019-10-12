@@ -1,11 +1,9 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.CodeAttribute;
+import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.instruction.IreturnInst;
-import com.gxk.jvm.instruction.ReturnInst;
 import com.gxk.jvm.rtda.Env;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
@@ -20,20 +18,19 @@ public class Interpreter {
     CodeFromByte code = codeAttribute.code;
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(maxLocals, maxStacks, thread, env);
+    Frame frame = new Frame(maxLocals, maxStacks, code, thread, env);
     thread.pushFrame(frame);
 
-    loop(thread, code);
+    loop(thread);
   }
 
-  public void loop(Thread thread, CodeFromByte code) {
-    Frame frame = thread.currentFrame();
-
+  public void loop(Thread thread) {
     while (true) {
+      Frame frame = thread.currentFrame();
       int pc = frame.nextPc;
       thread.setPc(pc);
 
-      Instruction inst = code.getInst(pc);
+      Instruction inst = frame.code.getInst(pc);
       frame.nextPc += inst.offset();
 
       inst.fetchOperands();
@@ -41,7 +38,7 @@ public class Interpreter {
 
 //      debug(inst, frame);
 
-      if (inst instanceof IreturnInst || inst instanceof ReturnInst) {
+      if (thread.empty()) {
         break;
       }
     }

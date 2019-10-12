@@ -15,6 +15,8 @@ public abstract class InstructionReader {
         return new Iconst0Inst();
       case 0x4:
         return new Iconst1Inst();
+      case 0x3b:
+        return new Istore0Inst();
       case 0x3c:
         return new Istore1Inst();
       case 0x3d:
@@ -45,7 +47,8 @@ public abstract class InstructionReader {
         return new LdcInst(stream.readUnsignedByte());
       case 0xb6:
         return new InvokespecialInst(stream.readUnsignedShort());
-
+      case 0xb8:
+        return new InvokestaticInst(stream.readUnsignedShort());
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");

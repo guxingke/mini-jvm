@@ -28,4 +28,8 @@ public class Thread {
   public Frame currentFrame() {
     return this.stack.peek();
   }
+
+  public boolean empty() {
+    return this.stack.empty();
+  }
 }
