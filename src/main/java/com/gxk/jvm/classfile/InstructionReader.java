@@ -1,13 +1,16 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.cp.IntegerCp;
+import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.instruction.*;
+import com.gxk.jvm.util.Utils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 public abstract class InstructionReader {
 
-  public static Instruction read(int opCode, DataInputStream stream) throws IOException {
+  public static Instruction read(int opCode, DataInputStream stream, ConstantPool constantPool) throws IOException {
     switch (opCode) {
       case 0x0:
         return new NopInst();
@@ -44,7 +47,17 @@ public abstract class InstructionReader {
       case 0xb2:
         return new GetstaticInst(stream.readUnsignedShort());
       case 0x12:
-        return new LdcInst(stream.readUnsignedByte());
+        int index = stream.readUnsignedByte();
+        ConstantInfo info = constantPool.infos[index - 1];
+        switch (info.infoEnum) {
+          case CONSTANT_String:
+            int stringIndex = ((StringCp) info).stringIndex;
+            String string = Utils.getString(constantPool, stringIndex);
+            return new LdcInst(null, string);
+          case CONSTANT_Integer:
+            return new LdcInst(((IntegerCp) info).val, null);
+        }
+        throw new IllegalStateException();
       case 0xb6:
         return new InvokespecialInst(stream.readUnsignedShort());
       case 0xb8:
@@ -53,5 +66,6 @@ public abstract class InstructionReader {
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
     }
+
   }
 }

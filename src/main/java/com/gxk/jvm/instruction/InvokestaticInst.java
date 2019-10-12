@@ -7,9 +7,9 @@ import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
-import com.gxk.jvm.rtda.Env;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -46,9 +46,8 @@ public class InvokestaticInst implements Instruction {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) sum10.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
 
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
 
     return frame;
   }

@@ -4,13 +4,12 @@ import com.gxk.jvm.classfile.CodeAttribute;
 import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.Env;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
 
 public class Interpreter {
 
-  public void interpret(MethodInfo method, Env env) {
+  public void interpret(MethodInfo method) {
     CodeAttribute codeAttribute = method.code;
 
     int maxLocals = codeAttribute.maxLocals;
@@ -18,7 +17,7 @@ public class Interpreter {
     CodeFromByte code = codeAttribute.code;
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(maxLocals, maxStacks, code, thread, env);
+    Frame frame = new Frame(maxLocals, maxStacks, code, thread);
     thread.pushFrame(frame);
 
     loop(thread);

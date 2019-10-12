@@ -234,7 +234,7 @@ public abstract class ClassReader {
           int codeLength = is.readInt();
           byte[] byteCode = Utils.readNBytes(is, codeLength);
 
-          Instruction[] instructions = readByteCode(byteCode);
+          Instruction[] instructions = readByteCode(byteCode, constantPool);
 
           int exceptionTableLength = is.readUnsignedShort();
           if (exceptionTableLength > 0) {
@@ -266,12 +266,12 @@ public abstract class ClassReader {
     return attributes;
   }
 
-  public static Instruction[] readByteCode(byte[] byteCode) throws IOException {
+  public static Instruction[] readByteCode(byte[] byteCode, ConstantPool constantPool) throws IOException {
     List<Instruction> instructions = new ArrayList<>();
     try (DataInputStream stream = new DataInputStream(new ByteArrayInputStream(byteCode))) {
       while (stream.available() > 0) {
         int opCode = stream.readUnsignedByte();
-        Instruction inst = InstructionReader.read(opCode, stream);
+        Instruction inst = InstructionReader.read(opCode, stream, constantPool);
         if (inst == null) {
           break;
         }

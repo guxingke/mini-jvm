@@ -41,7 +41,7 @@ public class ClassReaderTest {
     String main = "033c043d1c100aa3000d1b1c603c840201a7fff3b1";
     byte[] bytes = toBytes(main);
 
-    Instruction[] instructions = ClassReader.readByteCode(bytes);
+    Instruction[] instructions = ClassReader.readByteCode(bytes, null);
     System.out.println(instructions.length);
 
     System.out.println(bytesToHex(bytes));

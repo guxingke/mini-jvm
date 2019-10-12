@@ -8,15 +8,13 @@ public class Frame {
   public final OperandStack operandStack;
   public final CodeFromByte code;
   public final Thread thread;
-  public final Env env;
   public int nextPc;
 
-  public Frame(int maxLocals, int maxStack, CodeFromByte code, Thread thread, Env env) {
+  public Frame(int maxLocals, int maxStack, CodeFromByte code, Thread thread) {
     this.localVars = new LocalVars(maxLocals);
     this.operandStack = new OperandStack(maxStack);
     this.code = code;
     this.thread = thread;
-    this.env = env;
   }
 
   public void debug() {

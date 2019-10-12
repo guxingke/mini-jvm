@@ -20,13 +20,13 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.instruction.IreturnInst;
 import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
-import com.gxk.jvm.rtda.Env;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import org.junit.Test;
+
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
 
 public class InterpreterTest {
 
@@ -39,7 +39,7 @@ public class InterpreterTest {
     CodeAttribute codeAttr = new CodeAttribute(code, 3, 2);
     MethodInfo method = new MethodInfo(codeAttr);
 
-    interpreter.interpret(method, null);
+    interpreter.interpret(method);
   }
 
   private Map<Integer, Instruction> sum10Instructions() {
@@ -71,8 +71,7 @@ public class InterpreterTest {
 
     MethodInfo method = map(attribute);
 
-    Env env = new Env(cf.cpInfo);
-    new Interpreter().interpret(method, env);
+    new Interpreter().interpret(method);
   }
 
   @Test
@@ -84,8 +83,7 @@ public class InterpreterTest {
 
     MethodInfo method = map(attribute);
 
-    Env env = new Env(cf.cpInfo);
-    new Interpreter().interpret(method, env);
+    new Interpreter().interpret(method);
   }
 
   @Test
@@ -94,8 +92,7 @@ public class InterpreterTest {
     Method main = cf.getMainMethod();
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
-    new Interpreter().interpret(method, env);
+    new Interpreter().interpret(method);
   }
 
   @Test
@@ -104,8 +101,7 @@ public class InterpreterTest {
     Method main = cf.getMainMethod();
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
-    new Interpreter().interpret(method, env);
+    new Interpreter().interpret(method);
   }
 
   @Test
@@ -115,10 +111,9 @@ public class InterpreterTest {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 1000);
@@ -133,10 +128,9 @@ public class InterpreterTest {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
 
     thread.pushFrame(frame);
 
@@ -150,10 +144,9 @@ public class InterpreterTest {
 
     com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
     MethodInfo method = map(attribute);
-    Env env = new Env(cf.cpInfo);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread, env);
+    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 10);

@@ -10,7 +10,7 @@ import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
-import com.gxk.jvm.rtda.Env;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ class VirtualMachine {
 
     MethodInfo info = map(method.getCode());
 
-    new Interpreter().interpret(info, new Env(cf.cpInfo));
+    new Interpreter().interpret(info);
   }
 
   private MethodInfo map(Code attribute) {
