@@ -2,8 +2,7 @@ package com.gxk.jvm.interpret;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
-import com.gxk.jvm.classfile.Method;
-import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.classloader.Classloader;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
@@ -19,6 +18,7 @@ import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.Test;
 
@@ -62,43 +62,38 @@ public class InterpreterTest {
   @Test
   public void test_hello_main() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Hello.class"));
-    Method main = cf.methods.methods[1];
-
-    KMethod method = map(main);
-    new Interpreter().interpret(method);
+    KClass main = Classloader.doLoadClass("Hello", cf);
+    new Interpreter().interpret(main.getMainMethod());
   }
 
   @Test
   public void test_with_class() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop1.class"));
-    Method main = cf.methods.methods[2];
-    KMethod method = map(main);
+    KClass clazz = Classloader.doLoadClass("Hello", cf);
+    KMethod method = clazz.getMethods().get(2);
     new Interpreter().interpret(method);
   }
 
   @Test
   public void test_loop2() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop2.class"));
-    Method main = cf.getMainMethod();
-    KMethod method = map(main);
+    KClass kc = Classloader.doLoadClass("Loop2", cf);
+    KMethod method = kc.getMainMethod();
     new Interpreter().interpret(method);
   }
 
   @Test
   public void test_loop100() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop100.class"));
-    Method main = cf.getMainMethod();
-    KMethod method = map(main);
-    Thread thread = new Thread(1024);
-    new Interpreter().interpret(method);
+    KClass main = Classloader.doLoadClass("Loop100", cf);
+    new Interpreter().interpret(main.getMainMethod());
   }
 
   @Test
   public void test_method_with_args() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
-    Method main = cf.methods.methods[2];
-
-    KMethod method = map(main);
+    KClass clazz = Classloader.doLoadClass("Loop3", cf);
+    KMethod method = clazz.getMethods().get(2);
 
     Thread thread = new Thread(1024);
     Frame frame = new Frame(method, thread);
@@ -112,9 +107,9 @@ public class InterpreterTest {
   @Test
   public void test_method_invoke() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop4.class"));
-    Method main = cf.getMainMethod();
+    KClass main = Classloader.doLoadClass("Loop4", cf);
 
-    KMethod method = map(main);
+    KMethod method = main.getMainMethod();
 
     Thread thread = new Thread(1024);
     Frame frame = new Frame(method, thread);
@@ -127,9 +122,8 @@ public class InterpreterTest {
   @Test
   public void test_method_with_add_two_int() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
-    Method cfMethod = cf.methods.methods[2];
-
-    KMethod method = map(cfMethod);
+    KClass clazz = Classloader.doLoadClass("AddTwoInt", cf);
+    KMethod method = clazz.getMethods().get(2);
 
     Thread thread = new Thread(1024);
     Frame frame = new Frame(method, thread);
@@ -141,8 +135,4 @@ public class InterpreterTest {
     new Interpreter().loop(thread);
   }
 
-  private KMethod map(Method cfMethod) {
-    Code code = cfMethod.getCode();
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions());
-  }
 }
