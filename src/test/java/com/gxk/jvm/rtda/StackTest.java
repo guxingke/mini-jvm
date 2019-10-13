@@ -1,5 +1,6 @@
 package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +10,8 @@ public class StackTest {
   @Test
   public void test() {
     Stack<Frame> stack = new Stack<>(1024);
-    stack.push(new Frame(1, 1, null, null));
+    KMethod method = new KMethod(1, "x", "x", 1, 1, null);
+    stack.push(new Frame(method, null));
 
     assertEquals(1, stack.size());
     assertEquals(1024, stack.maxSize);

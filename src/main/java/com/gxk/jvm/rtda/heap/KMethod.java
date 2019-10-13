@@ -13,5 +13,5 @@ public class KMethod {
 
   public final int maxStacks;
   public final int maxLocals;
-  public final Map<String, Instruction> instructionMap;
+  public final Map<Integer, Instruction> instructionMap;
 }

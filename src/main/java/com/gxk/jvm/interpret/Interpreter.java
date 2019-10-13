@@ -1,23 +1,15 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classfile.CodeAttribute;
-import com.gxk.jvm.classfile.CodeFromByte;
-import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.KMethod;
 
 public class Interpreter {
 
-  public void interpret(MethodInfo method) {
-    CodeAttribute codeAttribute = method.code;
-
-    int maxLocals = codeAttribute.maxLocals;
-    int maxStacks = codeAttribute.maxStacks;
-    CodeFromByte code = codeAttribute.code;
-
+  public void interpret(KMethod method) {
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(maxLocals, maxStacks, code, thread);
+    Frame frame = new Frame(method, thread);
     thread.pushFrame(frame);
 
     loop(thread);
@@ -29,7 +21,7 @@ public class Interpreter {
       int pc = frame.nextPc;
       thread.setPc(pc);
 
-      Instruction inst = frame.code.getInst(pc);
+      Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
       inst.fetchOperands();

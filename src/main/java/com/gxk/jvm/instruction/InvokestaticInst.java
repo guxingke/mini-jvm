@@ -9,6 +9,7 @@ import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.KMethod;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -42,28 +43,18 @@ public class InvokestaticInst implements Instruction {
     } catch (IOException e) {
       throw new IllegalStateException();
     }
-    Method sum10= cf.methods.methods[2];
+    Method sum10 = cf.methods.methods[2];
 
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) sum10.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(sum10);
 
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
+    Frame frame = new Frame(method, thread);
 
     return frame;
   }
 
-  private MethodInfo map(Code attribute) {
-    int maxStacks = attribute.getMaxStacks();
-    int maxLocals = attribute.getMaxLocals();
-    Instruction[] instructions = attribute.getInstructions();
-
-    Map<Integer, Instruction> map = new HashMap<>();
-    int pc = 0;
-    for (Instruction instruction : instructions) {
-      map.put(pc, instruction);
-      pc += instruction.offset();
-    }
-    CodeAttribute codeAttribute = new CodeAttribute(new CodeFromByte(map), maxLocals, maxStacks);
-    return new MethodInfo(codeAttribute);
+  private KMethod map(Method cfMethod) {
+    Code code = cfMethod.getCode();
+    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions());
   }
 }
+

@@ -1,20 +1,27 @@
 package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.classfile.CodeFromByte;
+import com.gxk.jvm.instruction.Instruction;
+import com.gxk.jvm.rtda.heap.KMethod;
+
+import java.util.Map;
 
 public class Frame {
 
+  public final KMethod method;
   public final LocalVars localVars;
   public final OperandStack operandStack;
-  public final CodeFromByte code;
+  public final Map<Integer, Instruction> instructionMap;
   public final Thread thread;
   public int nextPc;
 
-  public Frame(int maxLocals, int maxStack, CodeFromByte code, Thread thread) {
-    this.localVars = new LocalVars(maxLocals);
-    this.operandStack = new OperandStack(maxStack);
-    this.code = code;
+
+  public Frame(KMethod method, Thread thread) {
+    this.method = method;
+    this.localVars = new LocalVars(method.getMaxLocals());
+    this.operandStack = new OperandStack(method.getMaxStacks());
     this.thread = thread;
+    this.instructionMap = method.getInstructionMap();
   }
 
   public void debug() {
@@ -23,5 +30,9 @@ public class Frame {
     System.out.println();
     operandStack.debug();
     System.out.println();
+  }
+
+  public Instruction getInst(int pc) {
+    return this.instructionMap.get(pc);
   }
 }

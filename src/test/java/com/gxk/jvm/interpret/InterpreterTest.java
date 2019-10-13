@@ -2,10 +2,7 @@ package com.gxk.jvm.interpret;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
-import com.gxk.jvm.classfile.CodeAttribute;
-import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.Method;
-import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
@@ -22,6 +19,7 @@ import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -35,9 +33,8 @@ public class InterpreterTest {
     Interpreter interpreter = new Interpreter();
 
     Map<Integer, Instruction> instructions = sum10Instructions();
-    CodeFromByte code = new CodeFromByte(instructions);
-    CodeAttribute codeAttr = new CodeAttribute(code, 3, 2);
-    MethodInfo method = new MethodInfo(codeAttr);
+
+    KMethod method = new KMethod(1, "sum10", "V()", 2, 3, instructions);
 
     interpreter.interpret(method);
   }
@@ -67,10 +64,7 @@ public class InterpreterTest {
     ClassFile cf = ClassReader.read(Paths.get("example/Hello.class"));
     Method main = cf.methods.methods[1];
 
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-
-    MethodInfo method = map(attribute);
-
+    KMethod method = map(main);
     new Interpreter().interpret(method);
   }
 
@@ -78,11 +72,7 @@ public class InterpreterTest {
   public void test_with_class() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop1.class"));
     Method main = cf.methods.methods[2];
-
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-
-    MethodInfo method = map(attribute);
-
+    KMethod method = map(main);
     new Interpreter().interpret(method);
   }
 
@@ -90,8 +80,7 @@ public class InterpreterTest {
   public void test_loop2() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop2.class"));
     Method main = cf.getMainMethod();
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(main);
     new Interpreter().interpret(method);
   }
 
@@ -99,8 +88,8 @@ public class InterpreterTest {
   public void test_loop100() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop100.class"));
     Method main = cf.getMainMethod();
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(main);
+    Thread thread = new Thread(1024);
     new Interpreter().interpret(method);
   }
 
@@ -109,11 +98,10 @@ public class InterpreterTest {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
     Method main = cf.methods.methods[2];
 
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(main);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
+    Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 1000);
@@ -126,11 +114,10 @@ public class InterpreterTest {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop4.class"));
     Method main = cf.getMainMethod();
 
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(main);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
+    Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
 
@@ -140,13 +127,12 @@ public class InterpreterTest {
   @Test
   public void test_method_with_add_two_int() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
-    Method main = cf.methods.methods[2];
+    Method cfMethod = cf.methods.methods[2];
 
-    com.gxk.jvm.classfile.attribute.Code attribute = (com.gxk.jvm.classfile.attribute.Code) main.attributes.attributes[0];
-    MethodInfo method = map(attribute);
+    KMethod method = map(cfMethod);
 
     Thread thread = new Thread(1024);
-    Frame frame = new Frame(method.code.maxLocals, method.code.maxStacks, method.code.code, thread);
+    Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
     frame.localVars.setInt(0, 10);
@@ -155,18 +141,8 @@ public class InterpreterTest {
     new Interpreter().loop(thread);
   }
 
-  private MethodInfo map(Code attribute) {
-    int maxStacks = attribute.getMaxStacks();
-    int maxLocals = attribute.getMaxLocals();
-    Instruction[] instructions = attribute.getInstructions();
-
-    Map<Integer, Instruction> map = new HashMap<>();
-    int pc = 0;
-    for (Instruction instruction : instructions) {
-      map.put(pc, instruction);
-      pc += instruction.offset();
-    }
-    CodeAttribute codeAttribute = new CodeAttribute(new CodeFromByte(map), maxLocals, maxStacks);
-    return new MethodInfo(codeAttribute);
+  private KMethod map(Method cfMethod) {
+    Code code = cfMethod.getCode();
+    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions());
   }
 }
