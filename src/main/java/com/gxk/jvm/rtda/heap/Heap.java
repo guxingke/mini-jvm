@@ -22,10 +22,18 @@ public class Heap {
     if (this.methodRefMap.containsKey(descriptor)) {
       throw new IllegalStateException();
     }
-    this.methodRefMap.put(descriptor, method);
+    this.methodRefMap.put(method.getName() + "_" + descriptor, method);
   }
 
-  public KMethod findMethod(String descriptor) {
-    return this.methodRefMap.get(descriptor);
+  public KMethod findMethod(String name, String descriptor) {
+    return this.methodRefMap.get(name + "_" + descriptor);
+  }
+
+  public KClass findClass(String name) {
+    return this.classRefMap.get(name);
+  }
+
+  public void registerClass(String name, KClass clazz) {
+    this.classRefMap.putIfAbsent(name, clazz);
   }
 }

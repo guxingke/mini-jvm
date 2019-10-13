@@ -1,5 +1,8 @@
 package com.gxk.jvm.rtda.heap;
 
-public class KClass {
+import lombok.Data;
 
+@Data
+public class KClass {
+  public final String name;
 }
