@@ -16,10 +16,9 @@ class VirtualMachine {
 
     Entry entry = Classpath.parse(cmd.classpath);
 
-    Heap heap = new Heap();
-    Classloader.loadClass(cmd.clazz, entry, heap);
+    Classloader.loadClass(cmd.clazz, entry);
 
-    KClass clazz = heap.findClass(cmd.clazz);
+    KClass clazz = Heap.findClass(cmd.clazz);
     KMethod method = clazz.getMainMethod();
     if (method == null) {
       throw new IllegalStateException("not found main method");

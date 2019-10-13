@@ -14,11 +14,15 @@ import java.util.stream.Collectors;
 
 public abstract class Classloader {
 
-  public static void loadClass(String name, Entry entry, Heap heap) {
+  public static void loadClass(String name, Entry entry) {
     KClass clazz = doLoadClass(name, entry);
-    heap.registerClass(clazz.name, clazz);
+    doRegister(clazz);
+  }
+
+  public static void doRegister(KClass clazz) {
+    Heap.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.getMethods()) {
-      heap.registerMethod(method.descriptor, method);
+      Heap.registerMethod(method.descriptor, method);
     }
   }
 

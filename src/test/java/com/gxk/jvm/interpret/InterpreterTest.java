@@ -108,6 +108,7 @@ public class InterpreterTest {
   public void test_method_invoke() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/Loop4.class"));
     KClass main = Classloader.doLoadClass("Loop4", cf);
+    Classloader.doRegister(main);
 
     KMethod method = main.getMainMethod();
 

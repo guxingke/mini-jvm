@@ -1,6 +1,8 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.classfile.cp.IntegerCp;
+import com.gxk.jvm.classfile.cp.MethodDef;
+import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.instruction.*;
 import com.gxk.jvm.util.Utils;
@@ -61,7 +63,12 @@ public abstract class InstructionReader {
       case 0xb6:
         return new InvokespecialInst(stream.readUnsignedShort());
       case 0xb8:
-        return new InvokestaticInst(stream.readUnsignedShort());
+        ConstantInfo methodinfo= constantPool.infos[stream.readUnsignedShort() - 1];
+        MethodDef methodDef = (MethodDef) methodinfo;
+        NameAndType nat = (NameAndType) constantPool.infos[methodDef.nameAndTypeIndex - 1];
+
+        String methodName= Utils.getString(constantPool, nat.getNameIndex());
+        return new InvokestaticInst(methodName);
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
