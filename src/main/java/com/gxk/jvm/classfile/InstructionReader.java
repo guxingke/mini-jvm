@@ -20,6 +20,10 @@ public abstract class InstructionReader {
         return new Iconst0Inst();
       case 0x4:
         return new Iconst1Inst();
+      case 0x5:
+        return new Iconst2Inst();
+      case 0x6:
+        return new Iconst3Inst();
       case 0x3b:
         return new Istore0Inst();
       case 0x3c:
@@ -28,8 +32,14 @@ public abstract class InstructionReader {
         return new Istore2Inst();
       case 0x10:
         return new BiPushInst(stream.readByte());
+      case 0x9a:
+        return new IfneInst(stream.readShort());
       case 0xa3:
         return new IfIcmpGtInst(stream.readShort());
+      case 0x9f:
+        return new IfIcmpEqInst(stream.readShort());
+      case 0xa0:
+        return new IfIcmpNeInst(stream.readShort());
       case 0x1a:
         return new Iload0Inst();
       case 0x1b:
@@ -38,6 +48,8 @@ public abstract class InstructionReader {
         return new Iload2Inst();
       case 0x60:
         return new IaddInst();
+      case 0x64:
+        return new ISubInst();
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
       case 0xa7:
