@@ -121,6 +121,40 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_method_invoke_with_args() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
+    KClass clazz = Classloader.doLoadClass("Loop3", cf);
+    Classloader.doRegister(clazz);
+
+    KMethod method = clazz.getMainMethod();
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 1000);
+
+    new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_method_invoke_with_two_int() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
+    KClass clazz = Classloader.doLoadClass("AddTwoInt", cf);
+    Classloader.doRegister(clazz);
+
+    KMethod method = clazz.getMainMethod();
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 1000);
+
+    new Interpreter().loop(thread);
+  }
+
+  @Test
   public void test_method_with_add_two_int() throws Exception {
     ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
     KClass clazz = Classloader.doLoadClass("AddTwoInt", cf);

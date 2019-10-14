@@ -68,7 +68,8 @@ public abstract class InstructionReader {
         NameAndType nat = (NameAndType) constantPool.infos[methodDef.nameAndTypeIndex - 1];
 
         String methodName= Utils.getString(constantPool, nat.getNameIndex());
-        return new InvokestaticInst(methodName);
+        String descriptor = Utils.getString(constantPool, nat.getDescriptionIndex());
+        return new InvokestaticInst(methodName, descriptor);
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
