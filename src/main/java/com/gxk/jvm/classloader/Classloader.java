@@ -8,6 +8,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public abstract class Classloader {
 
   public static KClass doLoadClass(String name, ClassFile classFile) {
     List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(Classloader::map).collect(Collectors.toList());
-    return new KClass(name, methods);
+    return new KClass(name, methods, new ArrayList<>());
   }
 
   public static KMethod map(Method cfMethod) {

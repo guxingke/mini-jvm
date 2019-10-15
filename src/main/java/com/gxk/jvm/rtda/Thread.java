@@ -22,7 +22,11 @@ public class Thread {
   }
 
   public Frame popFrame() {
-    return this.stack.pop();
+    Frame pop = this.stack.pop();
+    if (pop.getOnPop() != null) {
+      pop.getOnPop().run();
+    }
+    return pop;
   }
 
   public Frame currentFrame() {

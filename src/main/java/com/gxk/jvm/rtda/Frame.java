@@ -1,7 +1,7 @@
 package com.gxk.jvm.rtda;
 
-import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.instruction.Instruction;
+import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 
 import java.util.Map;
@@ -15,6 +15,7 @@ public class Frame {
   public final Thread thread;
   public int nextPc;
 
+  private Runnable onPop;
 
   public Frame(KMethod method, Thread thread) {
     this.method = method;
@@ -34,5 +35,13 @@ public class Frame {
 
   public Instruction getInst(int pc) {
     return this.instructionMap.get(pc);
+  }
+
+  public Runnable getOnPop() {
+    return onPop;
+  }
+
+  public void setOnPop(Runnable onPop) {
+    this.onPop = onPop;
   }
 }

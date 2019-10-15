@@ -9,6 +9,9 @@ import java.util.Objects;
 public class KClass {
   public final String name;
   public final List<KMethod> methods;
+  public final List<KField> fields;
+
+  private boolean staticInit = false;
 
   public KMethod getMainMethod() {
     for (KMethod method : methods) {
