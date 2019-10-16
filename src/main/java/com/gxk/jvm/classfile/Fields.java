@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class Fields {
-
+  public final Field[] fields;
 }

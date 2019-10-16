@@ -21,4 +21,17 @@ public class KClass {
     }
     return null;
   }
+
+  public KMethod getMethod(String name) {
+    return methods.stream().filter(it -> Objects.equals(name, it.getName())).findFirst().get();
+  }
+
+  public KField getField(String fieldName, String fieldDescriptor) {
+    for (KField field : fields) {
+      if (Objects.equals(field.name, fieldName) && Objects.equals(field.descriptor, fieldDescriptor)) {
+        return field;
+      }
+    }
+    return null;
+  }
 }

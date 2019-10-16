@@ -1,11 +1,13 @@
 package com.gxk.jvm.classloader;
 
 import com.gxk.jvm.classfile.ClassFile;
+import com.gxk.jvm.classfile.Field;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 
 import java.util.ArrayList;
@@ -34,11 +36,16 @@ public abstract class Classloader {
 
   public static KClass doLoadClass(String name, ClassFile classFile) {
     List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(Classloader::map).collect(Collectors.toList());
-    return new KClass(name, methods, new ArrayList<>());
+    List<KField> fields = Arrays.stream(classFile.fields.fields).map(Classloader::map).collect(Collectors.toList());
+    return new KClass(name, methods, fields);
   }
 
   public static KMethod map(Method cfMethod) {
     Code code = cfMethod.getCode();
     return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions());
+  }
+
+  public static KField map(Field field) {
+    return new KField(field.getName(), field.getDescriptor().descriptor);
   }
 }

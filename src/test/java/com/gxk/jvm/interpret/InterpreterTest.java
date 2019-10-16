@@ -204,4 +204,20 @@ public class InterpreterTest {
     new Interpreter().loop(thread);
   }
 
+  @Test
+  public void test_static_field() throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/TestStatic.class"));
+    KClass clazz = Classloader.doLoadClass("TestStatic", cf);
+    Classloader.doRegister(clazz);
+
+    KMethod method = clazz.getMainMethod();
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 1000);
+
+    new Interpreter().loop(thread);
+  }
 }

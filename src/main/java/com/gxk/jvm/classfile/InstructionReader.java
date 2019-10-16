@@ -1,5 +1,7 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.cp.ClassCp;
+import com.gxk.jvm.classfile.cp.FieldDef;
 import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
@@ -59,7 +61,23 @@ public abstract class InstructionReader {
       case 0xb1:
         return new ReturnInst();
       case 0xb2:
-        return new GetstaticInst(stream.readUnsignedShort());
+        int gsIndex = stream.readUnsignedShort();
+        ConstantInfo gsInfo = constantPool.infos[gsIndex - 1];
+        FieldDef fieldDef = (FieldDef) gsInfo;
+        int gsClassIndex = fieldDef.getClassIndex();
+        int gsClassNameIndex = ((ClassCp) constantPool.infos[gsClassIndex - 1]).getNameIndex();
+        int gsNTIdx = fieldDef.getNameAndTypeIndex();
+        NameAndType gsNT = (NameAndType) constantPool.infos[gsNTIdx - 1];
+        return new GetstaticInst(Utils.getString(constantPool, gsClassNameIndex), Utils.getString(constantPool, gsNT.getNameIndex()), Utils.getString(constantPool, gsNT.getDescriptionIndex()));
+      case 0xb3:
+        int psIndex = stream.readUnsignedShort();
+        ConstantInfo psInfo = constantPool.infos[psIndex - 1];
+        FieldDef psFieldDef = (FieldDef) psInfo;
+        int psClassIndex = psFieldDef.getClassIndex();
+        int psClassNameIndex = ((ClassCp) constantPool.infos[psClassIndex - 1]).getNameIndex();
+        int psNTIdx = psFieldDef.getNameAndTypeIndex();
+        NameAndType psNT = (NameAndType) constantPool.infos[psNTIdx - 1];
+        return new PutStaticInst(Utils.getString(constantPool, psClassNameIndex), Utils.getString(constantPool, psNT.getNameIndex()), Utils.getString(constantPool, psNT.getDescriptionIndex()));
       case 0x12:
         int index = stream.readUnsignedByte();
         ConstantInfo info = constantPool.infos[index - 1];
@@ -75,11 +93,11 @@ public abstract class InstructionReader {
       case 0xb6:
         return new InvokespecialInst(stream.readUnsignedShort());
       case 0xb8:
-        ConstantInfo methodinfo= constantPool.infos[stream.readUnsignedShort() - 1];
+        ConstantInfo methodinfo = constantPool.infos[stream.readUnsignedShort() - 1];
         MethodDef methodDef = (MethodDef) methodinfo;
         NameAndType nat = (NameAndType) constantPool.infos[methodDef.nameAndTypeIndex - 1];
 
-        String methodName= Utils.getString(constantPool, nat.getNameIndex());
+        String methodName = Utils.getString(constantPool, nat.getNameIndex());
         String descriptor = Utils.getString(constantPool, nat.getDescriptionIndex());
         return new InvokestaticInst(methodName, descriptor);
       default:
