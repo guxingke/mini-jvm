@@ -22,8 +22,13 @@ public class KClass {
     return null;
   }
 
-  public KMethod getMethod(String name) {
-    return methods.stream().filter(it -> Objects.equals(name, it.getName())).findFirst().get();
+  public KMethod getMethod(String name, String descriptor) {
+    for (KMethod  method: methods) {
+      if (Objects.equals(method.name, name) && Objects.equals(method.descriptor, descriptor)) {
+        return method;
+      }
+    }
+    return null;
   }
 
   public KField getField(String fieldName, String fieldDescriptor) {
@@ -33,5 +38,9 @@ public class KClass {
       }
     }
     return null;
+  }
+
+  public KObject newObject() {
+    return new KObject(methods, fields, this);
   }
 }

@@ -1,4 +1,6 @@
-# Mini-jvm
+# [Mini-jvm](https://jvm.guxingke.com)
+![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/guxingke/mini-jvm?style=for-the-badge)![GitHub](https://img.shields.io/github/license/guxingke/mini-jvm?style=for-the-badge)![GitHub commit activity](https://img.shields.io/github/commit-activity/w/guxingke/mini-jvm?style=for-the-badge)![GitHub last commit](https://img.shields.io/github/last-commit/guxingke/mini-jvm?style=for-the-badge)
+------
 使用 java 1.8 实现 jvm. [文档](https://jvm.guxingke.com)
 
 ## 动机

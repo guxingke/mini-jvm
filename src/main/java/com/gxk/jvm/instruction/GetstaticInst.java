@@ -32,7 +32,7 @@ public class GetstaticInst implements Instruction {
 
     KClass kClass = Heap.findClass(clazz);
     if (!kClass.isStaticInit()) {
-      KMethod cinit = kClass.getMethod("<clinit>");
+      KMethod cinit = kClass.getMethod("<clinit>", "()V");
       if (cinit == null) {
         throw new IllegalStateException();
       }

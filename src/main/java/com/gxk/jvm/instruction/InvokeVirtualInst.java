@@ -6,13 +6,13 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import java.util.Objects;
 
-public class InvokespecialInst implements Instruction {
+public class InvokeVirtualInst implements Instruction {
 
   public final String clazz;
   public final String methodName;
   public final String methodDescriptor;
 
-  public InvokespecialInst(String clazz, String methodName, String methodDescriptor) {
+  public InvokeVirtualInst(String clazz, String methodName, String methodDescriptor) {
     this.clazz = clazz;
     this.methodName = methodName;
     this.methodDescriptor = methodDescriptor;
@@ -40,7 +40,6 @@ public class InvokespecialInst implements Instruction {
 
     if (Objects.equals(clazz, "java/lang/Object")) {
       // TODO ignore
-      frame.operandStack.popRef();
       return;
     }
 

@@ -219,4 +219,20 @@ public class InterpreterTest {
 
     new Interpreter().loop(thread);
   }
+
+  @Test
+  public void test_object( )throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/TestObject.class"));
+    KClass clazz = Classloader.doLoadClass("TestObject", cf);
+    Classloader.doRegister(clazz);
+
+    KMethod method = clazz.getMainMethod();
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+
+    new Interpreter().loop(thread);
+  }
 }

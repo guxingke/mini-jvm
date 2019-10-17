@@ -32,6 +32,16 @@ public abstract class InstructionReader {
         return new Istore1Inst();
       case 0x3d:
         return new Istore2Inst();
+      case 0x3e:
+        return new Istore3Inst();
+      case 0x4c:
+        return new Astore1Inst();
+      case 0x59:
+        return new DupInst();
+      case 0x2a:
+        return new Aload0Inst();
+      case 0x2b:
+        return new Aload1Inst();
       case 0x10:
         return new BiPushInst(stream.readByte());
       case 0x9a:
@@ -48,6 +58,8 @@ public abstract class InstructionReader {
         return new Iload1Inst();
       case 0x1c:
         return new Iload2Inst();
+      case 0x1d:
+        return new Iload3Inst();
       case 0x60:
         return new IaddInst();
       case 0x64:
@@ -68,7 +80,9 @@ public abstract class InstructionReader {
         int gsClassNameIndex = ((ClassCp) constantPool.infos[gsClassIndex - 1]).getNameIndex();
         int gsNTIdx = fieldDef.getNameAndTypeIndex();
         NameAndType gsNT = (NameAndType) constantPool.infos[gsNTIdx - 1];
-        return new GetstaticInst(Utils.getString(constantPool, gsClassNameIndex), Utils.getString(constantPool, gsNT.getNameIndex()), Utils.getString(constantPool, gsNT.getDescriptionIndex()));
+        return new GetstaticInst(Utils.getString(constantPool, gsClassNameIndex),
+            Utils.getString(constantPool, gsNT.getNameIndex()),
+            Utils.getString(constantPool, gsNT.getDescriptionIndex()));
       case 0xb3:
         int psIndex = stream.readUnsignedShort();
         ConstantInfo psInfo = constantPool.infos[psIndex - 1];
@@ -77,7 +91,20 @@ public abstract class InstructionReader {
         int psClassNameIndex = ((ClassCp) constantPool.infos[psClassIndex - 1]).getNameIndex();
         int psNTIdx = psFieldDef.getNameAndTypeIndex();
         NameAndType psNT = (NameAndType) constantPool.infos[psNTIdx - 1];
-        return new PutStaticInst(Utils.getString(constantPool, psClassNameIndex), Utils.getString(constantPool, psNT.getNameIndex()), Utils.getString(constantPool, psNT.getDescriptionIndex()));
+        return new PutStaticInst(Utils.getString(constantPool, psClassNameIndex),
+            Utils.getString(constantPool, psNT.getNameIndex()),
+            Utils.getString(constantPool, psNT.getDescriptionIndex()));
+      case 0xb4:
+        int gfIndex = stream.readUnsignedShort();
+        ConstantInfo gfInfo = constantPool.infos[gfIndex - 1];
+        FieldDef gfFieldDef = (FieldDef) gfInfo;
+        int gfClassIndex = gfFieldDef.getClassIndex();
+        int gfClassNameIndex = ((ClassCp) constantPool.infos[gfClassIndex - 1]).getNameIndex();
+        int gfNTIdx = gfFieldDef.getNameAndTypeIndex();
+        NameAndType gfNT = (NameAndType) constantPool.infos[gfNTIdx - 1];
+        return new GetFieldInst(Utils.getString(constantPool, gfClassNameIndex),
+            Utils.getString(constantPool, gfNT.getNameIndex()),
+            Utils.getString(constantPool, gfNT.getDescriptionIndex()));
       case 0x12:
         int index = stream.readUnsignedByte();
         ConstantInfo info = constantPool.infos[index - 1];
@@ -90,8 +117,39 @@ public abstract class InstructionReader {
             return new LdcInst(((IntegerCp) info).val, null);
         }
         throw new IllegalStateException();
+      case 0xb5:
+        int pfIndex = stream.readUnsignedShort();
+        ConstantInfo pfInfo = constantPool.infos[pfIndex - 1];
+        FieldDef pfFieldDef = (FieldDef) pfInfo;
+        int pfClassIndex = pfFieldDef.getClassIndex();
+        int pfClassNameIndex = ((ClassCp) constantPool.infos[pfClassIndex - 1]).getNameIndex();
+        int pfNTIdx = pfFieldDef.getNameAndTypeIndex();
+        NameAndType pfNT = (NameAndType) constantPool.infos[pfNTIdx - 1];
+        return new PutFieldInst(Utils.getString(constantPool, pfClassNameIndex),
+            Utils.getString(constantPool, pfNT.getNameIndex()),
+            Utils.getString(constantPool, pfNT.getDescriptionIndex()));
       case 0xb6:
-        return new InvokespecialInst(stream.readUnsignedShort());
+        int ivIndex = stream.readUnsignedShort();
+        ConstantInfo ivInfo = constantPool.infos[ivIndex - 1];
+        MethodDef ivFieldDef = (MethodDef) ivInfo;
+        int ivClassIndex = ivFieldDef.getClassIndex();
+        int ivClassNameIndex = ((ClassCp) constantPool.infos[ivClassIndex - 1]).getNameIndex();
+        int ivNTIdx = ivFieldDef.getNameAndTypeIndex();
+        NameAndType ivNT = (NameAndType) constantPool.infos[ivNTIdx - 1];
+        return new InvokeVirtualInst(Utils.getString(constantPool, ivClassNameIndex),
+            Utils.getString(constantPool, ivNT.getNameIndex()),
+            Utils.getString(constantPool, ivNT.getDescriptionIndex()));
+      case 0xb7:
+        int isIndex = stream.readUnsignedShort();
+        ConstantInfo isInfo = constantPool.infos[isIndex - 1];
+        MethodDef isFieldDef = (MethodDef) isInfo;
+        int isClassIndex = isFieldDef.getClassIndex();
+        int isClassNameIndex = ((ClassCp) constantPool.infos[isClassIndex - 1]).getNameIndex();
+        int isNTIdx = isFieldDef.getNameAndTypeIndex();
+        NameAndType isNT = (NameAndType) constantPool.infos[isNTIdx - 1];
+        return new InvokespecialInst(Utils.getString(constantPool, isClassNameIndex),
+            Utils.getString(constantPool, isNT.getNameIndex()),
+            Utils.getString(constantPool, isNT.getDescriptionIndex()));
       case 0xb8:
         ConstantInfo methodinfo = constantPool.infos[stream.readUnsignedShort() - 1];
         MethodDef methodDef = (MethodDef) methodinfo;
@@ -100,6 +158,10 @@ public abstract class InstructionReader {
         String methodName = Utils.getString(constantPool, nat.getNameIndex());
         String descriptor = Utils.getString(constantPool, nat.getDescriptionIndex());
         return new InvokestaticInst(methodName, descriptor);
+      case 0xbb:
+        ConstantInfo newInfo = constantPool.infos[stream.readUnsignedShort() - 1];
+        String newClassName = Utils.getString(constantPool, ((ClassCp) newInfo).getNameIndex());
+        return new NewInst(newClassName);
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
