@@ -1,7 +1,5 @@
 package com.gxk.jvm;
 
-import com.gxk.jvm.classfile.Method;
-import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classloader.Classloader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;

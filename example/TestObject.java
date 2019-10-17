@@ -1,18 +1,9 @@
 public class TestObject {
 
-  private String name;
   private Integer level;
 
-
-  public TestObject(){}
-
-  public TestObject(String name, Integer level) {
-    this.name = name;
+  public TestObject(Integer level){
     this.level = level;
-  }
-  
-  public String getName() {
-    return this.name;
   }
 
   public Integer getLevel() {

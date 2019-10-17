@@ -129,28 +129,6 @@ public abstract class ClassReader {
       String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();
 
       methods.methods[i] = new Method(accessFlag, name, new Descriptor(descriptor), attributes);
-
-//      System.out.println("attributesCount = " + attributesCount);
-//
-//      for (int i1 = 0; i1 < attributesCount; i1++) {
-//        int attributeNameIndex = is.readUnsignedShort();
-//         ignore, 暂时只是 code
-//        int attributeLength = is.readInt();
-//        int maxStack = is.readUnsignedShort();
-//        int maxLocals = is.readUnsignedShort();
-//        int codeLength = is.readInt();
-//         read code
-//        byte[] bytes = Utils.readNBytes(is, codeLength);
-//
-//        int exceptionTableLength = is.readUnsignedShort();
-//
-//        int codeAttributeCount = is.readUnsignedShort();
-//        for (int i2 = 0; i2 < codeAttributeCount; i2++) {
-//          int codeAttributeNameIndex = is.readUnsignedShort();
-//          int codeAttributeLength = is.readInt();
-//          byte[] bytes1 = Utils.readNBytes(is, codeAttributeLength);
-//        }
-//      }
     }
     return methods;
   }
