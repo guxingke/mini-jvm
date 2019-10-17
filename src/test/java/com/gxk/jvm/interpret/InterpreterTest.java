@@ -216,7 +216,6 @@ public class InterpreterTest {
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
 
     new Interpreter().loop(thread);
   }
