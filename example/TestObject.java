@@ -19,8 +19,8 @@ public class TestObject {
     int level = object.getLevel();
     System.out.println(level);
 
-    object.setLevel(20);
-    int newLevel = object.getLevel();
+    TestObject obj2 = new TestObject(20);
+    int newLevel = obj2.getLevel();
     System.out.println(newLevel);
   }
 }
