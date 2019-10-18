@@ -22,7 +22,7 @@ class VirtualMachine {
       throw new IllegalStateException("not found main method");
     }
 
-    new Interpreter().interpret(method);
+    new Interpreter().interpret(method, cmd.args);
   }
 
 }

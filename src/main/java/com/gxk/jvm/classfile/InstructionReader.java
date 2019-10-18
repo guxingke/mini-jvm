@@ -18,6 +18,8 @@ public abstract class InstructionReader {
     switch (opCode) {
       case 0x0:
         return new NopInst();
+      case 0xbe:
+        return new ArrayLengthInst();
       case 0x3:
         return new Iconst0Inst();
       case 0x4:
@@ -26,6 +28,8 @@ public abstract class InstructionReader {
         return new Iconst2Inst();
       case 0x6:
         return new Iconst3Inst();
+      case 0x32:
+        return new AAloadInst();
       case 0x3b:
         return new Istore0Inst();
       case 0x3c:
@@ -56,6 +60,8 @@ public abstract class InstructionReader {
         return new BiPushInst(stream.readByte());
       case 0x9a:
         return new IfneInst(stream.readShort());
+      case 0xa2:
+        return new IfIcmpGeInst(stream.readShort());
       case 0xa3:
         return new IfIcmpGtInst(stream.readShort());
       case 0x9f:

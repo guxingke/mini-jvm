@@ -235,4 +235,13 @@ public class InterpreterTest {
 
     new Interpreter().loop(thread);
   }
+
+  @Test
+  public void test_array_0( )throws Exception {
+    ClassFile cf = ClassReader.read(Paths.get("example/HelloWorld.class"));
+    KClass clazz = Classloader.doLoadClass("HelloWorld", cf);
+    Classloader.doRegister(clazz);
+    KMethod method = clazz.getMainMethod();
+    new Interpreter().interpret(method, new String[] {"hello", "mini-jvm"});
+  }
 }
