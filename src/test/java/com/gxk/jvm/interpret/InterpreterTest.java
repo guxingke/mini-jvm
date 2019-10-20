@@ -3,6 +3,8 @@ package com.gxk.jvm.interpret;
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
 import com.gxk.jvm.classloader.Classloader;
+import com.gxk.jvm.classpath.Classpath;
+import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
@@ -18,6 +20,7 @@ import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.Test;
@@ -234,6 +237,16 @@ public class InterpreterTest {
     thread.pushFrame(frame);
 
     new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_object2() {
+    Entry entry = Classpath.parse("example");
+    Heap.setDefaultEntry(entry);
+    Classloader.loadClass("TestObject2", entry);
+    KClass clazz = Heap.findClass("TestObject2");
+    KMethod method = clazz.getMainMethod();
+    new Interpreter().interpret(method);
   }
 
   @Test

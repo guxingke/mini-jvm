@@ -1,5 +1,7 @@
 package com.gxk.jvm.instruction;
 
+import com.gxk.jvm.classloader.Classloader;
+import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.*;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
@@ -22,6 +24,17 @@ public class NewInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     KClass kClass = Heap.findClass(clazz);
+
+    if (kClass == null) {
+      Entry entry = Heap.getDefaultEntry();
+      Classloader.loadClass(clazz, entry);
+      kClass = Heap.findClass(clazz);
+    }
+
+    if (kClass == null) {
+      throw new IllegalStateException(ClassNotFoundException.class.getName());
+    }
+
     if (!kClass.isStaticInit()) {
       // init
       KMethod cinit = kClass.getMethod("<clinit>", "()V");
@@ -32,7 +45,8 @@ public class NewInst implements Instruction {
       }
 
       Frame newFrame = new Frame(cinit, frame.thread);
-      newFrame.setOnPop(() -> kClass.setStaticInit(true));
+      KClass finalKClass = kClass;
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(true));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.thread.getPc();
