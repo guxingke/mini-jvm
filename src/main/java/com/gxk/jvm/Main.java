@@ -1,10 +1,8 @@
 package com.gxk.jvm;
 
-import java.io.IOException;
-
 public class Main {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args)  {
 
     if (args.length == 0) {
       System.out.println("usage: java [options] class [args]\n");

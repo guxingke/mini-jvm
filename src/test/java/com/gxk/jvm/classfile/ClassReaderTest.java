@@ -1,5 +1,6 @@
 package com.gxk.jvm.classfile;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.gxk.jvm.instruction.Instruction;
@@ -27,24 +28,15 @@ public class ClassReaderTest {
     ClassFile cf = ClassReader.read(path);
 
     assertNotNull(cf);
-
-//    System.out.println(cf);
   }
 
-  //  int sum = 0;
-//    for (int i = 1; i <= 10; i++) {
-//    sum += i;
-//  }
-//  return;
   @Test
   public void testReadInst_main() throws IOException {
     String main = "033c043d1c100aa3000d1b1c603c840201a7fff3b1";
     byte[] bytes = toBytes(main);
 
     Instruction[] instructions = ClassReader.readByteCode(bytes, null);
-    System.out.println(instructions.length);
-
-    System.out.println(bytesToHex(bytes));
+    assertEquals(14, instructions.length);
   }
 
   public static byte[] toBytes(String str) {
@@ -61,11 +53,4 @@ public class ClassReaderTest {
     return bytes;
   }
 
-  public static String bytesToHex(byte[] a) {
-    StringBuilder sb = new StringBuilder(a.length * 2);
-    for (byte b : a) {
-      sb.append(String.format("%02x", b));
-    }
-    return sb.toString();
-  }
 }

@@ -1,9 +1,8 @@
 package com.gxk.jvm.classfile;
 
-import com.gxk.jvm.classfile.attribute.Code;
 import lombok.Data;
 
-//method_info {
+//field_info {
 //    u2             access_flags;
 //    u2             name_index;
 //    u2             descriptor_index;

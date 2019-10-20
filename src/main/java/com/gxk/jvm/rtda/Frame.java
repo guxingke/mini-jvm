@@ -1,7 +1,6 @@
 package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 
 import java.util.Map;
@@ -11,7 +10,7 @@ public class Frame {
   public final KMethod method;
   public final LocalVars localVars;
   public final OperandStack operandStack;
-  public final Map<Integer, Instruction> instructionMap;
+  private final Map<Integer, Instruction> instructionMap;
   public final Thread thread;
   public int nextPc;
 
