@@ -15,6 +15,12 @@ public class CompositeEntry implements Entry {
 
   @Override
   public ClassFile findClass(String name) {
+    for (Entry entry : entries) {
+      ClassFile cf = entry.findClass(name);
+      if (cf != null) {
+        return cf;
+      }
+    }
     return null;
   }
 }

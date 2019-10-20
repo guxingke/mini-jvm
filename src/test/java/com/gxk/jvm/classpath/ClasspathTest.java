@@ -5,10 +5,31 @@ import static org.junit.Assert.*;
 import com.gxk.jvm.classfile.ClassFile;
 import org.junit.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class ClasspathTest {
 
   @Test
   public void parse() {
+    String home = System.getenv("JAVA_HOME");
+    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
+
+    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
+
+    ClassFile cf = entry.findClass("java/lang/Object");
+    assertNotNull(cf);
+  }
+
+  @Test
+  public void parse_2() {
+    String home = System.getenv("JAVA_HOME");
+    Path jarPath = Paths.get(home, "jre", "lib");
+
+    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath() + "/*");
+
+    ClassFile cf = entry.findClass("java/lang/Object");
+    assertNotNull(cf);
   }
 
   @Test
@@ -32,6 +53,25 @@ public class ClasspathTest {
 
   @Test
   public void doParseJar() {
+    Entry entry = Classpath.doParseJar("example.jar");
+    ClassFile cf = entry.findClass("Hello");
+    assertNotNull(cf);
+  }
+
+  @Test
+  public void doParseJar_package() {
+    Entry entry = Classpath.doParseJar("example.jar");
+    ClassFile cf = entry.findClass("example/Hello");
+    assertNotNull(cf);
+  }
+
+  @Test
+  public void doParseJar_jre_object() {
+    String home = System.getenv("JAVA_HOME");
+    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
+    Entry entry = Classpath.doParseJar(jarPath.toFile().getAbsolutePath());
+    ClassFile cf = entry.findClass("java/lang/Object");
+    assertNotNull(cf);
   }
 
   @Test

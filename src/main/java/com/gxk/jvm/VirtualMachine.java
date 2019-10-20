@@ -11,12 +11,12 @@ import com.gxk.jvm.rtda.heap.KMethod;
 class VirtualMachine {
 
   void run(Args cmd) {
-
     Entry entry = Classpath.parse(cmd.classpath);
 
-    Classloader.loadClass(cmd.clazz, entry);
+    String mainClass = cmd.clazz.replace(".", "/");
+    Classloader.loadClass(mainClass, entry);
 
-    KClass clazz = Heap.findClass(cmd.clazz);
+    KClass clazz = Heap.findClass(mainClass);
     KMethod method = clazz.getMainMethod();
     if (method == null) {
       throw new IllegalStateException("not found main method");

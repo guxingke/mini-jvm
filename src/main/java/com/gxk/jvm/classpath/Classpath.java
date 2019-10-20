@@ -1,5 +1,6 @@
 package com.gxk.jvm.classpath;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,16 +41,16 @@ public abstract class Classpath {
     } else if (isJar(path)) {
       entry = doParseJar(path);
     } else if (isWildcard(path)) {
-      entry = doParseWildcard(path);
+      entry = doParseWildcard(path.substring(0, path.length() - 2));
     }
     return entry;
   }
 
   public static Entry doParseWildcard(String path) {
     List<Entry> entries = Arrays.stream(
-        Objects.requireNonNull(Paths.get(path).toFile().list((dir, name) -> isJar(name))))
-        .map(Classpath::doParseJar).collect(
-            Collectors.toList());
+      Objects.requireNonNull(Paths.get(path).toFile().list((dir, name) -> isJar(name))))
+      .map(it -> Classpath.doParseJar(path + File.separator + it))
+      .collect(Collectors.toList());
     return new CompositeEntry(entries);
   }
 
