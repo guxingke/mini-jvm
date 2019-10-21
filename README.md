@@ -31,5 +31,5 @@
 ## 参考
 - [The Java® Virtual Machine Specification](https://docs.oracle.com/javase/specs/jvms/se8/html/)
 - [JVM 字节码从入门到精通](https://juejin.im/book/5c25811a6fb9a049ec6b23ee/)
-- [自己动手写Java虚拟机] (https://book.douban.com/subject/26802084/)
+- [自己动手写Java虚拟机](https://book.douban.com/subject/26802084/)
 
