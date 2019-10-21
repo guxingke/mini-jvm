@@ -8,10 +8,10 @@ jobs:
       - image: circleci/openjdk:8-jdk-stretch
 
     steps:
-      - run
+      - run:
         command: mvn 
 
-      - run
+      - run:
         command: echo $JAVA_HOME
 
       - checkout
