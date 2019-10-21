@@ -9,10 +9,10 @@ jobs:
 
     steps:
       - run:
-        command: mvn 
+          command: mvn 
 
       - run:
-        command: echo $JAVA_HOME
+          command: echo $JAVA_HOME
 
       - checkout
 
