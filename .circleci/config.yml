@@ -7,6 +7,9 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk-stretch
 
+    environment:
+      JAVA_HOME: /usr/lib/jvm/jdk-1.8.0/
+
     steps:
 
       - checkout
