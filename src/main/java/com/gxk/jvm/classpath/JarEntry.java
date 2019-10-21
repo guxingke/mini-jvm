@@ -28,6 +28,10 @@ public class JarEntry implements Entry {
 
     java.util.jar.JarEntry jarEntry = file.getJarEntry(name + ".class");
 
+    if (jarEntry == null) {
+      return null;
+    }
+
     try (InputStream is = file.getInputStream(jarEntry)) {
       ClassFile cf = ClassReader.read(new DataInputStream(new BufferedInputStream(is)));
       return cf;
