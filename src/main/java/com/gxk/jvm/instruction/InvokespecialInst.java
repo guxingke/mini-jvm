@@ -40,7 +40,7 @@ public class InvokespecialInst implements Instruction {
 
     if (Objects.equals(clazz, "java/lang/Object")) {
       // TODO ignore
-      frame.operandStack.popRef();
+      Object ref = frame.operandStack.popRef();
       return;
     }
 

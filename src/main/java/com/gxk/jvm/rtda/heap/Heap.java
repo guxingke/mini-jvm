@@ -1,6 +1,5 @@
 package com.gxk.jvm.rtda.heap;
 
-import com.gxk.jvm.classpath.Entry;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -13,8 +12,6 @@ import java.util.Map;
 public abstract class Heap {
   private static final Map<String, KMethod> methodRefMap;
   private static final Map<String, KClass> classRefMap;
-
-  private static Entry defaultEntry;
 
   static {
     methodRefMap = new HashMap<>();
@@ -38,13 +35,5 @@ public abstract class Heap {
 
   public static void registerClass(String name, KClass clazz) {
     classRefMap.putIfAbsent(name, clazz);
-  }
-
-  public static void setDefaultEntry(Entry entry) {
-    defaultEntry = entry;
-  }
-
-  public static Entry getDefaultEntry() {
-    return defaultEntry;
   }
 }

@@ -7,11 +7,20 @@ import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 class VirtualMachine {
 
   void run(Args cmd) {
-    Entry entry = Classpath.parse(cmd.classpath);
+    String home = System.getenv("JAVA_HOME");
+    if (home == null) {
+      throw new IllegalStateException("must set env JAVA_HOME");
+    }
+
+    Path jarPath = Paths.get(home, "jre", "lib");
+    String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath();
+    Entry entry = Classpath.parse(classpath);
 
     String mainClass = cmd.clazz.replace(".", "/");
     Classloader.loadClass(mainClass, entry);

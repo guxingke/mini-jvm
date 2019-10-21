@@ -30,13 +30,13 @@ public abstract class Classloader {
 
   public static KClass doLoadClass(String name, Entry entry) {
     ClassFile clazz = entry.findClass(name);
-    return doLoadClass(name, clazz);
+    return doLoadClass(name, clazz, entry);
   }
 
-  public static KClass doLoadClass(String name, ClassFile classFile) {
+  public static KClass doLoadClass(String name, ClassFile classFile, Entry entry) {
     List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(Classloader::map).collect(Collectors.toList());
     List<KField> fields = Arrays.stream(classFile.fields.fields).map(Classloader::map).collect(Collectors.toList());
-    return new KClass(name, methods, fields);
+    return new KClass(name, methods, fields, entry);
   }
 
   public static KMethod map(Method cfMethod) {

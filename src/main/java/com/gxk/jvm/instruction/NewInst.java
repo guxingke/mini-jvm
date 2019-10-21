@@ -26,7 +26,7 @@ public class NewInst implements Instruction {
     KClass kClass = Heap.findClass(clazz);
 
     if (kClass == null) {
-      Entry entry = Heap.getDefaultEntry();
+      Entry entry = frame.method.clazz.getDefaultEntry();
       Classloader.loadClass(clazz, entry);
       kClass = Heap.findClass(clazz);
     }

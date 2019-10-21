@@ -1,7 +1,5 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classfile.ClassFile;
-import com.gxk.jvm.classfile.ClassReader;
 import com.gxk.jvm.classloader.Classloader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
@@ -23,11 +21,9 @@ import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
-import org.junit.Test;
-
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Test;
 
 public class InterpreterTest {
 
@@ -40,6 +36,132 @@ public class InterpreterTest {
     KMethod method = new KMethod(1, "sum10", "V()", 2, 3, instructions);
 
     interpreter.interpret(method);
+  }
+
+  @Test
+  public void test_hello_main() throws Exception {
+    testMain("Hello");
+  }
+
+  @Test
+  public void test_with_class() throws Exception {
+    KClass clazz = loadAndGetClazz("Loop1");
+    KMethod method = clazz.getMethods().get(2);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 10);
+    frame.localVars.setInt(1, 20);
+
+    new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_loop2() throws Exception {
+    testMain("Loop2");
+  }
+
+  @Test
+  public void test_loop100() throws Exception {
+    testMain("Loop100");
+  }
+
+  @Test
+  public void test_method_with_args() throws Exception {
+    KClass clazz = loadAndGetClazz("Loop3");
+    KMethod method = clazz.getMethods().get(2);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 10);
+    frame.localVars.setInt(1, 20);
+
+    new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_method_invoke() throws Exception {
+    testMain("Loop4");
+  }
+
+  @Test
+  public void test_method_invoke_with_args() throws Exception {
+    testMain("Loop3");
+  }
+
+  @Test
+  public void test_method_recur_invoke() throws Exception {
+    testMain("AddN");
+  }
+
+  @Test
+  public void test_method_recur_invoke_with_args() throws Exception {
+    testMain("Fibonacci");
+  }
+
+  @Test
+  public void test_method_invoke_with_two_int() throws Exception {
+    testMain("AddTwoInt");
+  }
+
+  @Test
+  public void test_method_with_add_two_int() throws Exception {
+    KClass clazz = loadAndGetClazz("AddTwoInt");
+    KMethod method = clazz.getMethods().get(2);
+
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(method, thread);
+
+    thread.pushFrame(frame);
+    frame.localVars.setInt(0, 10);
+    frame.localVars.setInt(1, 20);
+
+    new Interpreter().loop(thread);
+  }
+
+  @Test
+  public void test_static_field() throws Exception {
+    testMain("TestStatic");
+  }
+
+  @Test
+  public void test_object() throws Exception {
+    testMain("TestObject");
+  }
+
+  @Test
+  public void test_object2() {
+    testMain("TestObject2");
+  }
+
+  @Test
+  public void test_array_0() throws Exception {
+    KMethod method = loadAndGetMainMethod("HelloWorld");
+    new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
+  }
+
+  private void testMain(String hello) {
+    KMethod method = loadAndGetMainMethod(hello);
+    new Interpreter().interpret(method);
+  }
+
+  private KMethod loadAndGetMainMethod(String clazzName) {
+    Entry entry = Classpath.parse("example");
+    Classloader.loadClass(clazzName, entry);
+    KClass clazz = Heap.findClass(clazzName);
+    KMethod method = clazz.getMainMethod();
+    return method;
+  }
+
+  private KClass loadAndGetClazz(String clazzName) {
+    Entry entry = Classpath.parse("example");
+    Classloader.loadClass(clazzName, entry);
+    KClass clazz = Heap.findClass(clazzName);
+    return clazz;
   }
 
   private Map<Integer, Instruction> sum10Instructions() {
@@ -60,201 +182,5 @@ public class InterpreterTest {
     map.put(20, new Iload1Inst());
     map.put(21, new IreturnInst());
     return map;
-  }
-
-  @Test
-  public void test_hello_main() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Hello.class"));
-    KClass main = Classloader.doLoadClass("Hello", cf);
-    new Interpreter().interpret(main.getMainMethod());
-  }
-
-  @Test
-  public void test_with_class() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop1.class"));
-    KClass clazz = Classloader.doLoadClass("Hello", cf);
-    KMethod method = clazz.getMethods().get(2);
-    new Interpreter().interpret(method);
-  }
-
-  @Test
-  public void test_loop2() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop2.class"));
-    KClass kc = Classloader.doLoadClass("Loop2", cf);
-    KMethod method = kc.getMainMethod();
-    new Interpreter().interpret(method);
-  }
-
-  @Test
-  public void test_loop100() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop100.class"));
-    KClass main = Classloader.doLoadClass("Loop100", cf);
-    new Interpreter().interpret(main.getMainMethod());
-  }
-
-  @Test
-  public void test_method_with_args() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
-    KClass clazz = Classloader.doLoadClass("Loop3", cf);
-    KMethod method = clazz.getMethods().get(2);
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_invoke() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop4.class"));
-    KClass main = Classloader.doLoadClass("Loop4", cf);
-    Classloader.doRegister(main);
-
-    KMethod method = main.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_invoke_with_args() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Loop3.class"));
-    KClass clazz = Classloader.doLoadClass("Loop3", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_recur_invoke() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/AddN.class"));
-    KClass clazz = Classloader.doLoadClass("AddN", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_recur_invoke_with_args() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/Fibonacci.class"));
-    KClass clazz = Classloader.doLoadClass("Fibonacci", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_invoke_with_two_int() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
-    KClass clazz = Classloader.doLoadClass("AddTwoInt", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 1000);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_method_with_add_two_int() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/AddTwoInt.class"));
-    KClass clazz = Classloader.doLoadClass("AddTwoInt", cf);
-    KMethod method = clazz.getMethods().get(2);
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-    frame.localVars.setInt(0, 10);
-    frame.localVars.setInt(1, 20);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_static_field() throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/TestStatic.class"));
-    KClass clazz = Classloader.doLoadClass("TestStatic", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_object( )throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/TestObject.class"));
-    KClass clazz = Classloader.doLoadClass("TestObject", cf);
-    Classloader.doRegister(clazz);
-
-    KMethod method = clazz.getMainMethod();
-
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
-
-    thread.pushFrame(frame);
-
-    new Interpreter().loop(thread);
-  }
-
-  @Test
-  public void test_object2() {
-    Entry entry = Classpath.parse("example");
-    Heap.setDefaultEntry(entry);
-    Classloader.loadClass("TestObject2", entry);
-    KClass clazz = Heap.findClass("TestObject2");
-    KMethod method = clazz.getMainMethod();
-    new Interpreter().interpret(method);
-  }
-
-  @Test
-  public void test_array_0( )throws Exception {
-    ClassFile cf = ClassReader.read(Paths.get("example/HelloWorld.class"));
-    KClass clazz = Classloader.doLoadClass("HelloWorld", cf);
-    Classloader.doRegister(clazz);
-    KMethod method = clazz.getMainMethod();
-    new Interpreter().interpret(method, new String[] {"hello", "mini-jvm"});
   }
 }
