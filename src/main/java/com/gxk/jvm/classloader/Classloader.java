@@ -41,6 +41,9 @@ public abstract class Classloader {
 
   public static KMethod map(Method cfMethod) {
     Code code = cfMethod.getCode();
+    if (code == null) {
+      return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0, null);
+    }
     return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions());
   }
 

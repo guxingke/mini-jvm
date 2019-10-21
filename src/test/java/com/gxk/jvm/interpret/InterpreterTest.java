@@ -21,6 +21,8 @@ import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -150,7 +152,9 @@ public class InterpreterTest {
   }
 
   private KMethod loadAndGetMainMethod(String clazzName) {
-    Entry entry = Classpath.parse("example");
+    String home = System.getenv("JAVA_HOME");
+    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
+    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
     Classloader.loadClass(clazzName, entry);
     KClass clazz = Heap.findClass(clazzName);
     KMethod method = clazz.getMainMethod();
@@ -158,7 +162,9 @@ public class InterpreterTest {
   }
 
   private KClass loadAndGetClazz(String clazzName) {
-    Entry entry = Classpath.parse("example");
+    String home = System.getenv("JAVA_HOME");
+    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
+    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
     Classloader.loadClass(clazzName, entry);
     KClass clazz = Heap.findClass(clazzName);
     return clazz;
