@@ -13,6 +13,6 @@
 
 ## 验证
 ```bash
-mini-jvm -cp example Hello
+./mini-jvm -cp example Hello
 ```
 输出 hello 即正常.
