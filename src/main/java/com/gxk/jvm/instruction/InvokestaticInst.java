@@ -3,16 +3,14 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KMethod;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class InvokestaticInst implements Instruction {
 
+  public final String clazzName;
   public final String methodName;
   public final String descriptor;
-
-  public InvokestaticInst(String methodName, String descriptor) {
-    this.methodName = methodName;
-    this.descriptor = descriptor;
-  }
 
   @Override
   public int offset() {

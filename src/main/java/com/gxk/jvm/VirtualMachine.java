@@ -1,6 +1,6 @@
 package com.gxk.jvm;
 
-import com.gxk.jvm.classloader.Classloader;
+import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
@@ -22,8 +22,10 @@ class VirtualMachine {
     String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath();
     Entry entry = Classpath.parse(classpath);
 
+    ClassLoader classLoader = new ClassLoader("boot", entry);
+
     String mainClass = cmd.clazz.replace(".", "/");
-    Classloader.loadClass(mainClass, entry);
+    classLoader.loadClass(mainClass);
 
     KClass clazz = Heap.findClass(mainClass);
     KMethod method = clazz.getMainMethod();

@@ -1,6 +1,5 @@
 package com.gxk.jvm.instruction;
 
-import com.gxk.jvm.classloader.Classloader;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
@@ -39,21 +38,11 @@ public class InvokespecialInst implements Instruction {
       return;
     }
 
-//    if (Objects.equals(clazz, "java/lang/Object")) {
-//      // TODO ignore
-//      Object ref = frame.operandStack.popRef();
-//      return;
-//    }
-
     KClass kClass = Heap.findClass(clazz);
-    if (kClass == null) {
-      Classloader.loadClass(clazz, frame.method.clazz.getDefaultEntry());
-    }
-
-    kClass = Heap.findClass(clazz);
     if (kClass == null) {
       throw new IllegalStateException();
     }
+
     KMethod method = kClass.getMethod(methodName, methodDescriptor);
     if (method == null) {
       throw new IllegalStateException();

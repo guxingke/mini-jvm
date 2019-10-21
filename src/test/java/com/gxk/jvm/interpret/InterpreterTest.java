@@ -1,6 +1,6 @@
 package com.gxk.jvm.interpret;
 
-import com.gxk.jvm.classloader.Classloader;
+import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.instruction.BiPushInst;
@@ -18,14 +18,14 @@ import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import org.junit.Test;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
 
 public class InterpreterTest {
 
@@ -41,12 +41,12 @@ public class InterpreterTest {
   }
 
   @Test
-  public void test_hello_main() throws Exception {
+  public void test_hello_main() {
     testMain("Hello");
   }
 
   @Test
-  public void test_with_class() throws Exception {
+  public void test_with_class() {
     KClass clazz = loadAndGetClazz("Loop1");
     KMethod method = clazz.getMethods().get(2);
 
@@ -61,17 +61,17 @@ public class InterpreterTest {
   }
 
   @Test
-  public void test_loop2() throws Exception {
+  public void test_loop2() {
     testMain("Loop2");
   }
 
   @Test
-  public void test_loop100() throws Exception {
+  public void test_loop100() {
     testMain("Loop100");
   }
 
   @Test
-  public void test_method_with_args() throws Exception {
+  public void test_method_with_args() {
     KClass clazz = loadAndGetClazz("Loop3");
     KMethod method = clazz.getMethods().get(2);
 
@@ -86,32 +86,32 @@ public class InterpreterTest {
   }
 
   @Test
-  public void test_method_invoke() throws Exception {
+  public void test_method_invoke() {
     testMain("Loop4");
   }
 
   @Test
-  public void test_method_invoke_with_args() throws Exception {
+  public void test_method_invoke_with_args() {
     testMain("Loop3");
   }
 
   @Test
-  public void test_method_recur_invoke() throws Exception {
+  public void test_method_recur_invoke() {
     testMain("AddN");
   }
 
   @Test
-  public void test_method_recur_invoke_with_args() throws Exception {
+  public void test_method_recur_invoke_with_args() {
     testMain("Fibonacci");
   }
 
   @Test
-  public void test_method_invoke_with_two_int() throws Exception {
+  public void test_method_invoke_with_two_int() {
     testMain("AddTwoInt");
   }
 
   @Test
-  public void test_method_with_add_two_int() throws Exception {
+  public void test_method_with_add_two_int() {
     KClass clazz = loadAndGetClazz("AddTwoInt");
     KMethod method = clazz.getMethods().get(2);
 
@@ -126,12 +126,12 @@ public class InterpreterTest {
   }
 
   @Test
-  public void test_static_field() throws Exception {
+  public void test_static_field() {
     testMain("TestStatic");
   }
 
   @Test
-  public void test_object() throws Exception {
+  public void test_object() {
     testMain("TestObject");
   }
 
@@ -141,7 +141,7 @@ public class InterpreterTest {
   }
 
   @Test
-  public void test_array_0() throws Exception {
+  public void test_array_0() {
     KMethod method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
   }
@@ -155,8 +155,9 @@ public class InterpreterTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
-    Classloader.loadClass(clazzName, entry);
-    KClass clazz = Heap.findClass(clazzName);
+
+    ClassLoader loader = new ClassLoader("boot", entry);
+    KClass clazz = loader.loadClass(clazzName);
     KMethod method = clazz.getMainMethod();
     return method;
   }
@@ -165,8 +166,8 @@ public class InterpreterTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
-    Classloader.loadClass(clazzName, entry);
-    KClass clazz = Heap.findClass(clazzName);
+    ClassLoader loader = new ClassLoader("boot", entry);
+    KClass clazz = loader.loadClass(clazzName);
     return clazz;
   }
 

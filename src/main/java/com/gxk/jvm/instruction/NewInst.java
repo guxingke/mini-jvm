@@ -1,7 +1,6 @@
 package com.gxk.jvm.instruction;
 
-import com.gxk.jvm.classloader.Classloader;
-import com.gxk.jvm.classpath.Entry;
+import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.*;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
@@ -26,9 +25,8 @@ public class NewInst implements Instruction {
     KClass kClass = Heap.findClass(clazz);
 
     if (kClass == null) {
-      Entry entry = frame.method.clazz.getDefaultEntry();
-      Classloader.loadClass(clazz, entry);
-      kClass = Heap.findClass(clazz);
+      ClassLoader loader = frame.method.clazz.classLoader;
+      kClass = loader.loadClass(clazz);
     }
 
     if (kClass == null) {
