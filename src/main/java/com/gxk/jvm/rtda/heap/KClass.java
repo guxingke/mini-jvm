@@ -42,7 +42,10 @@ public class KClass {
         return method;
       }
     }
-    return null;
+    if (this.superClass == null) {
+      return null;
+    }
+    return this.superClass.getMethod(name, descriptor);
   }
 
   public KField getField(String fieldName, String fieldDescriptor) {

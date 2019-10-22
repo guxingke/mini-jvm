@@ -13,7 +13,6 @@ import com.gxk.jvm.util.Utils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ClassLoader {
@@ -50,7 +49,7 @@ public class ClassLoader {
     KClass kClass = doLoadClass(name, clazz);
 
     // superclass
-    if (Objects.equals(kClass.superClassName, "java/lang/Object")) {
+    if (kClass.superClassName != null) {
       kClass.setSuperClass(this.loadClass(kClass.superClassName));
     }
 

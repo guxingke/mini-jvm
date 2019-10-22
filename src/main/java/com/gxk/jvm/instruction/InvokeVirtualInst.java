@@ -4,6 +4,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.KObject;
 import java.util.Objects;
 
 public class InvokeVirtualInst implements Instruction {
@@ -43,19 +44,15 @@ public class InvokeVirtualInst implements Instruction {
       return;
     }
 
-    KClass kClass = Heap.findClass(clazz);
-    if (kClass == null) {
-      throw new IllegalStateException();
-    }
-
-    KMethod method = kClass.getMethod(methodName, methodDescriptor);
+    Object thisObj = frame.operandStack.popRef();
+    KObject obj = (KObject) thisObj;
+    KMethod method = obj.getMethod(methodName, methodDescriptor);
     if (method == null) {
       throw new IllegalStateException();
     }
 
     Frame newFrame = new Frame(method, frame.thread);
     if (method.getDescriptor().startsWith("()")) {
-      Object thisObj = frame.operandStack.popRef();
       newFrame.localVars.setRef(0, thisObj);
       frame.thread.pushFrame(newFrame);
       return;
@@ -63,8 +60,6 @@ public class InvokeVirtualInst implements Instruction {
 
     if (method.getDescriptor().startsWith("(I)")) {
       Integer arg2 = frame.operandStack.popInt();
-      Object thisObj = frame.operandStack.popRef();
-
       newFrame.localVars.setRef(0, thisObj);
       newFrame.localVars.setInt(1, arg2);
       frame.thread.pushFrame(newFrame);

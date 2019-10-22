@@ -141,6 +141,11 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_object3() {
+    testMain("TestObject3");
+  }
+
+  @Test
   public void test_array_0() {
     KMethod method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});

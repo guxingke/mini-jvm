@@ -31,6 +31,22 @@ public class KObject {
     return this.superObject.getField(fieldName, fieldDescriptor);
   }
 
+  public KMethod getMethod(String name, String descriptor) {
+    // this object
+    for (KMethod method : methods) {
+      if (Objects.equals(method.name, name) && Objects.equals(method.descriptor, descriptor)) {
+        return method;
+      }
+    }
+
+    if (this.superObject == null) {
+      return null;
+    }
+
+    // super object
+    return this.superObject.getMethod(name, descriptor);
+  }
+
   public void setSuperObject(KObject superObject) {
     this.superObject = superObject;
   }
