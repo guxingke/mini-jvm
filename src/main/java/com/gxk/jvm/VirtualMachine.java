@@ -19,7 +19,7 @@ class VirtualMachine {
     }
 
     Path jarPath = Paths.get(home, "jre", "lib");
-    String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath();
+    String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath() + "/*";
     Entry entry = Classpath.parse(classpath);
 
     ClassLoader classLoader = new ClassLoader("boot", entry);
