@@ -29,4 +29,8 @@ public class KMethod {
         ", clazz=" + clazz.getName() +
         '}';
   }
+
+  public boolean isNative() {
+    return (this.accessFlags & 0x0100) != 0;
+  }
 }

@@ -1,10 +1,10 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
+
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class InvokeVirtualInst implements Instruction {
@@ -39,16 +39,23 @@ public class InvokeVirtualInst implements Instruction {
       return;
     }
 
-    if (Objects.equals(clazz, "java/lang/Object")) {
-      // TODO ignore
-      return;
-    }
-
     Object thisObj = frame.operandStack.popRef();
     KObject obj = (KObject) thisObj;
     KMethod method = obj.getMethod(methodName, methodDescriptor);
+
     if (method == null) {
       throw new IllegalStateException();
+    }
+
+    if (method.isNative()) {
+      try {
+        Method m1 = obj.getClass().getMethod(methodName);
+        Object ret = m1.invoke(obj);
+        frame.operandStack.pushInt(((int) ret));
+        return;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     Frame newFrame = new Frame(method, frame.thread);
