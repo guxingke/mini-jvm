@@ -59,6 +59,10 @@ public class KClass {
   }
 
   public KObject newObject() {
-    return new KObject(methods, fields, this);
+    KObject object = new KObject(methods, fields, this);
+    if (this.superClass != null) {
+      object.setSuperObject(this.superClass.newObject());
+    }
+    return object;
   }
 }
