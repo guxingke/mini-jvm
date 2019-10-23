@@ -10,30 +10,30 @@ import java.util.Map;
  */
 @Data
 public abstract class Heap {
-  private static final Map<String, KMethod> methodRefMap;
-  private static final Map<String, KClass> classRefMap;
+  private static final Map<String, NativeMethod> NATIVE_METHOD_MAP;
+  private static final Map<String, KClass> STRING_K_CLASS_MAP;
 
   static {
-    methodRefMap = new HashMap<>();
-    classRefMap = new HashMap<>();
+    NATIVE_METHOD_MAP = new HashMap<>();
+    STRING_K_CLASS_MAP = new HashMap<>();
   }
 
-  public static void registerMethod(String descriptor, KMethod method) {
-    if (methodRefMap.containsKey(descriptor)) {
+  public static void registerMethod(String key, NativeMethod method) {
+    if (NATIVE_METHOD_MAP.containsKey(key)) {
       throw new IllegalStateException();
     }
-    methodRefMap.put(method.getName() + "_" + descriptor, method);
+    NATIVE_METHOD_MAP.put(key, method);
   }
 
-  public static KMethod findMethod(String name, String descriptor) {
-    return methodRefMap.get(name + "_" + descriptor);
+  public static NativeMethod findMethod(String key) {
+    return NATIVE_METHOD_MAP.get(key);
   }
 
   public static KClass findClass(String name) {
-    return classRefMap.get(name);
+    return STRING_K_CLASS_MAP.get(name);
   }
 
   public static void registerClass(String name, KClass clazz) {
-    classRefMap.putIfAbsent(name, clazz);
+    STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }
 }

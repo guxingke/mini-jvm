@@ -10,9 +10,9 @@ import com.gxk.jvm.rtda.heap.KMethod;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-class VirtualMachine {
+public class VirtualMachine {
 
-  void run(Args cmd) {
+  public void run(Args cmd) {
     String home = System.getenv("JAVA_HOME");
     if (home == null) {
       throw new IllegalStateException("must set env JAVA_HOME");
@@ -21,6 +21,9 @@ class VirtualMachine {
     Path jarPath = Paths.get(home, "jre", "lib");
     String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath() + "/*";
     Entry entry = Classpath.parse(classpath);
+
+    // load library
+    loadLibrary();
 
     ClassLoader classLoader = new ClassLoader("boot", entry);
 
@@ -34,6 +37,10 @@ class VirtualMachine {
     }
 
     new Interpreter().interpret(method, cmd.args);
+  }
+
+  public static void loadLibrary() {
+    Heap.registerMethod("java/lang/Object_hashCode_()I", (obj, args) -> obj.hashCode());
   }
 
 }

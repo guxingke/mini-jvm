@@ -4,7 +4,6 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class InvokeVirtualInst implements Instruction {
@@ -49,9 +48,8 @@ public class InvokeVirtualInst implements Instruction {
 
     if (method.isNative()) {
       try {
-        Method m1 = obj.getClass().getMethod(methodName);
-        Object ret = m1.invoke(obj);
-        frame.operandStack.pushInt(((int) ret));
+        frame.operandStack.pushRef(obj);
+        method.invokeNative(frame);
         return;
       } catch (Exception e) {
         e.printStackTrace();

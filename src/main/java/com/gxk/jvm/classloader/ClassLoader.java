@@ -9,6 +9,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
 import java.util.Arrays;
@@ -40,7 +41,13 @@ public class ClassLoader {
   public void doRegister(KClass clazz) {
     Heap.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.getMethods()) {
-      Heap.registerMethod(method.descriptor, method);
+      if (method.isNative()) {
+        NativeMethod nm = Heap
+            .findMethod(String.format("%s_%s_%s", method.clazz.name, method.name, method.descriptor));
+        if (nm == null) {
+          System.err.println("not found native method " + method);
+        }
+      }
     }
   }
 

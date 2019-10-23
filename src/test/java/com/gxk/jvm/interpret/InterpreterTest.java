@@ -1,5 +1,6 @@
 package com.gxk.jvm.interpret;
 
+import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
@@ -162,12 +163,7 @@ public class InterpreterTest {
   }
 
   private KMethod loadAndGetMainMethod(String clazzName) {
-    String home = System.getenv("JAVA_HOME");
-    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
-
-    ClassLoader loader = new ClassLoader("boot", entry);
-    KClass clazz = loader.loadClass(clazzName);
+    KClass clazz = this.loadAndGetClazz(clazzName);
     KMethod method = clazz.getMainMethod();
     return method;
   }
@@ -176,6 +172,7 @@ public class InterpreterTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
+    VirtualMachine.loadLibrary();
     ClassLoader loader = new ClassLoader("boot", entry);
     KClass clazz = loader.loadClass(clazzName);
     return clazz;

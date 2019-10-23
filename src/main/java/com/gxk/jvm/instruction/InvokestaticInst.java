@@ -2,6 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import lombok.AllArgsConstructor;
 
@@ -19,7 +20,8 @@ public class InvokestaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KMethod method = Heap.findMethod(methodName, descriptor);
+    KClass kClass = Heap.findClass(clazzName);
+    KMethod method = kClass.getMethod(methodName, descriptor);
     Frame newFrame = new Frame(method, frame.thread);
 
     if (descriptor.startsWith("(I)")) {
