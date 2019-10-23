@@ -36,4 +36,10 @@ public abstract class Heap {
   public static void registerClass(String name, KClass clazz) {
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }
+
+  // for test
+  public static void clear() {
+    NATIVE_METHOD_MAP.clear();
+    STRING_K_CLASS_MAP.clear();
+  }
 }

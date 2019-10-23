@@ -19,8 +19,10 @@ import com.gxk.jvm.instruction.Istore1Inst;
 import com.gxk.jvm.instruction.Istore2Inst;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import org.junit.After;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -29,6 +31,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InterpreterTest {
+
+  @After
+  public void tearDown() {
+    Heap.clear();
+  }
 
   @Test
   public void interpret() {
