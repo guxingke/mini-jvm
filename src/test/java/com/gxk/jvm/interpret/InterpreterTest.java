@@ -166,7 +166,7 @@ public class InterpreterTest {
 
   private void testMain(String hello) {
     KMethod method = loadAndGetMainMethod(hello);
-    new Interpreter().interpret(method);
+    new Interpreter().interpret(method, new String[0]);
   }
 
   private KMethod loadAndGetMainMethod(String clazzName) {

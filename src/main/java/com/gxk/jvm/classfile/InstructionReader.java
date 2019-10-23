@@ -141,7 +141,7 @@ public abstract class InstructionReader {
           case CONSTANT_Class:
             return new LdcInst(null, info);
         }
-        throw new IllegalStateException();
+        throw new IllegalStateException(info.toString());
       case 0xb2:
         int gsIndex = stream.readUnsignedShort();
         return new GetstaticInst(

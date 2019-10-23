@@ -15,12 +15,11 @@ public class Interpreter {
   public void interpret(KMethod method, String[] args) {
     Thread thread = new Thread(1024);
     Frame frame = new Frame(method, thread);
-    if (args == null) {
-      args = new String[0];
+    if (args != null) {
+      KArray array = new KArray(null, args);
+      frame.localVars.setRef(0, array);
     }
 
-    KArray array = new KArray(null, args);
-    frame.localVars.setRef(0, array);
 
     thread.pushFrame(frame);
 

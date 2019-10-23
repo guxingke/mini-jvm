@@ -1,16 +1,7 @@
 package com.gxk.jvm.classfile;
 
-import com.gxk.jvm.classfile.attribute.Code;
-import com.gxk.jvm.classfile.attribute.LineNumberTable;
-import com.gxk.jvm.classfile.attribute.SourceFile;
-import com.gxk.jvm.classfile.cp.ClassCp;
-import com.gxk.jvm.classfile.cp.FieldDef;
-import com.gxk.jvm.classfile.cp.IntegerCp;
-import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
-import com.gxk.jvm.classfile.cp.MethodDef;
-import com.gxk.jvm.classfile.cp.NameAndType;
-import com.gxk.jvm.classfile.cp.StringCp;
-import com.gxk.jvm.classfile.cp.Utf8;
+import com.gxk.jvm.classfile.attribute.*;
+import com.gxk.jvm.classfile.cp.*;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 
@@ -24,13 +15,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gxk.jvm.classfile.ConstantPoolInfoEnum.CONSTANT_Double;
+import static com.gxk.jvm.classfile.ConstantPoolInfoEnum.CONSTANT_Long;
+
 public abstract class ClassReader {
 
   public static ClassFile read(Path path) throws IOException {
 
     try (InputStream is = Files.newInputStream(path);
-        BufferedInputStream bis = new BufferedInputStream(is);
-        DataInputStream stream = new DataInputStream(bis)) {
+         BufferedInputStream bis = new BufferedInputStream(is);
+         DataInputStream stream = new DataInputStream(bis)) {
       return read(stream);
     }
   }
@@ -60,22 +54,22 @@ public abstract class ClassReader {
     Attributes attributes = readAttributes(is, attributeCount, constantPool);
 
     return new ClassFile(
-        magic,
-        minorVersion,
-        majorVersion,
-        cpSize,
-        constantPool,
-        accessFlag,
-        thisClass,
-        superClass,
-        interfaceCount,
-        interfaces,
-        fieldCount,
-        fields,
-        methodCount,
-        methods,
-        attributeCount,
-        attributes
+      magic,
+      minorVersion,
+      majorVersion,
+      cpSize,
+      constantPool,
+      accessFlag,
+      thisClass,
+      superClass,
+      interfaceCount,
+      interfaces,
+      fieldCount,
+      fields,
+      methodCount,
+      methods,
+      attributeCount,
+      attributes
     );
   }
 
@@ -112,7 +106,7 @@ public abstract class ClassReader {
 //    attribute_info attributes[attributes_count];
 //    }
   private static Methods readMethods(DataInputStream is, int methodCount,
-      ConstantPool constantPool) throws IOException {
+                                     ConstantPool constantPool) throws IOException {
     Methods methods = new Methods(methodCount);
 
     for (int i = 0; i < methodCount; i++) {
@@ -140,7 +134,7 @@ public abstract class ClassReader {
 
       ConstantPoolInfoEnum infoEnum = ConstantPoolInfoEnum.of(tag);
       if (infoEnum == null) {
-        throw new IllegalStateException();
+        throw new IllegalStateException("cccccc");
       }
 
       ConstantInfo info = null;
@@ -178,16 +172,23 @@ public abstract class ClassReader {
           info = new IntegerCp(infoEnum, is.readInt());
           break;
         case CONSTANT_Long:
+          info = new LongCp(infoEnum, is.readLong());
           break;
         case CONSTANT_Float:
+          info = new FloatCp(infoEnum, is.readFloat());
           break;
         case CONSTANT_Double:
+          info = new DoubleCp(infoEnum, is.readDouble());
           break;
       }
       if (info == null) {
         throw new UnsupportedOperationException("un parse cp " + infoEnum);
       }
+
       constantPool.infos[i] = info;
+      if (info.infoEnum.equals(CONSTANT_Long) || info.infoEnum.equals(CONSTANT_Double)) {
+        i++;
+      }
     }
     return constantPool;
   }
@@ -206,7 +207,7 @@ public abstract class ClassReader {
 //    u1 info[attribute_length];
 //  }
   private static Attributes readAttributes(DataInputStream is, int attributeCount, ConstantPool constantPool)
-      throws IOException {
+    throws IOException {
     Attributes attributes = new Attributes(attributeCount);
 
     for (int i = 0; i < attributeCount; i++) {

@@ -39,8 +39,6 @@ public class InvokestaticInst implements Instruction {
 
     if (method.isNative()) {
       method.invokeStaticNative(frame);
-    }
-    if (method.name.equalsIgnoreCase("registerNatives")) {
       return;
     }
 

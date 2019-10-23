@@ -25,14 +25,8 @@ public class PutStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (clazz.equals("java/lang/System")) {
-      return;
-    }
-
     KClass kClass = Heap.findClass(clazz);
     KField field = kClass.getField(fieldName, fieldDescriptor);
-
-    Integer tmp = frame.operandStack.popInt();
-    field.val = new Slot(tmp);
+    field.val = frame.operandStack.popSlot();
   }
 }

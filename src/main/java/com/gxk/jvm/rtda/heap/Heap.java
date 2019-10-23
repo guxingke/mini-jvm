@@ -20,7 +20,7 @@ public abstract class Heap {
 
   public static void registerMethod(String key, NativeMethod method) {
     if (NATIVE_METHOD_MAP.containsKey(key)) {
-      throw new IllegalStateException();
+      throw new IllegalStateException("xxxxxxxxxxxxx");
     }
     NATIVE_METHOD_MAP.put(key, method);
   }

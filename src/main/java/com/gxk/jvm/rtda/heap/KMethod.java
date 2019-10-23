@@ -56,7 +56,9 @@ public class KMethod {
   }
 
   public void invokeStaticNative(Frame frame) {
-    NativeMethod method = Heap.findMethod(String.format("%s_%s_%s", clazz.name, name, descriptor));
+    String key = String.format("%s_%s_%s", clazz.name, name, descriptor);
+    System.out.println(key);
+    NativeMethod method = Heap.findMethod(key);
     Object ret = method.invoke();
     switch (descriptor) {
       case "()V":

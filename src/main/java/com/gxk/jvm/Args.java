@@ -25,6 +25,7 @@ class Args {
     if (MINUS_CP.equals(cliArgs[0])) {
       args.classpath = cliArgs[1];
       args.clazz = cliArgs[2];
+      args.args = new String[0];
 
       if (cliArgs.length > ARGS_LIMIT) {
         String[] programArgs = new String[cliArgs.length - 3];
@@ -36,6 +37,7 @@ class Args {
     }
 
     args.clazz = cliArgs[0];
+    args.args = new String[0];
     if (cliArgs.length > 1) {
       String[] programArgs = new String[cliArgs.length - 1];
       System.arraycopy(cliArgs, 1, programArgs, 0, programArgs.length);

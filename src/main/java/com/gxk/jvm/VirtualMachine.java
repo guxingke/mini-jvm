@@ -27,6 +27,12 @@ public class VirtualMachine {
 
     ClassLoader classLoader = new ClassLoader("boot", entry);
 
+    // init vm
+    KClass vmClass = classLoader.loadClass("sun/misc/VM");
+    KMethod vmClinit = vmClass.getMethod("<clinit>", "()V");
+    new Interpreter().interpret(vmClinit);
+
+    // exec main
     String mainClass = cmd.clazz.replace(".", "/");
     classLoader.loadClass(mainClass);
 

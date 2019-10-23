@@ -1,7 +1,6 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -26,9 +25,9 @@ public class GetstaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (clazz.equals("java/lang/System")) {
-      return;
-    }
+//    if (clazz.equals("java/lang/System")) {
+////      return;
+////    }
 
     KClass kClass = Heap.findClass(clazz);
     if (kClass == null) {
@@ -55,11 +54,6 @@ public class GetstaticInst implements Instruction {
       throw new IllegalStateException();
     }
 
-    Slot val = field.val;
-    if (val.ref != null) {
-      frame.operandStack.pushRef(val.ref);
-    } else {
-      frame.operandStack.pushInt(val.num);
-    }
+    frame.operandStack.pushSlot(field.val);
   }
 }

@@ -23,7 +23,8 @@ public class JarEntry implements Entry {
     try {
       file = new JarFile(path.toFile());
     } catch (IOException e) {
-      throw new IllegalStateException();
+      e.printStackTrace();
+      throw new IllegalStateException("xxasdfad");
     }
 
     java.util.jar.JarEntry jarEntry = file.getJarEntry(name + ".class");
@@ -36,7 +37,8 @@ public class JarEntry implements Entry {
       ClassFile cf = ClassReader.read(new DataInputStream(new BufferedInputStream(is)));
       return cf;
     } catch (Exception e) {
-      throw new IllegalStateException();
+      e.printStackTrace();
+      throw new IllegalStateException("xxxxxaaaa");
     }
   }
 }
