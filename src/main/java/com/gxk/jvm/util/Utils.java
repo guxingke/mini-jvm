@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.ConstantInfo;
 import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
+import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
@@ -26,7 +27,7 @@ public abstract class Utils {
 
   public static String getClassName(ConstantPool cp, int classIndex) {
     int nameIndex = ((ClassCp) cp.infos[classIndex - 1]).getNameIndex();
-    return ((Utf8) cp.infos[nameIndex- 1]).getString();
+    return ((Utf8) cp.infos[nameIndex - 1]).getString();
   }
 
   public static String getClassNameByMethodDefIdx(ConstantPool constantPool, int mdIdx) {
@@ -35,19 +36,31 @@ public abstract class Utils {
     return getClassName(constantPool, methodDef.classIndex);
   }
 
-  public static String getNameByNameAndTypeIdx(ConstantPool cp , int natIdx) {
-    int nameIndex = ((NameAndType) cp.infos[natIdx- 1]).getNameIndex();
+  public static String getClassNameByIMethodDefIdx(ConstantPool constantPool, int mdIdx) {
+    ConstantInfo methodInfo = constantPool.infos[mdIdx - 1];
+    InterfaceMethodDef methodDef = (InterfaceMethodDef) methodInfo;
+    return getClassName(constantPool, methodDef.classIndex);
+  }
+
+  public static String getNameByNameAndTypeIdx(ConstantPool cp, int natIdx) {
+    int nameIndex = ((NameAndType) cp.infos[natIdx - 1]).getNameIndex();
     return getString(cp, nameIndex);
   }
 
-  public static String getTypeByNameAndTypeIdx(ConstantPool cp , int natIdx) {
+  public static String getTypeByNameAndTypeIdx(ConstantPool cp, int natIdx) {
     int idx = ((NameAndType) cp.infos[natIdx - 1]).descriptionIndex;
     return getString(cp, idx);
   }
 
-  public static String getMethodNameByMethodDefIdx(ConstantPool cp , int mdIdx) {
+  public static String getMethodNameByMethodDefIdx(ConstantPool cp, int mdIdx) {
     ConstantInfo methodInfo = cp.infos[mdIdx - 1];
     MethodDef methodDef = (MethodDef) methodInfo;
+    return getNameByNameAndTypeIdx(cp, methodDef.nameAndTypeIndex);
+  }
+
+  public static String getMethodNameByIMethodDefIdx(ConstantPool cp, int mdIdx) {
+    ConstantInfo methodInfo = cp.infos[mdIdx - 1];
+    InterfaceMethodDef methodDef = (InterfaceMethodDef) methodInfo;
     return getNameByNameAndTypeIdx(cp, methodDef.nameAndTypeIndex);
   }
 
@@ -57,8 +70,14 @@ public abstract class Utils {
     return getTypeByNameAndTypeIdx(cp, methodDef.nameAndTypeIndex);
   }
 
+  public static String getMethodTypeByIMethodDefIdx(ConstantPool cp, int mdIdx) {
+    ConstantInfo methodInfo = cp.infos[mdIdx - 1];
+    InterfaceMethodDef methodDef = (InterfaceMethodDef) methodInfo;
+    return getTypeByNameAndTypeIdx(cp, methodDef.nameAndTypeIndex);
+  }
+
   public static String getClassNameByFieldDefIdx(ConstantPool cp, int gsIndex) {
-    ConstantInfo methodInfo = cp.infos[gsIndex- 1];
+    ConstantInfo methodInfo = cp.infos[gsIndex - 1];
     FieldDef def = (FieldDef) methodInfo;
     return getClassName(cp, def.classIndex);
   }

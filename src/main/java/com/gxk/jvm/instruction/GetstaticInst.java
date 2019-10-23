@@ -31,6 +31,10 @@ public class GetstaticInst implements Instruction {
     }
 
     KClass kClass = Heap.findClass(clazz);
+    if (kClass == null) {
+      kClass = frame.method.clazz.getClassLoader().loadClass(clazz);
+    }
+
     if (!kClass.isStaticInit()) {
       KMethod cinit = kClass.getMethod("<clinit>", "()V");
       if (cinit == null) {
@@ -38,7 +42,8 @@ public class GetstaticInst implements Instruction {
       }
 
       Frame newFrame = new Frame(cinit, frame.thread);
-      newFrame.setOnPop(() -> kClass.setStaticInit(true));
+      KClass finalKClass = kClass;
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(true));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.thread.getPc();

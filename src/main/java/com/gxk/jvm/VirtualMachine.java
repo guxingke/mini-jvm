@@ -40,7 +40,24 @@ public class VirtualMachine {
   }
 
   public static void loadLibrary() {
-    Heap.registerMethod("java/lang/Object_hashCode_()I", (obj, args) -> obj.hashCode());
+    // object
+    Heap.registerMethod("java/lang/Object_hashCode_()I", (args) -> args[0].hashCode());
+    Heap.registerMethod("java/lang/Object_registerNatives_()V", (args) -> null);
+    Heap.registerMethod("java/lang/Object_clone_()Ljava/lang/Object;", (args) -> args[0]);
+    Heap.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (args) -> args[0].getClass());
+    Heap.registerMethod("java/lang/Object_wait_(J)V", (args) -> null);
+    Heap.registerMethod("java/lang/Object_notify_()V", (args) -> null);
+    Heap.registerMethod("java/lang/Object_notifyAll_()V", (args) -> null);
+    // system
+    Heap.registerMethod("java/lang/System_registerNatives_()V", (args) -> null);
+    Heap.registerMethod("java/lang/System_setIn0_(Ljava/io/InputStream;)V", (args) -> null);
+    Heap.registerMethod("java/lang/System_setOut0_(Ljava/io/PrintStream;)V", (args) -> null);
+    Heap.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (args) -> null);
+    Heap.registerMethod("java/lang/System_currentTimeMillis_()J", (args) -> System.currentTimeMillis());
+    Heap.registerMethod("java/lang/System_nanoTime_()J", (args) -> System.nanoTime());
+    Heap.registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (args) -> null);
+    Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (args) -> args[0].hashCode());
+    Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (args) -> null);
+    Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (args) -> args[0]);
   }
-
 }

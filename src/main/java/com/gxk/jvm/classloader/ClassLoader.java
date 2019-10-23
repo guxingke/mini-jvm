@@ -42,10 +42,10 @@ public class ClassLoader {
     Heap.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.getMethods()) {
       if (method.isNative()) {
-        NativeMethod nm = Heap
-            .findMethod(String.format("%s_%s_%s", method.clazz.name, method.name, method.descriptor));
+        String key = String.format("%s_%s_%s", method.clazz.name, method.name, method.descriptor);
+        NativeMethod nm = Heap.findMethod(key);
         if (nm == null) {
-          System.err.println("not found native method " + method);
+          System.err.println("not found native method " + key + " " + method);
         }
       }
     }
