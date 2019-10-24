@@ -1,6 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 
@@ -26,6 +27,9 @@ public class GetFieldInst implements Instruction {
   public void execute(Frame frame) {
     KObject obj = ((KObject) frame.operandStack.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
-    frame.operandStack.pushSlot(field.val);
+    Slot[] val = field.val;
+    for (Slot slot : val) {
+      frame.operandStack.pushSlot(slot);
+    }
   }
 }

@@ -20,7 +20,6 @@ public class Interpreter {
       frame.localVars.setRef(0, array);
     }
 
-
     thread.pushFrame(frame);
 
     loop(thread);
@@ -35,10 +34,13 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-      inst.fetchOperands();
-      inst.execute(frame);
-
-//      debug(inst, frame);
+//      debugBefore(inst, frame);
+      try {
+        inst.execute(frame);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+//      debugAfter(inst, frame);
 
       if (thread.empty()) {
         break;
@@ -46,9 +48,25 @@ public class Interpreter {
     }
   }
 
-  void debug(Instruction inst, Frame frame) {
+  void debugBefore(Instruction inst, Frame frame) {
     System.out.println("==============================");
     System.out.println(inst.getClass());
     frame.debug();
+  }
+
+  void debugAfter(Instruction inst, Frame frame) {
+    System.out.println(inst.getClass());
+    frame.debug();
+    System.out.println("==============================");
+  }
+
+  public void initVm(KMethod vmClinit) {
+    Thread thread = new Thread(1024);
+    Frame frame = new Frame(vmClinit, thread);
+    vmClinit.clazz.setStaticInit(1);
+    thread.pushFrame(frame);
+    frame.setOnPop(() -> vmClinit.clazz.setStaticInit(2));
+
+    loop(thread);
   }
 }

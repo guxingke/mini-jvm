@@ -94,7 +94,11 @@ public abstract class ClassReader {
     return new Fields(fields);
   }
 
-  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) {
+  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) throws IOException {
+    for (int i = 0; i < interfaceCount; i++) {
+      int xx = is.readUnsignedShort();
+      System.out.println("interface: xxx" + xx);
+    }
     return null;
   }
 
@@ -215,7 +219,10 @@ public abstract class ClassReader {
       int attributeNameIndex = is.readUnsignedShort();
       String attributeName = Utils.getString(constantPool, attributeNameIndex);
 
-      AttributeEnum attributeEnum = AttributeEnum.valueOf(attributeName);
+      AttributeEnum attributeEnum = AttributeEnum.of(attributeName);
+      if (attributeEnum == null) {
+        throw new IllegalStateException(attributeName);
+      }
       int attributeLength = is.readInt();
       switch (attributeEnum) {
         case SourceFile:
@@ -265,11 +272,11 @@ public abstract class ClassReader {
 
   public static Instruction[] readByteCode(byte[] byteCode, ConstantPool constantPool) throws IOException {
     List<Instruction> instructions = new ArrayList<>();
-    try (DataInputStream stream = new DataInputStream(new ByteArrayInputStream(byteCode))) {
-      while (stream.available() > 0) {
-        int opCode = stream.readUnsignedByte();
+    try (MyByteArrayInputStream in = new MyByteArrayInputStream(byteCode);) {
+      while (in.available() > 0) {
+        int opCode = in.read();
         try {
-          Instruction inst = InstructionReader.read(opCode, stream, constantPool);
+          Instruction inst = InstructionReader.read(opCode, in, constantPool);
           if (inst == null) {
             System.out.println(Integer.toHexString(opCode));
             break;

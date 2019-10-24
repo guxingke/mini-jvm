@@ -25,19 +25,6 @@ public class InvokespecialInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (Objects.equals(clazz, "java/io/PrintStream")) {
-      // 暂时只执行 sout
-      Object obj = frame.operandStack.peekRef();
-      if (obj != null) {
-        System.out.println(frame.operandStack.popRef());
-        return;
-      }
-
-      // TODO 暂时只支持 int
-      System.out.println(frame.operandStack.popInt());
-      return;
-    }
-
     KClass kClass = Heap.findClass(clazz);
     if (kClass == null) {
       throw new IllegalStateException();

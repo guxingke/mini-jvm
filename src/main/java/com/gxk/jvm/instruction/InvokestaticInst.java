@@ -4,6 +4,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.NativeMethod;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -20,6 +21,17 @@ public class InvokestaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
+    String key = String.format("%s_%s_%s", clazzName, methodName, descriptor);
+    NativeMethod nm = Heap.findMethod(key);
+    if (nm != null) {
+      try {
+        nm.invoke(frame);
+        return;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
     KClass kClass = Heap.findClass(clazzName);
     KMethod method = kClass.getMethod(methodName, descriptor);
     Frame newFrame = new Frame(method, frame.thread);
@@ -35,11 +47,6 @@ public class InvokestaticInst implements Instruction {
 
       newFrame.localVars.setInt(0, o1);
       newFrame.localVars.setInt(1, o2);
-    }
-
-    if (method.isNative()) {
-      method.invokeStaticNative(frame);
-      return;
     }
 
     frame.thread.pushFrame(newFrame);

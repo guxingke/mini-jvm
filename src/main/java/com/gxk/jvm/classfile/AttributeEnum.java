@@ -30,4 +30,12 @@ public enum AttributeEnum {
   LocalVariableTypeTable,
   Deprecated,
   ;
+
+  public static AttributeEnum of(String value) {
+    try {
+      return AttributeEnum.valueOf(value);
+    } catch (Exception e) {
+      return null;
+    }
+  }
 }

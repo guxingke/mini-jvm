@@ -36,38 +36,37 @@ public class KMethod {
     return (this.accessFlags & 0x0100) != 0;
   }
 
-  public void invokeNative(Frame frame) {
-    KObject thisObj = (KObject) frame.operandStack.popRef();
-    NativeMethod method = Heap.findMethod(String.format("%s_%s_%s", clazz.name, name, descriptor));
-    Object ret = method.invoke(thisObj);
-    switch (descriptor) {
-      case "()V":
-        return;
-      case "()I":
-        frame.operandStack.pushInt(((int) ret));
-        return;
-      case "()J":
-        frame.operandStack.pushLong(((long) ret));
-        return;
-      default:
-        frame.operandStack.pushRef(ret);
-        return;
-    }
-  }
-
-  public void invokeStaticNative(Frame frame) {
-    String key = String.format("%s_%s_%s", clazz.name, name, descriptor);
-    System.out.println(key);
-    NativeMethod method = Heap.findMethod(key);
-    Object ret = method.invoke();
-    switch (descriptor) {
-      case "()V":
-        return;
-      case "()I":
-        frame.operandStack.pushInt(((int) ret));
-        return;
-      default:
-        frame.operandStack.pushRef(ret);
-    }
-  }
+//  public void invokeNative(Frame frame) {
+//    NativeMethod method = Heap.findMethod(String.format("%s_%s_%s", clazz.name, name, descriptor));
+//    Object ret = method.invoke(frame);
+//    switch (descriptor) {
+//      case "()V":
+//        return;
+//      case "()I":
+//        frame.operandStack.pushInt(((int) ret));
+//        return;
+//      case "()J":
+//        frame.operandStack.pushLong(((long) ret));
+//        return;
+//      default:
+//        frame.operandStack.pushRef(ret);
+//        return;
+//    }
+//  }
+//
+//  public void invokeStaticNative(Frame frame) {
+//    String key = String.format("%s_%s_%s", clazz.name, name, descriptor);
+//    System.out.println(key);
+//    NativeMethod method = Heap.findMethod(key);
+//    Object ret = method.invoke(frame);
+//    switch (descriptor) {
+//      case "()V":
+//        return;
+//      case "()I":
+//        frame.operandStack.pushInt(((int) ret));
+//        return;
+//      default:
+//        frame.operandStack.pushRef(ret);
+//    }
+//  }
 }

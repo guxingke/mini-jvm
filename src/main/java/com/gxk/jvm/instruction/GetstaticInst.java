@@ -1,6 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -41,9 +42,10 @@ public class GetstaticInst implements Instruction {
       }
 
       Frame newFrame = new Frame(cinit, frame.thread);
-      KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(true));
+      kClass.setStaticInit(1);
       frame.thread.pushFrame(newFrame);
+      KClass finalKClass = kClass;
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
 
       frame.nextPc = frame.thread.getPc();
       return;
@@ -54,6 +56,8 @@ public class GetstaticInst implements Instruction {
       throw new IllegalStateException();
     }
 
-    frame.operandStack.pushSlot(field.val);
+    for (Slot slot : field.val) {
+      frame.operandStack.pushSlot(slot);
+    }
   }
 }

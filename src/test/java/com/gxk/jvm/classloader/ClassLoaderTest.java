@@ -45,8 +45,20 @@ public class ClassLoaderTest {
   }
 
   @Test
+  public void test_properties() {
+    KClass kClass = classLoader.loadClass("java/util/Properties");
+    assertNotNull(kClass);
+  }
+
+  @Test
   public void test_system() {
     KClass kClass = classLoader.loadClass("java/lang/System");
+    assertNotNull(kClass);
+  }
+
+  @Test
+  public void test_printstream() {
+    KClass kClass = classLoader.loadClass("java/io/PrintStream");
     assertNotNull(kClass);
   }
 }

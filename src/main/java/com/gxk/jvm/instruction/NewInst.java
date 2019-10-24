@@ -37,14 +37,15 @@ public class NewInst implements Instruction {
       // init
       KMethod cinit = kClass.getMethod("<clinit>", "()V");
       if (cinit == null) {
-        kClass.setStaticInit(true);
+        kClass.setStaticInit(2);
         frame.nextPc = frame.thread.getPc();
         return;
       }
 
       Frame newFrame = new Frame(cinit, frame.thread);
+      kClass.setStaticInit(1);
       KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(true));
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.thread.getPc();

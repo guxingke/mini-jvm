@@ -52,6 +52,9 @@ public class OperandStack {
   }
 
   public void pushRef(Object val) {
+    if (this.slots.maxSize == this.slots.size()) {
+      int i = 1 / 1;
+    }
     this.slots.push(new Slot(val));
   }
 

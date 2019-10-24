@@ -55,6 +55,8 @@ public class InterpreterTest {
 
   @Test
   public void test_with_class() {
+    VirtualMachine.loadLibrary();
+
     KClass clazz = loadAndGetClazz("Loop1");
     KMethod method = clazz.getMethods().get(2);
 
@@ -80,6 +82,8 @@ public class InterpreterTest {
 
   @Test
   public void test_method_with_args() {
+    VirtualMachine.loadLibrary();
+
     KClass clazz = loadAndGetClazz("Loop3");
     KMethod method = clazz.getMethods().get(2);
 
@@ -120,6 +124,8 @@ public class InterpreterTest {
 
   @Test
   public void test_method_with_add_two_int() {
+    VirtualMachine.loadLibrary();
+
     KClass clazz = loadAndGetClazz("AddTwoInt");
     KMethod method = clazz.getMethods().get(2);
 
@@ -160,13 +166,24 @@ public class InterpreterTest {
 
   @Test
   public void test_array_0() {
-    KMethod method = loadAndGetMainMethod("HelloWorld");
-    new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
+    testMain("HelloWorld", "hello", "mini-jvm");
   }
 
-  private void testMain(String hello) {
+  private void testMain(String hello, String... args) {
+    VirtualMachine.loadLibrary();
+    // init vm
+    KMethod vmClinit = loadVmAndGetClinitMethod();
+    new Interpreter().initVm(vmClinit);
+
+    // exec main
     KMethod method = loadAndGetMainMethod(hello);
-    new Interpreter().interpret(method, new String[0]);
+    new Interpreter().interpret(method, args);
+  }
+
+  private KMethod loadVmAndGetClinitMethod() {
+    KClass clazz = this.loadAndGetClazz("sun/misc/VM");
+    KMethod method = clazz.getMethod("<clinit>", "()V");
+    return method;
   }
 
   private KMethod loadAndGetMainMethod(String clazzName) {
@@ -179,7 +196,6 @@ public class InterpreterTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
-    VirtualMachine.loadLibrary();
     ClassLoader loader = new ClassLoader("boot", entry);
     KClass clazz = loader.loadClass(clazzName);
     return clazz;
