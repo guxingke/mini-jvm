@@ -2,10 +2,13 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 
-public class Iconst0Inst implements Instruction {
+/**
+ * @see IConst0Inst
+ */
+public class IConst1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushInt(0);
+    frame.operandStack.pushInt(1);
   }
 }

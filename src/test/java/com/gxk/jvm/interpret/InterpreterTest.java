@@ -8,8 +8,8 @@ import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.Goto1Inst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.IaddInst;
-import com.gxk.jvm.instruction.Iconst0Inst;
-import com.gxk.jvm.instruction.Iconst1Inst;
+import com.gxk.jvm.instruction.IConst0Inst;
+import com.gxk.jvm.instruction.IConst1Inst;
 import com.gxk.jvm.instruction.IfIcmpGtInst;
 import com.gxk.jvm.instruction.Iload1Inst;
 import com.gxk.jvm.instruction.Iload2Inst;
@@ -187,9 +187,9 @@ public class InterpreterTest {
 
   private Map<Integer, Instruction> sum10Instructions() {
     Map<Integer, Instruction> map = new HashMap<>();
-    map.put(0, new Iconst0Inst());
+    map.put(0, new IConst0Inst());
     map.put(1, new Istore1Inst());
-    map.put(2, new Iconst1Inst());
+    map.put(2, new IConst1Inst());
     map.put(3, new Istore2Inst());
     map.put(4, new Iload2Inst());
     map.put(5, new BiPushInst((byte) 10));

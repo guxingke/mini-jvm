@@ -16,18 +16,18 @@ public abstract class InstructionReader {
         return new NopInst();
       case 0x1:
         return new AconstNullInst();
-      case 0x9:
-        return new Lconst0Inst();
-      case 0xa:
-        return new Lconst1Inst();
-      case 0x16:
-        return new LloadInst(stream.readUnsignedByte());
-      case 0xbe:
-        return new ArrayLengthInst();
       case 0x3:
-        return new Iconst0Inst();
+        return new IConst0Inst();
+      case 0x9:
+      return new Lconst0Inst();
+      case 0xa:
+      return new Lconst1Inst();
+      case 0x16:
+      return new LloadInst(stream.readUnsignedByte());
+      case 0xbe:
+      return new ArrayLengthInst();
       case 0x4:
-        return new Iconst1Inst();
+        return new IConst1Inst();
       case 0x5:
         return new Iconst2Inst();
       case 0x6:
