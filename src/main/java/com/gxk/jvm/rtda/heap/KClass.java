@@ -15,7 +15,7 @@ public class KClass {
   public final ClassLoader classLoader;
 
   private KClass superClass;
-  private boolean staticInit = false;
+  private int staticInit = 0;
 
   public KClass(String name, String superClassName, List<KMethod> methods, List<KField> fields, ClassLoader classLoader) {
     this.name = name;
@@ -67,5 +67,13 @@ public class KClass {
       object.setSuperObject(this.superClass.newObject());
     }
     return object;
+  }
+
+  public boolean isStaticInit() {
+    return this.staticInit > 0;
+  }
+
+  public void setStaticInit(int level) {
+    this.staticInit = level;
   }
 }

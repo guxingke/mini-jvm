@@ -38,8 +38,9 @@ public class GetstaticInst implements Instruction {
       }
 
       Frame newFrame = new Frame(cinit, frame.thread);
+      kClass.setStaticInit(1);
       KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(true));
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.thread.getPc();
