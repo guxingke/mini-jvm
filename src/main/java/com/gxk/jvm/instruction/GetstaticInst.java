@@ -26,10 +26,6 @@ public class GetstaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (clazz.equals("java/lang/System")) {
-      return;
-    }
-
     KClass kClass = Heap.findClass(clazz);
     if (kClass == null) {
       kClass = frame.method.clazz.getClassLoader().loadClass(clazz);

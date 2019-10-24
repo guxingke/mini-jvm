@@ -25,10 +25,6 @@ public class GetFieldInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (clazz.equals("java/lang/System")) {
-      return;
-    }
-
     KObject obj = ((KObject) frame.operandStack.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
     Slot val = field.val;

@@ -25,10 +25,6 @@ public class PutFieldInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (clazz.equals("java/lang/System")) {
-      return;
-    }
-
     KClass kClass = Heap.findClass(clazz);
     KField field = kClass.getField(fieldName, fieldDescriptor);
 
