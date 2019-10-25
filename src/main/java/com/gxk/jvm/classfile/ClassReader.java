@@ -4,9 +4,12 @@ import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classfile.attribute.LineNumberTable;
 import com.gxk.jvm.classfile.attribute.SourceFile;
 import com.gxk.jvm.classfile.cp.ClassCp;
+import com.gxk.jvm.classfile.cp.DoubleCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
+import com.gxk.jvm.classfile.cp.FloatCp;
 import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
+import com.gxk.jvm.classfile.cp.LongCp;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.StringCp;
@@ -178,10 +181,13 @@ public abstract class ClassReader {
           info = new IntegerCp(infoEnum, is.readInt());
           break;
         case CONSTANT_Long:
+          info = new LongCp(infoEnum, is.readLong());
           break;
         case CONSTANT_Float:
+          info = new FloatCp(infoEnum, is.readFloat());
           break;
         case CONSTANT_Double:
+          info = new DoubleCp(infoEnum, is.readDouble());
           break;
       }
       if (info == null) {
