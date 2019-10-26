@@ -4,6 +4,8 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.NativeMethod;
+
 import java.util.Objects;
 
 public class InvokeSpecialInst implements Instruction {
@@ -25,16 +27,9 @@ public class InvokeSpecialInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (Objects.equals(clazz, "java/io/PrintStream")) {
-      // 暂时只执行 sout
-      Object obj = frame.operandStack.peekRef();
-      if (obj != null) {
-        System.out.println(frame.operandStack.popRef());
-        return;
-      }
-
-      // TODO 暂时只支持 int
-      System.out.println(frame.operandStack.popInt());
+    NativeMethod nm = Heap.findMethod(String.format("%s_%s_%s", clazz, methodName, methodDescriptor));
+    if (nm != null) {
+      nm.invoke(frame);
       return;
     }
 

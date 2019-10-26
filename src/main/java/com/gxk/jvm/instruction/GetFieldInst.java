@@ -27,11 +27,10 @@ public class GetFieldInst implements Instruction {
   public void execute(Frame frame) {
     KObject obj = ((KObject) frame.operandStack.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
-    Slot val = field.val;
-    if (val.ref != null) {
-      frame.operandStack.pushRef(val.ref);
-    } else {
-      frame.operandStack.pushInt(val.num);
+    Slot[] val = field.val;
+
+    for (Slot slot : val) {
+      frame.operandStack.pushSlot(slot);
     }
   }
 }

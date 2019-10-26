@@ -28,7 +28,10 @@ public class PutStaticInst implements Instruction {
     KClass kClass = Heap.findClass(clazz);
     KField field = kClass.getField(fieldName, fieldDescriptor);
 
-    Integer tmp = frame.operandStack.popInt();
-    field.val = new Slot(tmp);
+    if (fieldDescriptor.equalsIgnoreCase("J")) {
+      field.val = new Slot[]{frame.operandStack.popSlot(), frame.operandStack.popSlot()};
+      return;
+    }
+    field.val = new Slot[]{frame.operandStack.popSlot()};
   }
 }

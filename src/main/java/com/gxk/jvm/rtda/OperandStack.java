@@ -59,6 +59,14 @@ public class OperandStack {
     return this.slots.pop().ref;
   }
 
+  public Slot popSlot() {
+    return this.slots.pop();
+  }
+
+  public void pushSlot(Slot val) {
+    this.slots.push(val);
+  }
+
   // FIXME for test
   public Object peekRef() {
     return this.slots.peek().ref;

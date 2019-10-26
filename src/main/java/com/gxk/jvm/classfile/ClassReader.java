@@ -241,7 +241,7 @@ public abstract class ClassReader {
           if (exceptionTableLength > 0) {
             // 定长 8
             byte[] bytes1 = Utils.readNBytes(is, exceptionTableLength * 8);
-            System.out.println("byteArrayToHex(bytes) = " + byteArrayToHex(bytes1));
+//            System.out.println("byteArrayToHex(bytes) = " + byteArrayToHex(bytes1));
           }
 
           int codeAttributeCount = is.readUnsignedShort();
@@ -270,7 +270,7 @@ public abstract class ClassReader {
 
   public static Instruction[] readByteCode(byte[] byteCode, ConstantPool constantPool) throws IOException {
     List<Instruction> instructions = new ArrayList<>();
-    try (DataInputStream stream = new DataInputStream(new ByteArrayInputStream(byteCode))) {
+    try (MyDataInputStream stream = new MyDataInputStream(new MyByteArrayInputStream(byteCode))) {
       while (stream.available() > 0) {
         int opCode = stream.readUnsignedByte();
         try {

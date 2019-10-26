@@ -1,18 +1,18 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.classfile.cp.DoubleCp;
+import com.gxk.jvm.classfile.cp.FloatCp;
 import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.LongCp;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.instruction.*;
 import com.gxk.jvm.util.Utils;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
 public abstract class InstructionReader {
 
-  public static Instruction read(int opCode, DataInputStream stream, ConstantPool constantPool) throws IOException {
+  public static Instruction read(int opCode, MyDataInputStream stream, ConstantPool constantPool) throws IOException {
     switch (opCode) {
       case 0x0:
         return new NopInst();
@@ -56,11 +56,13 @@ public abstract class InstructionReader {
           case CONSTANT_String:
             int stringIndex = ((StringCp) info).stringIndex;
             String string = Utils.getString(constantPool, stringIndex);
-            return new LdcInst(null, string);
+            return new LdcInst("Ljava/lang/String", string);
           case CONSTANT_Integer:
-            return new LdcInst(((IntegerCp) info).val, null);
+            return new LdcInst("I", ((IntegerCp) info).val);
+          case CONSTANT_Float:
+            return new LdcInst("F", ((FloatCp) info).val);
           case CONSTANT_Class:
-            return new LdcInst(null, info);
+            return new LdcInst("L", info);
         }
         throw new IllegalStateException();
         // TODO
@@ -128,8 +130,12 @@ public abstract class InstructionReader {
 
       case 0x32:
         return new AALoadInst();
+      case 0x34:
+        return new CAloadInst();
       case 0x36:
         return new IStoreNInst(stream.readUnsignedByte());
+      case 0x3a:
+        return new AStoreInst(stream.readUnsignedByte());
       case 0x3b:
         return new IStore0Inst();
       case 0x3c:
@@ -141,6 +147,10 @@ public abstract class InstructionReader {
 
       case 0x40:
         return new LStore1Inst();
+      case 0x41:
+        return new LStore2Inst();
+      case 0x42:
+        return new LStore3Inst();
       case 0x45:
         return new FStore2Inst();
       case 0x4b:
@@ -152,36 +162,16 @@ public abstract class InstructionReader {
       case 0x4e:
         return new AStore3Inst();
 
+      case 0x53:
+      return new AAStoreInst();
+      case 0x55:
+      return new CAStoreInst();
       case 0x57:
-        return new PopInst();
+      return new PopInst();
       case 0x59:
-        return new DupInst();
-
-      case 0x9a:
-        return new IfNeInst(stream.readShort());
-      case 0x9b:
-        return new IfLtInst(stream.readShort());
-      case 0x9c:
-        return new IfGeInst(stream.readShort());
-
-      case 0xa2:
-        return new IfICmpGeInst(stream.readShort());
-      case 0xa3:
-        return new IfICmpGtInst(stream.readShort());
-      case 0xa4:
-        return new IfICmpLeInst(stream.readShort());
-
-      case 0x9e:
-        return new IfLeInst(stream.readShort());
-      case 0x9f:
-        return new IfICmpEqInst(stream.readShort());
-
-      case 0xa0:
-        return new IfICmpNeInst(stream.readShort());
-
-
-      case 0x94:
-        return new LCmpInst();
+      return new DupInst();
+      case 0x5a:
+        return new DupX1Inst();
 
       case 0x60:
         return new IAddInst();
@@ -189,10 +179,66 @@ public abstract class InstructionReader {
         return new LAddInst();
       case 0x64:
         return new ISubInst();
+      case 0x68:
+        return new IMulInst();
+      case 0x6a:
+        return new FMulInst();
+      case 0x6c:
+        return new IDivInst();
+      case 0x6e:
+        return new FDivInst();
+
+      case 0x70:
+        return new IRemInst();
+      case 0x75:
+        return new LNegInst();
+      case 0x76:
+        return new FNegInst();
+      case 0x78:
+        return new IShlInst();
+      case 0x7a:
+        return new IShrInst();
+      case 0x7e:
+        return new IAndInst();
 
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
+      case 0x86:
+        return new I2fInst();
+      case 0x8b:
+        return new F2iInst();
 
+      case 0x92:
+        return new I2cInst();
+      case 0x9a:
+        return new IfNeInst(stream.readShort());
+      case 0x9b:
+        return new IfLtInst(stream.readShort());
+      case 0x9c:
+        return new IfGeInst(stream.readShort());
+      case 0x9e:
+        return new IfLeInst(stream.readShort());
+      case 0x9f:
+        return new IfICmpEqInst(stream.readShort());
+
+      case 0xa0:
+        return new IfICmpNeInst(stream.readShort());
+      case 0xa1:
+        return new IfICmpLtInst(stream.readShort());
+      case 0xa2:
+        return new IfICmpGeInst(stream.readShort());
+      case 0xa3:
+        return new IfICmpGtInst(stream.readShort());
+      case 0xa4:
+        return new IfICmpLeInst(stream.readShort());
+      case 0xad:
+        return new LReturnInst();
+
+
+      case 0x94:
+        return new LCmpInst();
+      case 0x96:
+        return new FCmpGInst();
       case 0x99:
         return new IfEqInst(stream.readShort());
 
@@ -200,6 +246,31 @@ public abstract class InstructionReader {
         return new IfACmpNeInst(stream.readShort());
       case 0xa7:
         return new Goto1Inst(stream.readShort());
+      case 0xaa:
+        int offset = 24;
+
+        int padding = stream.readPadding();
+        offset += padding;
+
+        int tsDefault = stream.readInt();
+        int tsLow = stream.readInt();
+        int tsHigh = stream.readInt();
+        int tsOffsetByteLength = (tsHigh - tsLow + 1) * 4;
+
+        byte[] tsBytes = Utils.readNBytes(stream, tsOffsetByteLength);
+        offset += tsBytes.length;
+
+        return new TableSwitchInst(offset, tsDefault, tsLow, tsHigh, tsBytes);
+      case 0xab:
+        int lsOffset = 16;
+        int lsPadding = stream.readPadding();
+        lsOffset += lsPadding;
+        int lsDef = stream.readInt();
+        int lsPairsCnt = stream.readInt();
+        int lsPairsLen = lsPairsCnt * 2 * 4;
+        byte[] lsBytes = Utils.readNBytes(stream, lsPairsLen);
+        lsOffset += lsBytes.length;
+        return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsBytes);
       case 0xac:
         return new IReturnInst();
 
@@ -269,6 +340,10 @@ public abstract class InstructionReader {
 
       case 0xbb:
         return new NewInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
+      case 0xbc:
+        return new NewArrayInst(stream.readUnsignedByte());
+      case 0xbd:
+        return new ANewArrayInst(stream.readUnsignedShort());
       case 0xbe:
         return new ArrayLengthInst();
       case 0xbf:
@@ -276,6 +351,9 @@ public abstract class InstructionReader {
 
       case 0xc0:
         return new CheckcastInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
+      case 0xc1:
+        int ioClazzIdx = stream.readUnsignedShort();
+        return new InstanceofInst(Utils.getClassName(constantPool, ioClazzIdx));
       case 0xc2:
         return new MonitorEnterInst();
       case 0xc3:
