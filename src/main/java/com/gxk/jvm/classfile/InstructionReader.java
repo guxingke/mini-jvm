@@ -65,7 +65,22 @@ public abstract class InstructionReader {
             return new LdcInst("L", info);
         }
         throw new IllegalStateException();
-        // TODO
+      case 0x13:
+        int lwIndex = stream.readUnsignedShort();
+        ConstantInfo lwInfo = constantPool.infos[lwIndex - 1];
+        switch (lwInfo.infoEnum) {
+          case CONSTANT_String:
+            int stringIndex = ((StringCp) lwInfo).stringIndex;
+            String string = Utils.getString(constantPool, stringIndex);
+            return new LdcWInst("Ljava/lang/String", string);
+          case CONSTANT_Integer:
+            return new LdcWInst("I", ((IntegerCp) lwInfo).val);
+          case CONSTANT_Float:
+            return new LdcWInst("F", ((FloatCp) lwInfo).val);
+          case CONSTANT_Class:
+            return new LdcWInst("L", lwInfo);
+        }
+        throw new IllegalStateException();
       case 0x14:
         int ldwIdx = stream.readUnsignedShort();
         ConstantInfo ldwInfo = constantPool.infos[ldwIdx - 1];
@@ -127,13 +142,29 @@ public abstract class InstructionReader {
         return new ALoad2Inst();
       case 0x2d:
         return new ALoad3Inst();
+      case 0x2e:
+        return new IALoadInst();
+      case 0x2f:
+        return new LALoadInst();
 
+      case 0x30:
+        return new FALoadInst();
+      case 0x31:
+        return new DALoadInst();
       case 0x32:
         return new AALoadInst();
       case 0x34:
         return new CAloadInst();
+      case 0x35:
+        return new SALoadInst();
       case 0x36:
         return new IStoreNInst(stream.readUnsignedByte());
+      case 0x37:
+        return new LStoreNInst(stream.readUnsignedByte());
+      case 0x38:
+        return new FStoreNInst(stream.readUnsignedByte());
+      case 0x39:
+        return new DStoreNInst(stream.readUnsignedByte());
       case 0x3a:
         return new AStoreInst(stream.readUnsignedByte());
       case 0x3b:
@@ -144,6 +175,8 @@ public abstract class InstructionReader {
         return new IStore2Inst();
       case 0x3e:
         return new IStore3Inst();
+      case 0x3f:
+        return new LStore0Inst();
 
       case 0x40:
         return new LStore1Inst();
@@ -151,8 +184,22 @@ public abstract class InstructionReader {
         return new LStore2Inst();
       case 0x42:
         return new LStore3Inst();
+      case 0x43:
+        return new FStore0Inst();
+      case 0x44:
+        return new FStore1Inst();
       case 0x45:
         return new FStore2Inst();
+      case 0x46:
+        return new FStore3Inst();
+      case 0x47:
+        return new DStore0Inst();
+      case 0x48:
+        return new DStore1Inst();
+      case 0x49:
+        return new DStore2Inst();
+      case 0x4a:
+        return new DStore3Inst();
       case 0x4b:
         return new AStore0Inst();
       case 0x4c:
@@ -161,45 +208,104 @@ public abstract class InstructionReader {
         return new AStore2Inst();
       case 0x4e:
         return new AStore3Inst();
+      case 0x4f:
+        return new IAStoreInst();
 
+      case 0x50:
+        return new LAStoreInst();
+      case 0x51:
+        return new FAStoreInst();
+      case 0x52:
+        return new DAStoreInst();
       case 0x53:
-      return new AAStoreInst();
+        return new AAStoreInst();
+      case 0x54:
+        return new BAStoreInst();
       case 0x55:
-      return new CAStoreInst();
+        return new CAStoreInst();
+      case 0x56:
+        return new SAStoreInst();
       case 0x57:
-      return new PopInst();
+        return new PopInst();
+      case 0x58:
+        return new Pop2Inst();
       case 0x59:
-      return new DupInst();
+        return new DupInst();
       case 0x5a:
         return new DupX1Inst();
+      case 0x5b:
+        return new DupX2Inst();
+      case 0x5c:
+        return new Dup2Inst();
+      case 0x5d:
+        return new Dup2X1Inst();
+      case 0x5e:
+        return new Dup2X2Inst();
+      case 0x5f:
+        return new SwapInst();
 
       case 0x60:
         return new IAddInst();
       case 0x61:
         return new LAddInst();
+      case 0x62:
+        return new FAddInst();
+      case 0x63:
+        return new DAddInst();
       case 0x64:
         return new ISubInst();
+      case 0x65:
+        return new LSubInst();
+      case 0x66:
+        return new FSubInst();
+      case 0x67:
+        return new DSubInst();
       case 0x68:
         return new IMulInst();
+      case 0x69:
+        return new LMulInst();
       case 0x6a:
         return new FMulInst();
+      case 0x6b:
+        return new DMulInst();
       case 0x6c:
         return new IDivInst();
+      case 0x6d:
+        return new LDivInst();
       case 0x6e:
         return new FDivInst();
+      case 0x6f:
+        return new DDivInst();
 
       case 0x70:
         return new IRemInst();
+      case 0x71:
+        return new LRemInst();
+      case 0x72:
+        return new FRemInst();
+      case 0x73:
+        return new DRemInst();
+      case 0x74:
+        return new INegInst();
       case 0x75:
         return new LNegInst();
       case 0x76:
         return new FNegInst();
+      case 0x77:
+        return new DNegInst();
       case 0x78:
         return new IShlInst();
+      case 0x79:
+        return new LShlInst();
       case 0x7a:
         return new IShrInst();
+      case 0x7b:
+        return new LShrInst();
+        // TODO .....
       case 0x7e:
         return new IAndInst();
+      case 0x7f:
+        return new LAndInst();
 
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
