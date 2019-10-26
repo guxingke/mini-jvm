@@ -11,7 +11,7 @@ public class MyDataInputStream extends DataInputStream {
 
   public int readPadding() {
     int offset = 0;
-    if (((MyByteArrayInputStream) in).getPosition() % 4 != 0) {
+    while (((MyByteArrayInputStream) in).getPosition() % 4 != 0) {
       try {
         in.read();
         offset++;
