@@ -315,63 +315,49 @@ public abstract class InstructionReader {
         return new LAndInst();
 
       case 0x80:
-        // ior
-        return null;
+        return new IOrInst();
       case 0x81:
-        // lor
-        return null;
+        return new LOrInst();
       case 0x82:
-        // for
-        return null;
+        return new IXOrInst();
       case 0x83:
-        // dor
-        return null;
+        return new LXOrInst();
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
       case 0x85:
-        // i2l
-        return null;
+        return new I2lInst();
       case 0x86:
         return new I2fInst();
       case 0x87:
-        // i2d
-        return null;
+        return new I2dInst();
       case 0x88:
         // l2i
-        return null;
+        return new L2iInst();
       case 0x89:
         // l2f
-        return null;
+        return new L2fInst();
       case 0x8a:
         // l2d
-        return null;
+        return new L2dInst();
       case 0x8b:
-        // f2i
         return new F2iInst();
       case 0x8c:
-        // f2l
-        return null;
+        return new F2lInst();
       case 0x8d:
-        // f2d
-        return null;
+        return new F2dInst();
       case 0x8e:
-        // d2i
-        return null;
+        return new D2iInst();
       case 0x8f:
-        // d2l
-        return null;
+        return new D2lInst();
 
       case 0x90:
-        // d2f
-        return null;
+        return new D2fInst();
       case 0x91:
-        // i2b
-        return null;
+        return new I2bInst();
       case 0x92:
         return new I2cInst();
       case 0x93:
-        // i2s
-        return null;
+        return new I2sInst();
       case 0x94:
         return new LCmpInst();
       case 0x95:
@@ -543,11 +529,37 @@ public abstract class InstructionReader {
       case 0xc3:
         return new MonitorExitInst();
       case 0xc4:
-        // wide
-        return null;
+        int wideOpcode = stream.readUnsignedByte();
+        switch (wideOpcode) {
+          case 0x84:
+            return new WideInst(6, new IIncInst(stream.readUnsignedShort(), stream.readShort()));
+          case 0x15:
+            return new WideInst(4, new IloadNInst(stream.readUnsignedShort()));
+          case 0x17:
+            return new WideInst(4, new FLoadInst(stream.readUnsignedShort()));
+          case 0x19:
+            return new WideInst(4, new ALoadInst(stream.readUnsignedShort()));
+          case 0x16:
+            return new WideInst(4, new LloadInst(stream.readUnsignedShort()));
+          case 0x24:
+            return new WideInst(4, new DLoadInst(stream.readUnsignedShort()));
+          case 0x36:
+            return new WideInst(4, new IStoreNInst(stream.readUnsignedShort()));
+          case 0x38:
+            return new WideInst(4, new FStoreNInst(stream.readUnsignedShort()));
+          case 0x3a:
+            return new WideInst(4, new AStoreInst(stream.readUnsignedShort()));
+          case 0x37:
+            return new WideInst(4, new LStoreNInst(stream.readUnsignedShort()));
+          case 0x39:
+            return new WideInst(4, new DStoreNInst(stream.readUnsignedShort()));
+          case 0xa9:
+            // ret, ignore
+            throw new UnsupportedOperationException();
+        }
+        throw new UnsupportedOperationException("wide op " + wideOpcode);
       case 0xc5:
-        // multianewarray
-        return null;
+        return new MultiANewArrayInst(stream.readUnsignedShort(), stream.readUnsignedByte());
       case 0xc6:
         return new IfNullInst(stream.readShort());
       case 0xc7:
