@@ -5,7 +5,7 @@ import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.instruction.BiPushInst;
-import com.gxk.jvm.instruction.Goto1Inst;
+import com.gxk.jvm.instruction.GotoInst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.IAddInst;
 import com.gxk.jvm.instruction.IConst0Inst;
@@ -199,7 +199,7 @@ public class InterpreterTest {
     map.put(12, new IAddInst());
     map.put(13, new IStore1Inst());
     map.put(14, new IIncInst(2, 1));
-    map.put(17, new Goto1Inst((short) -13));
+    map.put(17, new GotoInst((short) -13));
     map.put(20, new ILoad1Inst());
     map.put(21, new IReturnInst());
     return map;

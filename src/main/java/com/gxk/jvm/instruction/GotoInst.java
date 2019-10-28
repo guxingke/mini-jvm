@@ -2,11 +2,11 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 
-public class Goto1Inst implements Instruction {
+public class GotoInst implements Instruction {
 
   public final short offset;
 
-  public Goto1Inst(short offset) {
+  public GotoInst(short offset) {
     this.offset = offset;
   }
 

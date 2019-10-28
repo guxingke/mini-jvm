@@ -37,7 +37,9 @@ public abstract class InstructionReader {
       case 0xa:
         return new Lconst1Inst();
       case 0xb:
-        return new FConst2Inst();
+        return new FConst0Inst();
+      case 0xc:
+        return new FConst1Inst();
       case 0xd:
         return new FConst2Inst();
       case 0xe:
@@ -153,6 +155,8 @@ public abstract class InstructionReader {
         return new DALoadInst();
       case 0x32:
         return new AALoadInst();
+      case 0x33:
+        return new BAloadInst();
       case 0x34:
         return new CAloadInst();
       case 0x35:
@@ -371,16 +375,13 @@ public abstract class InstructionReader {
       case 0x94:
         return new LCmpInst();
       case 0x95:
-        // fcmpl
-        return null;
+        return new FCmpLInst();
       case 0x96:
         return new FCmpGInst();
       case 0x97:
-        // dcmpl
-        return null;
+        return new DCmpLInst();
       case 0x98:
-        // dcmpg
-        return null;
+        return new DCmpGInst();
       case 0x99:
         return new IfEqInst(stream.readShort());
       case 0x9a:
@@ -390,8 +391,7 @@ public abstract class InstructionReader {
       case 0x9c:
         return new IfGeInst(stream.readShort());
       case 0x9d:
-        // ifgt
-        return null;
+        return new IfGtInst(stream.readShort());
       case 0x9e:
         return new IfLeInst(stream.readShort());
       case 0x9f:
@@ -408,18 +408,17 @@ public abstract class InstructionReader {
       case 0xa4:
         return new IfICmpLeInst(stream.readShort());
       case 0xa5:
-        // if_acmpeq
-        return null;
+        return new IfACmpEqInst(stream.readShort());
       case 0xa6:
         return new IfACmpNeInst(stream.readShort());
       case 0xa7:
-        return new Goto1Inst(stream.readShort());
+        return new GotoInst(stream.readShort());
       case 0xa8:
-        // jsr
-        return null;
+        // jsr, 1.6 以前使用, 忽略
+        throw new UnsupportedOperationException("jsr");
       case 0xa9:
-        // ret
-        return null;
+        // ret, 1.6 以前使用, 忽略
+        throw new UnsupportedOperationException("ret");
       case 0xaa:
         int offset = 24;
 
@@ -450,11 +449,9 @@ public abstract class InstructionReader {
       case 0xad:
         return new LReturnInst();
       case 0xae:
-        // freturn
-        return null;
+        return new FReturnInst();
       case 0xaf:
-        // dreturn
-        return null;
+        return new DReturnInst();
 
       case 0xb0:
         return new AReturnInst();
@@ -557,10 +554,10 @@ public abstract class InstructionReader {
         return new IfNonNullInst(stream.readShort());
       case 0xc8:
         // goto_w
-        return null;
+        return new GotoWInst(stream.readInt());
       case 0xc9:
-        // jsr_w
-        return null;
+        // jsr_w, 同 jsr, 忽略
+        throw new UnsupportedOperationException();
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
