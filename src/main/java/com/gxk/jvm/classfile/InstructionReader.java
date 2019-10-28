@@ -301,27 +301,97 @@ public abstract class InstructionReader {
         return new IShrInst();
       case 0x7b:
         return new LShrInst();
-        // TODO .....
+      case 0x7c:
+        return new IUShrInst();
+      case 0x7d:
+        return new LUShrInst();
       case 0x7e:
         return new IAndInst();
       case 0x7f:
         return new LAndInst();
 
+      case 0x80:
+        // ior
+        return null;
+      case 0x81:
+        // lor
+        return null;
+      case 0x82:
+        // for
+        return null;
+      case 0x83:
+        // dor
+        return null;
       case 0x84:
         return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
+      case 0x85:
+        // i2l
+        return null;
       case 0x86:
         return new I2fInst();
+      case 0x87:
+        // i2d
+        return null;
+      case 0x88:
+        // l2i
+        return null;
+      case 0x89:
+        // l2f
+        return null;
+      case 0x8a:
+        // l2d
+        return null;
       case 0x8b:
+        // f2i
         return new F2iInst();
+      case 0x8c:
+        // f2l
+        return null;
+      case 0x8d:
+        // f2d
+        return null;
+      case 0x8e:
+        // d2i
+        return null;
+      case 0x8f:
+        // d2l
+        return null;
 
+      case 0x90:
+        // d2f
+        return null;
+      case 0x91:
+        // i2b
+        return null;
       case 0x92:
         return new I2cInst();
+      case 0x93:
+        // i2s
+        return null;
+      case 0x94:
+        return new LCmpInst();
+      case 0x95:
+        // fcmpl
+        return null;
+      case 0x96:
+        return new FCmpGInst();
+      case 0x97:
+        // dcmpl
+        return null;
+      case 0x98:
+        // dcmpg
+        return null;
+      case 0x99:
+        return new IfEqInst(stream.readShort());
       case 0x9a:
         return new IfNeInst(stream.readShort());
       case 0x9b:
         return new IfLtInst(stream.readShort());
       case 0x9c:
         return new IfGeInst(stream.readShort());
+      case 0x9d:
+        // ifgt
+        return null;
       case 0x9e:
         return new IfLeInst(stream.readShort());
       case 0x9f:
@@ -337,21 +407,19 @@ public abstract class InstructionReader {
         return new IfICmpGtInst(stream.readShort());
       case 0xa4:
         return new IfICmpLeInst(stream.readShort());
-      case 0xad:
-        return new LReturnInst();
-
-
-      case 0x94:
-        return new LCmpInst();
-      case 0x96:
-        return new FCmpGInst();
-      case 0x99:
-        return new IfEqInst(stream.readShort());
-
+      case 0xa5:
+        // if_acmpeq
+        return null;
       case 0xa6:
         return new IfACmpNeInst(stream.readShort());
       case 0xa7:
         return new Goto1Inst(stream.readShort());
+      case 0xa8:
+        // jsr
+        return null;
+      case 0xa9:
+        // ret
+        return null;
       case 0xaa:
         int offset = 24;
 
@@ -379,6 +447,14 @@ public abstract class InstructionReader {
         return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsBytes);
       case 0xac:
         return new IReturnInst();
+      case 0xad:
+        return new LReturnInst();
+      case 0xae:
+        // freturn
+        return null;
+      case 0xaf:
+        // dreturn
+        return null;
 
       case 0xb0:
         return new AReturnInst();
@@ -387,63 +463,68 @@ public abstract class InstructionReader {
       case 0xb2:
         int gsIndex = stream.readUnsignedShort();
         return new GetStaticInst(
-          Utils.getClassNameByFieldDefIdx(constantPool, gsIndex),
-          Utils.getMethodNameByFieldDefIdx(constantPool, gsIndex),
-          Utils.getMethodTypeByFieldDefIdx(constantPool, gsIndex)
+            Utils.getClassNameByFieldDefIdx(constantPool, gsIndex),
+            Utils.getMethodNameByFieldDefIdx(constantPool, gsIndex),
+            Utils.getMethodTypeByFieldDefIdx(constantPool, gsIndex)
         );
       case 0xb3:
         int psIndex = stream.readUnsignedShort();
         return new PutStaticInst(
-          Utils.getClassNameByFieldDefIdx(constantPool, psIndex),
-          Utils.getMethodNameByFieldDefIdx(constantPool, psIndex),
-          Utils.getMethodTypeByFieldDefIdx(constantPool, psIndex)
+            Utils.getClassNameByFieldDefIdx(constantPool, psIndex),
+            Utils.getMethodNameByFieldDefIdx(constantPool, psIndex),
+            Utils.getMethodTypeByFieldDefIdx(constantPool, psIndex)
         );
       case 0xb4:
         int gfIndex = stream.readUnsignedShort();
         return new GetFieldInst(
-          Utils.getClassNameByFieldDefIdx(constantPool, gfIndex),
-          Utils.getMethodNameByFieldDefIdx(constantPool, gfIndex),
-          Utils.getMethodTypeByFieldDefIdx(constantPool, gfIndex)
+            Utils.getClassNameByFieldDefIdx(constantPool, gfIndex),
+            Utils.getMethodNameByFieldDefIdx(constantPool, gfIndex),
+            Utils.getMethodTypeByFieldDefIdx(constantPool, gfIndex)
         );
       case 0xb5:
         int pfIndex = stream.readUnsignedShort();
         return new PutFieldInst(
-          Utils.getClassNameByFieldDefIdx(constantPool, pfIndex),
-          Utils.getMethodNameByFieldDefIdx(constantPool, pfIndex),
-          Utils.getMethodTypeByFieldDefIdx(constantPool, pfIndex)
+            Utils.getClassNameByFieldDefIdx(constantPool, pfIndex),
+            Utils.getMethodNameByFieldDefIdx(constantPool, pfIndex),
+            Utils.getMethodTypeByFieldDefIdx(constantPool, pfIndex)
         );
       case 0xb6:
         int ivIndex = stream.readUnsignedShort();
         return new InvokeVirtualInst(
-          Utils.getClassNameByMethodDefIdx(constantPool, ivIndex),
-          Utils.getMethodNameByMethodDefIdx(constantPool, ivIndex),
-          Utils.getMethodTypeByMethodDefIdx(constantPool, ivIndex)
+            Utils.getClassNameByMethodDefIdx(constantPool, ivIndex),
+            Utils.getMethodNameByMethodDefIdx(constantPool, ivIndex),
+            Utils.getMethodTypeByMethodDefIdx(constantPool, ivIndex)
         );
       case 0xb7:
         int isIndex = stream.readUnsignedShort();
         return new InvokeSpecialInst(
-          Utils.getClassNameByMethodDefIdx(constantPool, isIndex),
-          Utils.getMethodNameByMethodDefIdx(constantPool, isIndex),
-          Utils.getMethodTypeByMethodDefIdx(constantPool, isIndex)
+            Utils.getClassNameByMethodDefIdx(constantPool, isIndex),
+            Utils.getMethodNameByMethodDefIdx(constantPool, isIndex),
+            Utils.getMethodTypeByMethodDefIdx(constantPool, isIndex)
         );
-
       case 0xb8:
         int mdIdx = stream.readUnsignedShort();
         return new InvokeStaticInst(
-          Utils.getClassNameByMethodDefIdx(constantPool, mdIdx),
-          Utils.getMethodNameByMethodDefIdx(constantPool, mdIdx),
-          Utils.getMethodTypeByMethodDefIdx(constantPool, mdIdx)
+            Utils.getClassNameByMethodDefIdx(constantPool, mdIdx),
+            Utils.getMethodNameByMethodDefIdx(constantPool, mdIdx),
+            Utils.getMethodTypeByMethodDefIdx(constantPool, mdIdx)
         );
       case 0xb9:
         int iiIdx = stream.readUnsignedShort();
         return new InvokeInterfaceInst(
-          Utils.getClassNameByIMethodDefIdx(constantPool, iiIdx),
-          Utils.getMethodNameByIMethodDefIdx(constantPool, iiIdx),
-          Utils.getMethodTypeByIMethodDefIdx(constantPool, iiIdx),
-          stream.readUnsignedByte(),
-          stream.readUnsignedByte()
+            Utils.getClassNameByIMethodDefIdx(constantPool, iiIdx),
+            Utils.getMethodNameByIMethodDefIdx(constantPool, iiIdx),
+            Utils.getMethodTypeByIMethodDefIdx(constantPool, iiIdx),
+            stream.readUnsignedByte(),
+            stream.readUnsignedByte()
         );
-
+      case 0xba:
+        return new InvokeDynamicInst(
+            stream.readUnsignedByte(),
+            stream.readUnsignedByte(),
+            stream.readUnsignedByte(),
+            stream.readUnsignedByte()
+        );
       case 0xbb:
         return new NewInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
       case 0xbc:
@@ -464,11 +545,22 @@ public abstract class InstructionReader {
         return new MonitorEnterInst();
       case 0xc3:
         return new MonitorExitInst();
+      case 0xc4:
+        // wide
+        return null;
+      case 0xc5:
+        // multianewarray
+        return null;
       case 0xc6:
         return new IfNullInst(stream.readShort());
       case 0xc7:
         return new IfNonNullInst(stream.readShort());
-
+      case 0xc8:
+        // goto_w
+        return null;
+      case 0xc9:
+        // jsr_w
+        return null;
       default:
         return null;
 //        throw new UnsupportedOperationException("unknown op code");
