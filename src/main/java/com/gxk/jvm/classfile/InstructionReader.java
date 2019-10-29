@@ -513,7 +513,7 @@ public abstract class InstructionReader {
       case 0xbc:
         return new NewArrayInst(stream.readUnsignedByte());
       case 0xbd:
-        return new ANewArrayInst(stream.readUnsignedShort());
+        return new ANewArrayInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
       case 0xbe:
         return new ArrayLengthInst();
       case 0xbf:

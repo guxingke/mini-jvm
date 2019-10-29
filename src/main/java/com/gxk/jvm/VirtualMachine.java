@@ -6,7 +6,9 @@ import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.KObject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -22,10 +24,8 @@ public class VirtualMachine {
     String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath() + "/*";
     Entry entry = Classpath.parse(classpath);
 
-    // load library
-    loadLibrary();
-
     ClassLoader classLoader = new ClassLoader("boot", entry);
+    initVm(classLoader);
 
     String mainClass = cmd.clazz.replace(".", "/");
     classLoader.loadClass(mainClass);
@@ -39,12 +39,23 @@ public class VirtualMachine {
     new Interpreter().interpret(method, cmd.args);
   }
 
+  public static void initVm(ClassLoader classLoader) {
+    loadLibrary();
+
+    classLoader.loadClass("java/lang/String");
+  }
+
   public static void loadLibrary() {
     // hack for out.println
     Heap.registerMethod("java/io/PrintStream_println_(Ljava/lang/String;)V", frame -> {
       Object val = frame.operandStack.popRef();
       frame.operandStack.popRef();
-      System.out.println(val);
+      if (val instanceof String) {
+        System.out.println(val);
+        return;
+      }
+      KField value = ((KObject) val).getField("value", "[C");
+      System.out.println(value.val[0].ref);
     });
     Heap.registerMethod("java/io/PrintStream_println_()V", frame -> {
       frame.operandStack.popRef();
@@ -75,5 +86,9 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.operandStack.pushInt(frame.operandStack.popRef().hashCode()));
     Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {});
     Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {});
+    // string
+    Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame ->  {
+      System.out.println();
+    });
   }
 }

@@ -1,6 +1,7 @@
 package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.classloader.ClassLoader;
+import java.util.ArrayList;
 import lombok.Data;
 
 import java.util.List;
@@ -16,6 +17,15 @@ public class KClass {
 
   private KClass superClass;
   private int staticInit = 0;
+
+  public KClass(String name, ClassLoader classLoader) {
+    this.name = name;
+    this.superClassName = "java/lang/Object";
+    this.classLoader = classLoader;
+    this.methods = new ArrayList<>();
+    this.fields = new ArrayList<>();
+    this.staticInit = 2;
+  }
 
   public KClass(String name, String superClassName, List<KMethod> methods, List<KField> fields, ClassLoader classLoader) {
     this.name = name;
@@ -62,7 +72,7 @@ public class KClass {
   }
 
   public KObject newObject() {
-    KObject object = new KObject(methods, fields, this);
+    KObject object = new KObject(fields, this);
     if (this.superClass != null) {
       object.setSuperObject(this.superClass.newObject());
     }

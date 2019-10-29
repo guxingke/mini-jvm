@@ -164,6 +164,12 @@ public class InterpreterTest {
     new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
   }
 
+  @Test
+  public void test_array_1() {
+    KMethod method = loadAndGetMainMethod("HelloWorld");
+    new Interpreter().interpret(method, new String[0]);
+  }
+
   private void testMain(String hello) {
     KMethod method = loadAndGetMainMethod(hello);
     new Interpreter().interpret(method);
@@ -179,8 +185,8 @@ public class InterpreterTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
-    VirtualMachine.loadLibrary();
     ClassLoader loader = new ClassLoader("boot", entry);
+    VirtualMachine.initVm(loader);
     KClass clazz = loader.loadClass(clazzName);
     return clazz;
   }

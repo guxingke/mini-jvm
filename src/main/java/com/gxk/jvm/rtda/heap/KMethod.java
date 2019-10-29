@@ -2,6 +2,9 @@ package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Data;
 
 import java.util.Map;
@@ -18,6 +21,18 @@ public class KMethod {
   public final Map<Integer, Instruction> instructionMap;
 
   public KClass clazz;
+
+  public String getReturnType() {
+    return this.descriptor.substring(this.descriptor.indexOf(")") + 1);
+  }
+
+  public List<String> getArgs() {
+    if (this.descriptor.startsWith("()")) {
+      return new ArrayList<>();
+    }
+
+    return Arrays.asList(this.descriptor.substring(this.descriptor.indexOf("(") + 1, this.descriptor.indexOf(")")).split(";"));
+  }
 
   @Override
   public String toString() {

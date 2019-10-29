@@ -1,11 +1,10 @@
 package com.gxk.jvm.rtda.heap;
 
-public class KArray {
-  public final KClass clazz;
+public class KArray extends KObject{
   public final Object[] items;
 
   public KArray(KClass clazz, Object[] items) {
-    this.clazz = clazz;
+    super(clazz);
     this.items = items;
   }
 }

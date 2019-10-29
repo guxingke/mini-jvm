@@ -41,18 +41,39 @@ public class InvokeVirtualInst implements Instruction {
     }
 
     Frame newFrame = new Frame(method, frame.thread);
-    if (method.getDescriptor().startsWith("()")) {
-      newFrame.localVars.setRef(0, thisObj);
-      frame.thread.pushFrame(newFrame);
-      return;
+    // fill args
+    int idx = 0;
+    for (String arg : method.getArgs()) {
+      switch (arg) {
+        case "I":
+        case "B":
+        case "C":
+        case "S":
+          newFrame.localVars.setInt(idx, frame.operandStack.popInt());
+          idx++;
+          break;
+        case "J":
+          newFrame.localVars.setLong(idx, frame.operandStack.popLong());
+          idx += 2;
+          break;
+        case "F":
+          newFrame.localVars.setFloat(idx, frame.operandStack.popFloat());
+          idx++;
+          break;
+        case "D":
+          newFrame.localVars.setDouble(idx, frame.operandStack.popDouble());
+          idx += 2;
+          break;
+        default:
+          idx++;
+          newFrame.localVars.setRef(idx, frame.operandStack.popRef());
+          break;
+      }
     }
-
-    if (method.getDescriptor().startsWith("(I)")) {
-      Integer arg2 = frame.operandStack.popInt();
-      newFrame.localVars.setRef(0, thisObj);
-      newFrame.localVars.setInt(1, arg2);
-      frame.thread.pushFrame(newFrame);
-      return;
+    newFrame.localVars.setRef(method.getArgs().size(), thisObj);
+    if (idx != method.getArgs().size()) {
+      throw new IllegalStateException();
     }
+    frame.thread.pushFrame(newFrame);
   }
 }

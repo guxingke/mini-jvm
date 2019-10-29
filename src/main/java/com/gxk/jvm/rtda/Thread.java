@@ -36,4 +36,8 @@ public class Thread {
   public boolean empty() {
     return this.stack.empty();
   }
+
+  public int size() {
+    return this.stack.size();
+  }
 }

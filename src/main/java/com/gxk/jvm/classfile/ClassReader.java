@@ -103,7 +103,10 @@ public abstract class ClassReader {
     return new Fields(fields);
   }
 
-  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) {
+  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) throws IOException {
+    for (int i = 0; i < interfaceCount; i++) {
+      int xx = is.readUnsignedShort();
+    }
     return null;
   }
 
@@ -143,7 +146,7 @@ public abstract class ClassReader {
 
       ConstantPoolInfoEnum infoEnum = ConstantPoolInfoEnum.of(tag);
       if (infoEnum == null) {
-        throw new IllegalStateException();
+        throw new IllegalStateException("readConstantPool");
       }
 
       ConstantInfo info = null;
@@ -194,6 +197,10 @@ public abstract class ClassReader {
         throw new UnsupportedOperationException("un parse cp " + infoEnum);
       }
       constantPool.infos[i] = info;
+      if (info.infoEnum.equals(ConstantPoolInfoEnum.CONSTANT_Double) || info.infoEnum
+          .equals(ConstantPoolInfoEnum.CONSTANT_Long)) {
+        i++;
+      }
     }
     return constantPool;
   }
