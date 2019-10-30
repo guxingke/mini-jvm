@@ -45,7 +45,7 @@ public class InvokeSpecialInst implements Instruction {
 
     Frame newFrame = new Frame(method, frame.thread);
     // fill args
-    int idx = 0;
+    int idx = 1;
     for (String arg : method.getArgs()) {
       switch (arg) {
         case "I":
@@ -73,10 +73,7 @@ public class InvokeSpecialInst implements Instruction {
           break;
       }
     }
-    newFrame.localVars.setRef(method.getArgs().size(), frame.operandStack.popRef());
-    if (idx != method.getArgs().size()) {
-      throw new IllegalStateException();
-    }
+    newFrame.localVars.setRef(0, frame.operandStack.popRef());
     frame.thread.pushFrame(newFrame);
   }
 }

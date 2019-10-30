@@ -42,7 +42,7 @@ public class InvokeVirtualInst implements Instruction {
 
     Frame newFrame = new Frame(method, frame.thread);
     // fill args
-    int idx = 0;
+    int idx = 1;
     for (String arg : method.getArgs()) {
       switch (arg) {
         case "I":
@@ -70,10 +70,7 @@ public class InvokeVirtualInst implements Instruction {
           break;
       }
     }
-    newFrame.localVars.setRef(method.getArgs().size(), thisObj);
-    if (idx != method.getArgs().size()) {
-      throw new IllegalStateException();
-    }
+    newFrame.localVars.setRef(0, thisObj);
     frame.thread.pushFrame(newFrame);
   }
 }
