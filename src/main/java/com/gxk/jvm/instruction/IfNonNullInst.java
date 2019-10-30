@@ -16,6 +16,9 @@ public class IfNonNullInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    throw new UnsupportedOperationException();
+    Object ref = frame.operandStack.popRef();
+    if (ref != null) {
+      frame.nextPc = frame.thread.getPc() + offset;
+    }
   }
 }

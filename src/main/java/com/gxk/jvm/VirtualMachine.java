@@ -5,6 +5,7 @@ import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -54,8 +55,14 @@ public class VirtualMachine {
         System.out.println(val);
         return;
       }
+
       KField value = ((KObject) val).getField("value", "[C");
-      System.out.println(value.val[0].ref);
+      KArray arr = (KArray) value.val[0].ref;
+      char[] chars = new char[arr.items.length];
+      for (int i = 0; i < arr.items.length; i++) {
+        chars[i] = ((Character) arr.items[i]);
+      }
+      System.out.println(new String(chars));
     });
     Heap.registerMethod("java/io/PrintStream_println_()V", frame -> {
       frame.operandStack.popRef();

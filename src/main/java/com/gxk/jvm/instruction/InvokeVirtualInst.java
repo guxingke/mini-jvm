@@ -32,9 +32,7 @@ public class InvokeVirtualInst implements Instruction {
       return;
     }
 
-    Object thisObj = frame.operandStack.popRef();
-    KObject obj = (KObject) thisObj;
-    KMethod method = obj.getMethod(methodName, methodDescriptor);
+    KMethod method = Heap.findClass(clazz).getMethod(methodName, methodDescriptor);
 
     if (method == null) {
       throw new IllegalStateException();
@@ -65,12 +63,12 @@ public class InvokeVirtualInst implements Instruction {
           idx += 2;
           break;
         default:
-          idx++;
           newFrame.localVars.setRef(idx, frame.operandStack.popRef());
+          idx++;
           break;
       }
     }
-    newFrame.localVars.setRef(0, thisObj);
+    newFrame.localVars.setRef(0, frame.operandStack.popRef());
     frame.thread.pushFrame(newFrame);
   }
 }

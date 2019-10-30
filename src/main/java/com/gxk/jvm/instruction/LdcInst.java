@@ -3,6 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -46,7 +47,15 @@ public class LdcInst implements Instruction {
         }
         KObject object = klass.newObject();
         KField field = object.getField("value", "[C");
-        field.val = new Slot[]{new Slot(val)};
+        KClass arrClazz = new KClass("[C", frame.method.clazz.classLoader);
+
+        char[] chars = val.toString().toCharArray();
+        Character[] characters = new Character[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+          characters[i] = chars[i];
+        }
+        KArray arr = new KArray(arrClazz, characters);
+        field.val = new Slot[]{new Slot(arr)};
         frame.operandStack.pushRef(object);
         break;
       default:
