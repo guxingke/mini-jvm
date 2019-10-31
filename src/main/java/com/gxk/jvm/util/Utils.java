@@ -10,6 +10,9 @@ import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class Utils {
 
@@ -92,5 +95,46 @@ public abstract class Utils {
     ConstantInfo methodInfo = cp.infos[index - 1];
     FieldDef def = (FieldDef) methodInfo;
     return getTypeByNameAndTypeIdx(cp, def.nameAndTypeIndex);
+  }
+
+  public static List<String> parseMethodDescriptor(String descriptor) {
+    if (descriptor.startsWith("()")) {
+      return new ArrayList<>();
+    }
+
+    descriptor = descriptor.substring(descriptor.indexOf("(") + 1, descriptor.indexOf(")"));
+
+    List<Character> base = Arrays.asList('V', 'Z', 'B', 'C', 'S', 'I', 'J', 'F', 'D');
+    List<String> rets = new ArrayList<>();
+    for (int i = 0; i < descriptor.length(); i++) {
+      if (base.contains(descriptor.charAt(i))) {
+        rets.add(String.valueOf(descriptor.charAt(i)));
+        continue;
+      }
+      // array
+      if (descriptor.charAt(i) == '[') {
+        int temp = i;
+        i++;
+        while (descriptor.charAt(i) == '[') {
+          i++;
+        }
+        if (base.contains(descriptor.charAt(i))) {
+          rets.add(descriptor.substring(temp, i+1));
+          continue;
+        }
+        int idx = descriptor.indexOf(';', i);
+        rets.add(descriptor.substring(temp, idx));
+        i = idx;
+        continue;
+      }
+      // class
+      if (descriptor.charAt(i) == 'L') {
+        int idx = descriptor.indexOf(';', i);
+        rets.add(descriptor.substring(i, idx));
+        i = idx;
+        continue;
+      }
+    }
+    return rets;
   }
 }

@@ -28,6 +28,26 @@ public class InvokeStaticInst implements Instruction {
     }
 
     KClass kClass = Heap.findClass(clazzName);
+    if (kClass == null) {
+      kClass = frame.method.clazz.getClassLoader().loadClass(clazzName);
+    }
+
+    if (!kClass.isStaticInit()) {
+      KMethod cinit = kClass.getMethod("<clinit>", "()V");
+      if (cinit == null) {
+        throw new IllegalStateException();
+      }
+
+      Frame newFrame = new Frame(cinit, frame.thread);
+      kClass.setStaticInit(1);
+      KClass finalKClass = kClass;
+      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+      frame.thread.pushFrame(newFrame);
+
+      frame.nextPc = frame.thread.getPc();
+      return;
+    }
+
     KMethod method = kClass.getMethod(methodName, descriptor);
     Frame newFrame = new Frame(method, frame.thread);
 

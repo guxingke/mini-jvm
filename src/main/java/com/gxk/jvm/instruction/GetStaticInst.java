@@ -51,6 +51,9 @@ public class GetStaticInst implements Instruction {
     if (field == null) {
       throw new IllegalStateException();
     }
+    if (field.val == null) {
+      throw new IllegalStateException();
+    }
 
     Slot[] val = field.val;
     for (Slot slot : val) {
