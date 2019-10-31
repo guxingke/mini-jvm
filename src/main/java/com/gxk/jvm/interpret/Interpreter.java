@@ -52,9 +52,9 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-      debugBefore(inst, frame);
+//      debugBefore(inst, frame);
       inst.execute(frame);
-      debugAfter(inst, frame);
+//      debugAfter(inst, frame);
 
       if (thread.empty()) {
         break;
