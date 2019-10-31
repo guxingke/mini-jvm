@@ -34,4 +34,13 @@ public class PutStaticInst implements Instruction {
     }
     field.val = new Slot[]{frame.operandStack.popSlot()};
   }
+
+  @Override
+  public String toString() {
+    return "PutStaticInst{" +
+        "clazz='" + clazz + '\'' +
+        ", fieldName='" + fieldName + '\'' +
+        ", fieldDescriptor='" + fieldDescriptor + '\'' +
+        '}';
+  }
 }

@@ -75,4 +75,13 @@ public class InvokeVirtualInst implements Instruction {
     newFrame.localVars.setRef(0, frame.operandStack.popRef());
     frame.thread.pushFrame(newFrame);
   }
+
+  @Override
+  public String toString() {
+    return "InvokeVirtualInst{" +
+        "clazz='" + clazz + '\'' +
+        ", methodName='" + methodName + '\'' +
+        ", methodDescriptor='" + methodDescriptor + '\'' +
+        '}';
+  }
 }

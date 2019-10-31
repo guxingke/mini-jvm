@@ -66,5 +66,14 @@ public class InvokeStaticInst implements Instruction {
 
     frame.thread.pushFrame(newFrame);
   }
+
+  @Override
+  public String toString() {
+    return "InvokeStaticInst{" +
+        "clazzName='" + clazzName + '\'' +
+        ", methodName='" + methodName + '\'' +
+        ", descriptor='" + descriptor + '\'' +
+        '}';
+  }
 }
 

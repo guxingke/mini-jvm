@@ -62,4 +62,12 @@ public class LdcInst implements Instruction {
         frame.operandStack.pushRef(val);
     }
   }
+
+  @Override
+  public String toString() {
+    return "LdcInst{" +
+        "descriptor='" + descriptor + '\'' +
+        ", val=" + val +
+        '}';
+  }
 }

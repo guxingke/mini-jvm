@@ -61,4 +61,13 @@ public class KObject {
     KField field = this.getField(name, desc);
     field.val = val;
   }
+
+  @Override
+  public String toString() {
+    return "KObject{" +
+        "fields=" + fields +
+        ", clazz=" + clazz +
+        ", superObject=" + superObject +
+        '}';
+  }
 }

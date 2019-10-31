@@ -42,4 +42,13 @@ public class GetFieldInst implements Instruction {
       frame.operandStack.pushSlot(slot);
     }
   }
+
+  @Override
+  public String toString() {
+    return "GetFieldInst{" +
+        "clazz='" + clazz + '\'' +
+        ", fieldName='" + fieldName + '\'' +
+        ", fieldDescriptor='" + fieldDescriptor + '\'' +
+        '}';
+  }
 }

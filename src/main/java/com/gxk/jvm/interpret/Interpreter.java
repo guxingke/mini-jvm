@@ -52,9 +52,9 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-//      debugBefore(inst, frame);
+      debugBefore(inst, frame);
       inst.execute(frame);
-//      debugAfter(inst, frame);
+      debugAfter(inst, frame);
 
       if (thread.empty()) {
         break;
@@ -63,14 +63,17 @@ public class Interpreter {
   }
 
   void debugBefore(Instruction inst, Frame frame) {
-    System.out.println(frame.thread.size() + " <>==============================");
+    System.out.println(frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ============================== begin");
     inst.debug();
     frame.debug();
+    System.out.println("---------------------");
   }
 
   void debugAfter(Instruction inst, Frame frame) {
+    System.out.println("---------------------");
     inst.debug();
     frame.debug();
-    System.out.println(frame.thread.size() + " <>==============================");
+    System.out.println(frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ==============================   end");
+    System.out.println();
   }
 }

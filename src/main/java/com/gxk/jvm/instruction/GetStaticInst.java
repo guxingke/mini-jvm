@@ -60,4 +60,13 @@ public class GetStaticInst implements Instruction {
       frame.operandStack.pushSlot(slot);
     }
   }
+
+  @Override
+  public String toString() {
+    return "GetStaticInst{" +
+        "clazz='" + clazz + '\'' +
+        ", fieldName='" + fieldName + '\'' +
+        ", fieldDescriptor='" + fieldDescriptor + '\'' +
+        '}';
+  }
 }

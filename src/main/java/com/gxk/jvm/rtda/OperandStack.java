@@ -67,15 +67,19 @@ public class OperandStack {
     this.slots.push(val);
   }
 
-  // FIXME for test
-  public Object peekRef() {
-    return this.slots.peek().ref;
-  }
-
   public void debug() {
     System.out.println("OperandStack: ");
-    for (Slot slot : this.slots) {
-      System.out.println("slot = " + slot);
+    for (int i = 0; i < this.slots.size(); i++) {
+      Slot slot = this.slots.get(i);
+      if (slot == null) {
+        System.out.println(String.format("%d | null | null", i));
+        return;
+      }
+      if (slot.ref != null) {
+        System.out.println(String.format("%d | null | %s", i, slot.ref));
+        return;
+      }
+      System.out.println(String.format("%d | %s | null", i, slot.num));
     }
   }
 }
