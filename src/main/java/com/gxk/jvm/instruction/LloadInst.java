@@ -10,6 +10,11 @@ public class LloadInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Long tmp = frame.localVars.getLong(index);
     frame.operandStack.pushLong(tmp);

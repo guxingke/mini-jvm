@@ -36,6 +36,7 @@ public class JarEntry implements Entry {
       ClassFile cf = ClassReader.read(new DataInputStream(new BufferedInputStream(is)));
       return cf;
     } catch (Exception e) {
+      e.printStackTrace();
       throw new IllegalStateException();
     }
   }

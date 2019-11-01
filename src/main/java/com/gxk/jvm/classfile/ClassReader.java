@@ -9,8 +9,11 @@ import com.gxk.jvm.classfile.cp.FieldDef;
 import com.gxk.jvm.classfile.cp.FloatCp;
 import com.gxk.jvm.classfile.cp.IntegerCp;
 import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
+import com.gxk.jvm.classfile.cp.InvokeDynamic;
 import com.gxk.jvm.classfile.cp.LongCp;
 import com.gxk.jvm.classfile.cp.MethodDef;
+import com.gxk.jvm.classfile.cp.MethodHandle;
+import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.classfile.cp.Utf8;
@@ -175,10 +178,13 @@ public abstract class ClassReader {
           info = new Utf8(infoEnum, bytes);
           break;
         case CONSTANT_MethodHandle:
+          info = new MethodHandle(infoEnum, is.readUnsignedByte(), is.readUnsignedShort());
           break;
         case CONSTANT_MethodType:
+          info = new MethodType(infoEnum, is.readUnsignedShort());
           break;
         case CONSTANT_InvokeDynamic:
+          info = new InvokeDynamic(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
         case CONSTANT_Integer:
           info = new IntegerCp(infoEnum, is.readInt());

@@ -10,6 +10,11 @@ public class FStoreNInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Float tmp = frame.operandStack.popFloat();
     frame.localVars.setFloat(n, tmp);

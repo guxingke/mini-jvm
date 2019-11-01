@@ -10,6 +10,11 @@ public class IloadNInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Integer tmp = frame.localVars.getInt(n);
     frame.operandStack.pushInt(tmp);

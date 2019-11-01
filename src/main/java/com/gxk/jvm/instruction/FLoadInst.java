@@ -8,6 +8,11 @@ public class FLoadInst implements Instruction {
   public final int index;
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     float tmp = frame.localVars.getFloat(index);
     frame.operandStack.pushFloat(tmp);

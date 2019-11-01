@@ -7,4 +7,11 @@ public class KArray extends KObject{
     super(clazz);
     this.items = items;
   }
+
+  @Override
+  public String toString() {
+    return "KArray{" +
+        "items=" + items.length +
+        '}';
+  }
 }

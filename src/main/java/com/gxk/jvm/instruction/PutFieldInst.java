@@ -5,6 +5,7 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.rtda.heap.KObject;
 
 public class PutFieldInst implements Instruction {
   public final String clazz;
@@ -25,13 +26,15 @@ public class PutFieldInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
-    KField field = kClass.getField(fieldName, fieldDescriptor);
-
     if (fieldDescriptor.equalsIgnoreCase("J")) {
-      field.val = new Slot[]{frame.operandStack.popSlot(), frame.operandStack.popSlot()};
+      Slot v2 = frame.operandStack.popSlot();
+      Slot v1 = frame.operandStack.popSlot();
+      KObject obj = (KObject) frame.operandStack.popRef();
+      obj.setField(fieldName, fieldDescriptor, new Slot[]{v1, v2});
       return;
     }
-    field.val = new Slot[]{frame.operandStack.popSlot()};
+
+    Slot v = frame.operandStack.popSlot();
+    ((KObject) frame.operandStack.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
   }
 }

@@ -5,6 +5,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -50,20 +51,37 @@ public class InvokeStaticInst implements Instruction {
 
     KMethod method = kClass.getMethod(methodName, descriptor);
     Frame newFrame = new Frame(method, frame.thread);
-
-    if (descriptor.startsWith("(I)")) {
-      Integer tmp = frame.thread.currentFrame().operandStack.popInt();
-      newFrame.localVars.setInt(0, tmp);
+    // fill args
+    List<String> args = method.getArgs();
+    int idx = args.size() - 1;
+    while (idx >= 0) {
+      String arg = args.get(idx);
+      switch (arg) {
+        case "I":
+        case "B":
+        case "C":
+        case "S":
+          newFrame.localVars.setInt(idx, frame.operandStack.popInt());
+          idx--;
+          break;
+        case "J":
+          newFrame.localVars.setLong(idx, frame.operandStack.popLong());
+          idx -= 2;
+          break;
+        case "F":
+          newFrame.localVars.setFloat(idx, frame.operandStack.popFloat());
+          idx--;
+          break;
+        case "D":
+          newFrame.localVars.setDouble(idx, frame.operandStack.popDouble());
+          idx -= 2;
+          break;
+        default:
+          newFrame.localVars.setRef(idx, frame.operandStack.popRef());
+          idx--;
+          break;
+      }
     }
-
-    if (descriptor.startsWith("(II)")) {
-      Integer o2 = frame.thread.currentFrame().operandStack.popInt();
-      Integer o1 = frame.thread.currentFrame().operandStack.popInt();
-
-      newFrame.localVars.setInt(0, o1);
-      newFrame.localVars.setInt(1, o2);
-    }
-
     frame.thread.pushFrame(newFrame);
   }
 

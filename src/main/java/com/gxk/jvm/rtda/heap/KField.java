@@ -4,7 +4,6 @@ import com.gxk.jvm.rtda.Slot;
 
 import lombok.ToString;
 
-@ToString
 public class KField {
   public final String name;
   public final String descriptor;

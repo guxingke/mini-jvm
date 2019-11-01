@@ -58,8 +58,26 @@ public class LdcInst implements Instruction {
         field.val = new Slot[]{new Slot(arr)};
         frame.operandStack.pushRef(object);
         break;
+      case "L":
+        KClass klass2 = Heap.findClass(val.toString());
+        if (klass2 == null) {
+          klass2 = frame.method.clazz.getClassLoader().loadClass(val.toString());
+        }
+        if (!klass2.isStaticInit()) {
+          Frame newFrame = new Frame(klass2.getMethod("<clinit>", "()V"), frame.thread);
+          klass2.setStaticInit(1);
+          KClass finalKlass = klass2;
+          newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
+          frame.thread.pushFrame(newFrame);
+
+          frame.nextPc = frame.thread.getPc();
+          return;
+        }
+        frame.operandStack.pushRef(klass2);
+        break;
       default:
         frame.operandStack.pushRef(val);
+        break;
     }
   }
 

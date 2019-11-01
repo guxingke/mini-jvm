@@ -66,11 +66,11 @@ public class LocalVars {
       Slot slot = this.slots[i];
       if (slot == null) {
         System.out.println(String.format("%d | null | null", i));
-        return;
+        continue;
       }
       if (slot.ref != null) {
         System.out.println(String.format("%d | null | %s", i, slot.ref));
-        return;
+        continue;
       }
       System.out.println(String.format("%d | %s | null", i, slot.num));
     }

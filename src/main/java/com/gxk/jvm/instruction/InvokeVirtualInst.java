@@ -2,6 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
@@ -33,7 +34,8 @@ public class InvokeVirtualInst implements Instruction {
       return;
     }
 
-    KMethod method = Heap.findClass(clazz).getMethod(methodName, methodDescriptor);
+    KClass clazz = Heap.findClass(this.clazz);
+    KMethod method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
       throw new IllegalStateException();

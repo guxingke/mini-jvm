@@ -10,6 +10,11 @@ public class LStoreNInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Long tmp = frame.operandStack.popLong();
     frame.localVars.setLong(n, tmp);

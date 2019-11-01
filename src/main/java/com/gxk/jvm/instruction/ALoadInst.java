@@ -8,6 +8,11 @@ public class ALoadInst implements Instruction {
   public final int index;
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Object tmp = frame.localVars.getRef(index);
     frame.operandStack.pushRef(tmp);

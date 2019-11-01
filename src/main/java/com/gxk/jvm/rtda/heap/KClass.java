@@ -2,6 +2,7 @@ package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.classloader.ClassLoader;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 import java.util.List;
@@ -72,7 +73,8 @@ public class KClass {
   }
 
   public KObject newObject() {
-    KObject object = new KObject(fields, this);
+    List<KField> newFields = fields.stream().map(it -> new KField(it.name, it.descriptor)).collect(Collectors.toList());
+    KObject object = new KObject(newFields, this);
     if (this.superClass != null) {
       object.setSuperObject(this.superClass.newObject());
     }
@@ -85,5 +87,18 @@ public class KClass {
 
   public void setStaticInit(int level) {
     this.staticInit = level;
+  }
+
+  @Override
+  public String toString() {
+    return "KClass{" +
+        "name='" + name + '\'' +
+        ", superClassName='" + superClassName + '\'' +
+        ", methods=" + methods.size() +
+        ", fields=" + fields.size() +
+        ", classLoader=" + classLoader.getClass().getName() +
+        ", superClass=" + (superClass == null ? "null" : superClass.getName()) +
+        ", staticInit=" + staticInit +
+        '}';
   }
 }

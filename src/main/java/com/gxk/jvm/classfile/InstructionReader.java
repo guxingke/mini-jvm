@@ -1,5 +1,6 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.DoubleCp;
 import com.gxk.jvm.classfile.cp.FloatCp;
 import com.gxk.jvm.classfile.cp.IntegerCp;
@@ -64,7 +65,7 @@ public abstract class InstructionReader {
           case CONSTANT_Float:
             return new LdcInst("F", ((FloatCp) info).val);
           case CONSTANT_Class:
-            return new LdcInst("L", info);
+            return new LdcInst("L", Utils.getString(constantPool, ((ClassCp) info).nameIndex));
         }
         throw new IllegalStateException();
       case 0x13:
@@ -323,7 +324,7 @@ public abstract class InstructionReader {
       case 0x83:
         return new LXOrInst();
       case 0x84:
-        return new IIncInst(stream.readUnsignedByte(), stream.readUnsignedByte());
+        return new IIncInst(stream.readUnsignedByte(), stream.readByte());
       case 0x85:
         return new I2lInst();
       case 0x86:

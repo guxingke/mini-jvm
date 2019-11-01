@@ -10,8 +10,20 @@ public class IStoreNInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Integer tmp = frame.operandStack.popInt();
     frame.localVars.setInt(n, tmp);
+  }
+
+  @Override
+  public String toString() {
+    return "IStoreNInst{" +
+        "n=" + n +
+        '}';
   }
 }

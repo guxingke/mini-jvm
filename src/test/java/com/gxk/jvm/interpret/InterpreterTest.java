@@ -23,7 +23,6 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -55,7 +54,6 @@ public class InterpreterTest {
   }
 
   @Test
-  @Ignore
   public void test_hello_sb() {
     testMain("Hello2");
   }
