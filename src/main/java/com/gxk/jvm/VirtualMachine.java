@@ -122,14 +122,14 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.operandStack.pushLong(System.currentTimeMillis()));
     Heap.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.operandStack.pushLong(System.nanoTime()));
     Heap.registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (frame) -> {
-      Integer de = frame.operandStack.popInt();
-      Integer ds = frame.operandStack.popInt();
+      Integer len= frame.operandStack.popInt();
+      Integer dsp = frame.operandStack.popInt();
       KArray dest = (KArray) frame.operandStack.popRef();
-      Integer ss = frame.operandStack.popInt();
+      Integer ssp = frame.operandStack.popInt();
       KArray source = (KArray) frame.operandStack.popRef();
 
-      for (int i = ds; i < de; i++) {
-        dest.items[i] = source.items[ss++];
+      for (int i = 0; i < len; i++) {
+        dest.items[dsp++] = source.items[ssp++];
       }
     });
     Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.operandStack.pushInt(frame.operandStack.popRef().hashCode()));
