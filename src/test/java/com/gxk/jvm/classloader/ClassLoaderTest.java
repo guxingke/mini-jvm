@@ -22,7 +22,7 @@ public class ClassLoaderTest {
   public void setup() {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse("example:"+ "onjava8:" + jarPath.toFile().getAbsolutePath());
     classLoader = new ClassLoader("boot", entry);
     VirtualMachine.loadLibrary();
   }
@@ -42,6 +42,12 @@ public class ClassLoaderTest {
   public void test_hello() {
     KClass kClass = classLoader.loadClass("Hello");
     assertNotNull(kClass);
+  }
+
+  @Test
+  public void test_onjava8_passobject() {
+    KClass clazz = classLoader.loadClass("PassObject");
+    assertNotNull(clazz);
   }
 
   @Test

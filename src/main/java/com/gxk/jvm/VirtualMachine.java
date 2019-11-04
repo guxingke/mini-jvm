@@ -113,6 +113,15 @@ public class VirtualMachine {
         frame.operandStack.pushInt(v2);
       }
     });
+    Heap.registerMethod("java/lang/Math_max_(II)I", frame -> {
+      Integer v2 = frame.operandStack.popInt();
+      Integer v1 = frame.operandStack.popInt();
+      if (v1 >= v2) {
+        frame.operandStack.pushInt(v1);
+      } else {
+        frame.operandStack.pushInt(v2);
+      }
+    });
 
     // system
     Heap.registerMethod("java/lang/System_registerNatives_()V", (frame) -> {});
@@ -138,6 +147,18 @@ public class VirtualMachine {
     // string
     Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame ->  {
       System.out.println();
+    });
+
+    // Float
+    Heap.registerMethod("java/lang/Float_intBitsToFloat_(I)F", frame -> {
+      Integer tmp = frame.operandStack.popInt();
+      float v = Float.intBitsToFloat(tmp);
+      frame.operandStack.pushFloat(v);
+    });
+    Heap.registerMethod("java/lang/Float_floatToRawIntBits_(F)I", frame -> {
+      float tmp = frame.operandStack.popFloat();
+      int v = Float.floatToRawIntBits(tmp);
+      frame.operandStack.pushInt(v);
     });
   }
 }

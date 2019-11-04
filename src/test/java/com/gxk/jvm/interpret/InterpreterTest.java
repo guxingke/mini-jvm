@@ -169,6 +169,11 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_passobject() {
+    testMain("PassObject");
+  }
+
+  @Test
   public void test_array_0() {
     KMethod method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
@@ -194,7 +199,7 @@ public class InterpreterTest {
   private KClass loadAndGetClazz(String clazzName) {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse("example:onjava8:" + jarPath.toFile().getAbsolutePath());
     ClassLoader loader = new ClassLoader("boot", entry);
     VirtualMachine.initVm(loader);
     KClass clazz = loader.loadClass(clazzName);
