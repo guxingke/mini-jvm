@@ -44,34 +44,39 @@ public class InvokeVirtualInst implements Instruction {
     Frame newFrame = new Frame(method, frame.thread);
     // fill args
     List<String> args = method.getArgs();
-    int idx = args.size();
-    while (idx > 0) {
-      String arg = args.get(idx - 1);
+    int slotIdx = method.getArgSlotSize() + 1;
+
+    int idx = args.size() - 1;
+    while (idx >= 0) {
+      String arg = args.get(idx);
       switch (arg) {
         case "I":
         case "B":
         case "C":
         case "S":
-          newFrame.localVars.setInt(idx, frame.operandStack.popInt());
-          idx--;
+        case "Z":
+          slotIdx--;
+          newFrame.localVars.setInt(slotIdx, frame.operandStack.popInt());
           break;
         case "J":
-          newFrame.localVars.setLong(idx, frame.operandStack.popLong());
-          idx -= 2;
+          slotIdx -= 2;
+          newFrame.localVars.setLong(slotIdx, frame.operandStack.popLong());
           break;
         case "F":
-          newFrame.localVars.setFloat(idx, frame.operandStack.popFloat());
-          idx--;
+          slotIdx -= 1;
+          newFrame.localVars.setFloat(slotIdx, frame.operandStack.popFloat());
           break;
         case "D":
-          newFrame.localVars.setDouble(idx, frame.operandStack.popDouble());
+          slotIdx -= 2;
+          newFrame.localVars.setDouble(slotIdx, frame.operandStack.popDouble());
           idx -= 2;
           break;
         default:
-          newFrame.localVars.setRef(idx, frame.operandStack.popRef());
-          idx--;
+          slotIdx--;
+          newFrame.localVars.setRef(slotIdx, frame.operandStack.popRef());
           break;
       }
+      idx--;
     }
 
     newFrame.localVars.setRef(0, frame.operandStack.popRef());

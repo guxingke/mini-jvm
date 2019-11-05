@@ -3,6 +3,8 @@ package com.gxk.jvm.rtda.heap;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 import java.util.Map;
@@ -26,6 +28,22 @@ public class KMethod {
 
   public List<String> getArgs() {
     return Utils.parseMethodDescriptor(this.descriptor);
+  }
+
+  public int getArgSlotSize() {
+    int count = Utils.parseMethodDescriptor(this.descriptor).stream()
+        .map(it -> {
+          if (Objects.equals("J", it)) {
+            return 2;
+          }
+          if (Objects.equals("D", it)) {
+            return 2;
+          }
+          return 1;
+        })
+        .reduce(0, (pre, next) -> pre + next);
+
+    return count;
   }
 
   @Override
