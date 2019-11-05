@@ -8,7 +8,7 @@ public class LCmpInst implements Instruction {
   public void execute(Frame frame) {
     Long v2 = frame.operandStack.popLong();
     Long v1 = frame.operandStack.popLong();
-    if (v1 == v2) {
+    if (v1.equals(v2)) {
       frame.operandStack.pushInt(0);
       return;
     }

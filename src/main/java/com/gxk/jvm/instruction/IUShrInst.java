@@ -9,8 +9,13 @@ public class IUShrInst implements Instruction {
     Integer v2 = frame.operandStack.popInt();
     Integer v1 = frame.operandStack.popInt();
     int s = v2 & 0x1f;
-    int ret = v1 >> s;
+
+    if (v1 >= 0) {
+      int ret = v1 >> s;
+      frame.operandStack.pushInt(ret);
+      return;
+    }
+    int ret = (v1 >> s) + (2 << ~s);
     frame.operandStack.pushInt(ret);
-    // FIXME .
   }
 }
