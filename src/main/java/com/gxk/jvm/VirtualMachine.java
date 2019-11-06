@@ -73,6 +73,11 @@ public class VirtualMachine {
       frame.operandStack.popRef();
       System.out.println(val);
     });
+    Heap.registerMethod("java/io/PrintStream_println_(Z)V", frame -> {
+      int val = frame.operandStack.popInt();
+      frame.operandStack.popRef();
+      System.out.println(val == 1);
+    });
 
     // object
     Heap.registerMethod("java/lang/Object_hashCode_()I", (frame) -> frame.operandStack.pushInt(frame.operandStack.popRef().hashCode()));

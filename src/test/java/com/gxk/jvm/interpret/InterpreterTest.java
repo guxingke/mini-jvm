@@ -69,6 +69,11 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_hello_bool() {
+    testMain("TrueFalse");
+  }
+
+  @Test
   public void test_with_class() {
     KClass clazz = loadAndGetClazz("Loop1");
     KMethod method = clazz.getMethods().get(2);
