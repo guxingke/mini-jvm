@@ -18,8 +18,8 @@ public class IIncInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.localVars.getInt(index);
+    Integer tmp = frame.getInt(index);
     tmp += val;
-    frame.localVars.setInt(index, tmp);
+    frame.setInt(index, tmp);
   }
 }

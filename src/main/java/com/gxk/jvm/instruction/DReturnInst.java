@@ -6,10 +6,10 @@ public class DReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
+    double tmp = frame.popDouble();
     frame.thread.popFrame();
     if (!frame.thread.empty()) {
-      frame.thread.currentFrame().operandStack.pushDouble(tmp);
+      frame.thread.currentFrame().pushDouble(tmp);
     }
 //    System.out.println("do ret " + tmp);
   }

@@ -6,7 +6,7 @@ public class FNegInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.operandStack.popFloat();
-    frame.operandStack.pushFloat(-tmp);
+    float tmp = frame.popFloat();
+    frame.pushFloat(-tmp);
   }
 }

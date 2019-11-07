@@ -13,7 +13,7 @@ public class I2dInst implements Instruction{
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.operandStack.pushDouble(((double) tmp));
+    Integer tmp = frame.popInt();
+    frame.pushDouble(((double) tmp));
   }
 }

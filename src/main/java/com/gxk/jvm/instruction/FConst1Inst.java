@@ -6,6 +6,6 @@ public class FConst1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushFloat(1.0f);
+    frame.pushFloat(1.0f);
   }
 }

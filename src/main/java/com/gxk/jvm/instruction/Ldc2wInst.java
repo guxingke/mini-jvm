@@ -19,9 +19,9 @@ public class Ldc2wInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     if (val != null) {
-      frame.operandStack.pushLong(val);
+      frame.pushLong(val);
     } else if (val2!= null) {
-      frame.operandStack.pushDouble(val2);
+      frame.pushDouble(val2);
     }
   }
 }

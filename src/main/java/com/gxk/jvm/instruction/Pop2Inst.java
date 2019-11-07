@@ -6,7 +6,7 @@ public class Pop2Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.popRef();
-    frame.operandStack.popRef();
+    frame.popRef();
+    frame.popRef();
   }
 }

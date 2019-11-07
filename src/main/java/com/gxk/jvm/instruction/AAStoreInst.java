@@ -7,9 +7,9 @@ public class AAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.operandStack.popRef();
-    Integer index = frame.operandStack.popInt();
-    KArray array = (KArray) frame.operandStack.popRef();
+    Object val = frame.popRef();
+    Integer index = frame.popInt();
+    KArray array = (KArray) frame.popRef();
     array.items[index] = val;
   }
 }

@@ -14,7 +14,7 @@ public class DLoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.localVars.getDouble(index);
-    frame.operandStack.pushDouble(tmp);
+    double tmp = frame.getDouble(index);
+    frame.pushDouble(tmp);
   }
 }

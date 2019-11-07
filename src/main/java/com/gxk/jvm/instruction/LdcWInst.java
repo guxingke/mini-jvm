@@ -20,12 +20,12 @@ public class LdcWInst implements Instruction {
   public void execute(Frame frame) {
     switch (descriptor) {
       case "I":
-        frame.operandStack.pushInt(((Integer) val));
+        frame.pushInt(((Integer) val));
         break;
       case "F":
-        frame.operandStack.pushFloat(((float) val));
+        frame.pushFloat(((float) val));
       default:
-        frame.operandStack.pushRef(val);
+        frame.pushRef(val);
     }
   }
 }

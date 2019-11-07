@@ -16,7 +16,7 @@ public class FStoreNInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Float tmp = frame.operandStack.popFloat();
-    frame.localVars.setFloat(n, tmp);
+    Float tmp = frame.popFloat();
+    frame.setFloat(n, tmp);
   }
 }

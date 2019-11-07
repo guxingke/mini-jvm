@@ -11,13 +11,13 @@ public class NewArrayInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer count = frame.operandStack.popInt();
+    Integer count = frame.popInt();
     switch (type) {
       case 5:
-        frame.operandStack.pushRef(new KArray(null, new Character[count]));
+        frame.pushRef(new KArray(null, new Character[count]));
         return;
       case 10:
-        frame.operandStack.pushRef(new KArray(Heap.findClass("java/lang/Integer"), new Integer[count]));
+        frame.pushRef(new KArray(Heap.findClass("java/lang/Integer"), new Integer[count]));
         return;
       default:
         throw new UnsupportedOperationException(String.valueOf(type));

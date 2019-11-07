@@ -6,10 +6,10 @@ public class IReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.thread.popFrame();
+    Integer tmp = frame.popInt();
+    fame.thread.popFrame();
     if (!frame.thread.empty()) {
-      frame.thread.currentFrame().operandStack.pushInt(tmp);
+      frame.thread.currentFrame().pushInt(tmp);
     }
 //    System.out.println("do ret " + tmp);
   }

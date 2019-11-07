@@ -13,7 +13,7 @@ public class D2fInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
-    frame.operandStack.pushFloat(((float) tmp));
+    double tmp = frame.popDouble();
+    frame.pushFloat(((float) tmp));
   }
 }

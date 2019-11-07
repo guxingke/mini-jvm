@@ -14,7 +14,7 @@ public class FLoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.localVars.getFloat(index);
-    frame.operandStack.pushFloat(tmp);
+    float tmp = frame.getFloat(index);
+    frame.pushFloat(tmp);
   }
 }

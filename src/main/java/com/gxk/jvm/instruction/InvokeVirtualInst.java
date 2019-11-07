@@ -56,30 +56,30 @@ public class InvokeVirtualInst implements Instruction {
         case "S":
         case "Z":
           slotIdx--;
-          newFrame.localVars.setInt(slotIdx, frame.operandStack.popInt());
+          newFrame.setInt(slotIdx, frame.popInt());
           break;
         case "J":
           slotIdx -= 2;
-          newFrame.localVars.setLong(slotIdx, frame.operandStack.popLong());
+          newFrame.setLong(slotIdx, frame.popLong());
           break;
         case "F":
           slotIdx -= 1;
-          newFrame.localVars.setFloat(slotIdx, frame.operandStack.popFloat());
+          newFrame.setFloat(slotIdx, frame.popFloat());
           break;
         case "D":
           slotIdx -= 2;
-          newFrame.localVars.setDouble(slotIdx, frame.operandStack.popDouble());
+          newFrame.setDouble(slotIdx, frame.popDouble());
           idx -= 2;
           break;
         default:
           slotIdx--;
-          newFrame.localVars.setRef(slotIdx, frame.operandStack.popRef());
+          newFrame.setRef(slotIdx, frame.popRef());
           break;
       }
       idx--;
     }
 
-    newFrame.localVars.setRef(0, frame.operandStack.popRef());
+    newFrame.setRef(0, frame.popRef());
     frame.thread.pushFrame(newFrame);
   }
 

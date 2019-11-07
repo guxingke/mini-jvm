@@ -13,7 +13,7 @@ public class D2iInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
-    frame.operandStack.pushInt(((int) tmp));
+    double tmp = frame.popDouble();
+    frame.pushInt(((int) tmp));
   }
 }

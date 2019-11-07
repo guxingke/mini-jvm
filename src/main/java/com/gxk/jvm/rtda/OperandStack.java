@@ -67,19 +67,19 @@ public class OperandStack {
     this.slots.push(val);
   }
 
-  public void debug() {
-    System.out.println("OperandStack: ");
+  public void debug(String space) {
+    System.out.println(space + "OperandStack: ");
     for (int i = 0; i < this.slots.size(); i++) {
       Slot slot = this.slots.get(i);
       if (slot == null) {
-        System.out.println(String.format("%d | null | null", i));
+        System.out.println(space + String.format("%d | null | null", i));
         continue;
       }
       if (slot.ref != null) {
-        System.out.println(String.format("%d | null | %s", i, slot.ref));
+        System.out.println(space + String.format("%d | null | %s", i, slot.ref));
         continue;
       }
-      System.out.println(String.format("%d | %s | null", i, slot.num));
+      System.out.println(space + String.format("%d | %s | null", i, slot.num));
     }
   }
 }

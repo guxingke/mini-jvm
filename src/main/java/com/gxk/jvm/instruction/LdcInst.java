@@ -26,10 +26,10 @@ public class LdcInst implements Instruction {
   public void execute(Frame frame) {
     switch (descriptor) {
       case "I":
-        frame.operandStack.pushInt(((Integer) val));
+        frame.pushInt(((Integer) val));
         break;
       case "F":
-        frame.operandStack.pushFloat(((float) val));
+        frame.pushFloat(((float) val));
       case "Ljava/lang/String":
         KClass klass = Heap.findClass("java/lang/String");
         if (klass == null) {
@@ -56,7 +56,7 @@ public class LdcInst implements Instruction {
         }
         KArray arr = new KArray(arrClazz, characters);
         field.val = new Slot[]{new Slot(arr)};
-        frame.operandStack.pushRef(object);
+        frame.pushRef(object);
         break;
       case "L":
         KClass klass2 = Heap.findClass(val.toString());
@@ -73,10 +73,10 @@ public class LdcInst implements Instruction {
           frame.nextPc = frame.thread.getPc();
           return;
         }
-        frame.operandStack.pushRef(klass2);
+        frame.pushRef(klass2);
         break;
       default:
-        frame.operandStack.pushRef(val);
+        frame.pushRef(val);
         break;
     }
   }

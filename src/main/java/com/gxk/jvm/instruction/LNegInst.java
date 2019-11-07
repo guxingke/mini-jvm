@@ -6,7 +6,7 @@ public class LNegInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.operandStack.popLong();
-    frame.operandStack.pushLong(-tmp);
+    Long tmp = frame.popLong();
+    frame.pushLong(-tmp);
   }
 }

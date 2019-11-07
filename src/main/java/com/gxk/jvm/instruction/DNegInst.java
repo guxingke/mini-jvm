@@ -6,7 +6,7 @@ public class DNegInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
-    frame.operandStack.pushDouble(-tmp);
+    double tmp = frame.popDouble();
+    frame.pushDouble(-tmp);
   }
 }

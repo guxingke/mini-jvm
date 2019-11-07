@@ -27,7 +27,7 @@ public class GetFieldInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KObject obj = ((KObject) frame.operandStack.popRef());
+    KObject obj = ((KObject) frame.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
     if (field.val == null) {
       // init
@@ -41,7 +41,7 @@ public class GetFieldInst implements Instruction {
     Slot[] val = field.val;
 
     for (Slot slot : val) {
-      frame.operandStack.pushSlot(slot);
+      frame.pushSlot(slot);
     }
   }
 

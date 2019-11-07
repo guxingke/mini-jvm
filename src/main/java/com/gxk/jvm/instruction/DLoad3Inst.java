@@ -6,7 +6,7 @@ public class DLoad3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.localVars.getDouble(3);
-    frame.operandStack.pushDouble(tmp);
+    double tmp = frame.getDouble(3);
+    frame.pushDouble(tmp);
   }
 }

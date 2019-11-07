@@ -6,8 +6,8 @@ public class LAddInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long a1 = frame.operandStack.popLong();
-    Long a2 = frame.operandStack.popLong();
-    frame.operandStack.pushLong(a1 + a2);
+    Long a1 = frame.popLong();
+    Long a2 = frame.popLong();
+    frame.pushLong(a1 + a2);
   }
 }

@@ -33,7 +33,7 @@ public class Interpreter {
     }
     KClass arrClazz = new KClass("[java/lang/String", method.clazz.classLoader);
     KArray array = new KArray(arrClazz, args);
-    frame.localVars.setRef(0, array);
+    frame.setRef(0, array);
 
     doInterpret(thread, frame);
   }
@@ -52,9 +52,9 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-//      debugBefore(inst, frame);
+      debugBefore(inst, frame);
       inst.execute(frame);
-//      debugAfter(inst, frame);
+      debugAfter(inst, frame);
 
       if (thread.empty()) {
         break;
@@ -63,17 +63,27 @@ public class Interpreter {
   }
 
   void debugBefore(Instruction inst, Frame frame) {
-    System.out.println(frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ============================== begin");
-    inst.debug();
-    frame.debug();
-    System.out.println("---------------------");
+    String space = genSpace(frame.thread.size() * 2);
+    System.out.println(space + frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ============================== begin");
+    inst.debug(space);
+    frame.debug(space);
+    System.out.println(space + "---------------------");
   }
 
   void debugAfter(Instruction inst, Frame frame) {
-    System.out.println("---------------------");
-    inst.debug();
-    frame.debug();
-    System.out.println(frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ==============================   end");
+    String space = genSpace(frame.thread.size() * 2);
+    System.out.println(space + "---------------------");
+    inst.debug(space);
+    frame.debug(space);
+    System.out.println(space + frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ==============================   end");
     System.out.println();
+  }
+
+  public String genSpace(int size) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < size; i++) {
+      sb.append(" ");
+    }
+    return sb.toString();
   }
 }

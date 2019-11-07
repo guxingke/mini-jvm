@@ -6,8 +6,8 @@ public class IRemInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer v2 = frame.operandStack.popInt();
-    Integer v1 = frame.operandStack.popInt();
-    frame.operandStack.pushInt(v1 % v2);
+    Integer v2 = frame.popInt();
+    Integer v1 = frame.popInt();
+    frame.pushInt(v1 % v2);
   }
 }

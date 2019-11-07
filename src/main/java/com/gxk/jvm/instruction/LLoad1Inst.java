@@ -6,7 +6,7 @@ public class LLoad1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.localVars.getLong(1);
-    frame.operandStack.pushLong(tmp);
+    Long tmp = frame.getLong(1);
+    frame.pushLong(tmp);
   }
 }

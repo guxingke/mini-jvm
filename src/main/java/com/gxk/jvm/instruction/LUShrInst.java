@@ -6,16 +6,16 @@ public class LUShrInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer v2 = frame.operandStack.popInt();
-    long v1 = frame.operandStack.popLong();
+    Integer v2 = frame.popInt();
+    long v1 = frame.popLong();
     int s = v2 & 0x3f;
 
     if (v1 >= 0) {
       long ret = v1 >> s;
-      frame.operandStack.pushLong(ret);
+      frame.pushLong(ret);
       return;
     }
     long ret = (v1 >> s) + (2L << ~s);
-    frame.operandStack.pushLong(ret);
+    frame.pushLong(ret);
   }
 }

@@ -17,6 +17,6 @@ public class AconstNullInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushRef(null);
+    frame.pushRef(null);
   }
 }

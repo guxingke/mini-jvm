@@ -6,8 +6,8 @@ public class FRemInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float v2 = frame.operandStack.popFloat();
-    float v1 = frame.operandStack.popFloat();
-    frame.operandStack.pushFloat(v1 % v2);
+    float v2 = frame.popFloat();
+    float v1 = frame.popFloat();
+    frame.pushFloat(v1 % v2);
   }
 }

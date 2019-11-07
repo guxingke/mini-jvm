@@ -6,7 +6,7 @@ public class ILoad2Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.localVars.getInt(2);
-    frame.operandStack.pushInt(tmp);
+    Integer tmp = frame.getInt(2);
+    frame.pushInt(tmp);
   }
 }

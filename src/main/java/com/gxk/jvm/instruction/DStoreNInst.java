@@ -16,7 +16,7 @@ public class DStoreNInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
-    frame.localVars.setDouble(n, tmp);
+    double tmp = frame.popDouble();
+    frame.setDouble(n, tmp);
   }
 }

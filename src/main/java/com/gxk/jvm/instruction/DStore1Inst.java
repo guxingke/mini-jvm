@@ -6,7 +6,7 @@ public class DStore1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.operandStack.popDouble();
-    frame.localVars.setDouble(1, tmp);
+    double tmp = frame.popDouble();
+    frame.setDouble(1, tmp);
   }
 }

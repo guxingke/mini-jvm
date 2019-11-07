@@ -6,7 +6,7 @@ public class FStore3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.operandStack.popFloat();
-    frame.localVars.setFloat(3, tmp);
+    float tmp = frame.popFloat();
+    frame.setFloat(3, tmp);
   }
 }

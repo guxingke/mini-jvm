@@ -6,6 +6,6 @@ public class IConst2Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushInt(2);
+    frame.pushInt(2);
   }
 }

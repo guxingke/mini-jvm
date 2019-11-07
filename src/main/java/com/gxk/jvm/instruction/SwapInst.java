@@ -6,9 +6,9 @@ public class SwapInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object v2 = frame.operandStack.popRef();
-    Object v1 = frame.operandStack.popRef();
-    frame.operandStack.pushRef(v2);
-    frame.operandStack.pushRef(v1);
+    Object v2 = frame.popRef();
+    Object v1 = frame.popRef();
+    frame.pushRef(v2);
+    frame.pushRef(v1);
   }
 }

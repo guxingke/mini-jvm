@@ -6,8 +6,8 @@ public class LXOrInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long v2 = frame.operandStack.popLong();
-    Long v1 = frame.operandStack.popLong();
-    frame.operandStack.pushLong(v1 ^ v2);
+    Long v2 = frame.popLong();
+    Long v1 = frame.popLong();
+    frame.pushLong(v1 ^ v2);
   }
 }

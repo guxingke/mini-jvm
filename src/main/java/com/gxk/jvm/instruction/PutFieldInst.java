@@ -27,14 +27,14 @@ public class PutFieldInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     if (fieldDescriptor.equalsIgnoreCase("J")) {
-      Slot v2 = frame.operandStack.popSlot();
-      Slot v1 = frame.operandStack.popSlot();
-      KObject obj = (KObject) frame.operandStack.popRef();
+      Slot v2 = frame.popSlot();
+      Slot v1 = frame.popSlot();
+      KObject obj = (KObject) frame.popRef();
       obj.setField(fieldName, fieldDescriptor, new Slot[]{v1, v2});
       return;
     }
 
-    Slot v = frame.operandStack.popSlot();
-    ((KObject) frame.operandStack.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
+    Slot v = frame.popSlot();
+    ((KObject) frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
   }
 }

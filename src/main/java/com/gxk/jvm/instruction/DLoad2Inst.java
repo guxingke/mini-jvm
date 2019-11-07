@@ -6,7 +6,7 @@ public class DLoad2Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double tmp = frame.localVars.getDouble(2);
-    frame.operandStack.pushDouble(tmp);
+    double tmp = frame.getDouble(2);
+    frame.pushDouble(tmp);
   }
 }

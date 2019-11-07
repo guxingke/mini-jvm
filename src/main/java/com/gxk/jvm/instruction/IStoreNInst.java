@@ -16,8 +16,8 @@ public class IStoreNInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.localVars.setInt(n, tmp);
+    Integer tmp = frame.popInt();
+    frame.setInt(n, tmp);
   }
 
   @Override

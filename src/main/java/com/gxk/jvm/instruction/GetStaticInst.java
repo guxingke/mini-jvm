@@ -57,7 +57,7 @@ public class GetStaticInst implements Instruction {
 
     Slot[] val = field.val;
     for (Slot slot : val) {
-      frame.operandStack.pushSlot(slot);
+      frame.pushSlot(slot);
     }
   }
 

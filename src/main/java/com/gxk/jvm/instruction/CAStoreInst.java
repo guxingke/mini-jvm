@@ -7,9 +7,9 @@ public class CAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Character val = ((char) (frame.operandStack.popInt().intValue()));
-    Integer index = frame.operandStack.popInt();
-    KArray array = (KArray) frame.operandStack.popRef();
+    Character val = ((char) (frame.popInt().intValue()));
+    Integer index = frame.popInt();
+    KArray array = (KArray) frame.popRef();
     array.items[index] = val;
   }
 }

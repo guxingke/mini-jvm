@@ -13,7 +13,7 @@ public class I2lInst implements Instruction{
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.operandStack.pushLong(tmp.longValue());
+    Integer tmp = frame.popInt();
+    frame.pushLong(tmp.longValue());
   }
 }

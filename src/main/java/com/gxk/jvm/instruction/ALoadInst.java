@@ -14,7 +14,7 @@ public class ALoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.localVars.getRef(index);
-    frame.operandStack.pushRef(tmp);
+    Object tmp = frame.getRef(index);
+    frame.pushRef(tmp);
   }
 }

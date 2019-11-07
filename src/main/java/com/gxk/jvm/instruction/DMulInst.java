@@ -7,8 +7,8 @@ public class DMulInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    double v2 = frame.operandStack.popDouble();
-    double v1 = frame.operandStack.popDouble();
-    frame.operandStack.pushDouble(v1 * v2);
+    double v2 = frame.popDouble();
+    double v1 = frame.popDouble();
+    frame.pushDouble(v1 * v2);
   }
 }

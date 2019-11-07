@@ -6,7 +6,7 @@ public class ALoad3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.localVars.getRef(3);
-    frame.operandStack.pushRef(tmp);
+    Object tmp = frame.getRef(3);
+    frame.pushRef(tmp);
   }
 }

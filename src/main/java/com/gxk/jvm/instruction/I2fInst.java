@@ -13,7 +13,7 @@ public class I2fInst implements Instruction{
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.operandStack.pushFloat(((float) tmp));
+    Integer tmp = frame.popInt();
+    frame.pushFloat(((float) tmp));
   }
 }

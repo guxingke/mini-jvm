@@ -6,8 +6,8 @@ public class LAndInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    long a1 = frame.operandStack.popLong();
-    long a2 = frame.operandStack.popLong();
-    frame.operandStack.pushLong(a2 & a1);
+    long a1 = frame.popLong();
+    long a2 = frame.popLong();
+    frame.pushLong(a2 & a1);
   }
 }

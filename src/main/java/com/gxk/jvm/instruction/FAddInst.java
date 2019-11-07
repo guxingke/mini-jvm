@@ -6,8 +6,8 @@ public class FAddInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float a1 = frame.operandStack.popFloat();
-    float a2 = frame.operandStack.popFloat();
-    frame.operandStack.pushFloat(a1 + a2);
+    float a1 = frame.popFloat();
+    float a2 = frame.popFloat();
+    frame.pushFloat(a1 + a2);
   }
 }

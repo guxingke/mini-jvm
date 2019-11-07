@@ -6,10 +6,10 @@ public class LReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.operandStack.popLong();
+    Long tmp = frame.popLong();
     frame.thread.popFrame();
     if (!frame.thread.empty()) {
-      frame.thread.currentFrame().operandStack.pushLong(tmp);
+      frame.thread.currentFrame().pushLong(tmp);
     }
 //    System.out.println("do ret " + tmp);
   }

@@ -17,6 +17,6 @@ public class BiPushInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushInt((int) (this.val));
+    frame.pushInt((int) (this.val));
   }
 }

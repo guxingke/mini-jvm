@@ -13,7 +13,7 @@ public interface Instruction {
 
   void execute(Frame frame);
 
-  default void debug(){
-    System.out.println(this.toString());
+  default void debug(String space){
+    System.out.println(space + this.toString());
   }
 }

@@ -6,6 +6,6 @@ public class PopInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.popRef();
+    frame.popRef();
   }
 }

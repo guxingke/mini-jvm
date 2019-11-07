@@ -16,7 +16,7 @@ public class IfLeInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer val= frame.operandStack.popInt();
+    Integer val= frame.popInt();
     if (val <= 0) {
       frame.nextPc = frame.thread.getPc() + offset;
     }

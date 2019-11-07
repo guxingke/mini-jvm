@@ -7,9 +7,9 @@ public class AALoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer index = frame.operandStack.popInt();
-    KArray array = (KArray) frame.operandStack.popRef();
+    Integer index = frame.popInt();
+    KArray array = (KArray) frame.popRef();
     Object item = array.items[index];
-    frame.operandStack.pushRef(item);
+    frame.pushRef(item);
   }
 }

@@ -6,7 +6,7 @@ public class INegInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    int tmp = frame.operandStack.popInt();
-    frame.operandStack.pushInt(-tmp);
+    int tmp = frame.popInt();
+    frame.pushInt(-tmp);
   }
 }

@@ -16,8 +16,8 @@ public class IfICmpLtInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer val2= frame.operandStack.popInt();
-    Integer val1= frame.operandStack.popInt();
+    Integer val2= frame.popInt();
+    Integer val1= frame.popInt();
     if (val1 < val2) {
       frame.nextPc = frame.thread.getPc() + offset;
     }

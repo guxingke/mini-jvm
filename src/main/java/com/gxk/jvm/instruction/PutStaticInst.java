@@ -29,10 +29,10 @@ public class PutStaticInst implements Instruction {
     KField field = kClass.getField(fieldName, fieldDescriptor);
 
     if (fieldDescriptor.equalsIgnoreCase("J")) {
-      field.val = new Slot[]{frame.operandStack.popSlot(), frame.operandStack.popSlot()};
+      field.val = new Slot[]{frame.popSlot(), frame.popSlot()};
       return;
     }
-    field.val = new Slot[]{frame.operandStack.popSlot()};
+    field.val = new Slot[]{frame.popSlot()};
   }
 
   @Override

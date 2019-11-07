@@ -53,7 +53,7 @@ public class NewInst implements Instruction {
     }
 
     KObject obj = kClass.newObject();
-    frame.operandStack.pushRef(obj);
+    frame.pushRef(obj);
   }
 }
 

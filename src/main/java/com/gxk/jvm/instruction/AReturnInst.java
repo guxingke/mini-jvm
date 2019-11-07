@@ -6,10 +6,10 @@ public class AReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.operandStack.popRef();
+    Object tmp = frame.popRef();
     frame.thread.popFrame();
     if (!frame.thread.empty()) {
-      frame.thread.currentFrame().operandStack.pushRef(tmp);
+      frame.thread.currentFrame().pushRef(tmp);
     }
 //    System.out.println("do ret " + tmp);
   }

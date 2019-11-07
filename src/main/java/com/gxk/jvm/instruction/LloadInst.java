@@ -16,7 +16,7 @@ public class LloadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.localVars.getLong(index);
-    frame.operandStack.pushLong(tmp);
+    Long tmp = frame.getLong(index);
+    frame.pushLong(tmp);
   }
 }

@@ -6,7 +6,7 @@ public class IStore3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.operandStack.popInt();
-    frame.localVars.setInt(3, tmp);
+    Integer tmp = frame.popInt();
+    frame.setInt(3, tmp);
   }
 }

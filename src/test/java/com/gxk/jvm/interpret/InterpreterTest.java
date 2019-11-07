@@ -82,8 +82,8 @@ public class InterpreterTest {
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
-    frame.localVars.setInt(0, 10);
-    frame.localVars.setInt(1, 20);
+    frame.setInt(0, 10);
+    frame.setInt(1, 20);
 
     new Interpreter().loop(thread);
   }
@@ -107,8 +107,8 @@ public class InterpreterTest {
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
-    frame.localVars.setInt(0, 10);
-    frame.localVars.setInt(1, 20);
+    frame.setInt(0, 10);
+    frame.setInt(1, 20);
 
     new Interpreter().loop(thread);
   }
@@ -147,8 +147,8 @@ public class InterpreterTest {
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
-    frame.localVars.setInt(0, 10);
-    frame.localVars.setInt(1, 20);
+    frame.setInt(0, 10);
+    frame.setInt(1, 20);
 
     new Interpreter().loop(thread);
   }

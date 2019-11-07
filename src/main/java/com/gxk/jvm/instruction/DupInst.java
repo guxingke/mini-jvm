@@ -7,8 +7,8 @@ public class DupInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     // TODO ...
-    Object obj = frame.operandStack.popRef();
-    frame.operandStack.pushRef(obj);
-    frame.operandStack.pushRef(obj);
+    Object obj = frame.popRef();
+    frame.pushRef(obj);
+    frame.pushRef(obj);
   }
 }

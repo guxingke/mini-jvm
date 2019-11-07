@@ -6,7 +6,7 @@ public class AStore3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.operandStack.popRef();
-    frame.localVars.setRef(3, tmp);
+    Object tmp = frame.popRef();
+    frame.setRef(3, tmp);
   }
 }

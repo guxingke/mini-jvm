@@ -6,7 +6,7 @@ public class LStore0Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.operandStack.popLong();
-    frame.localVars.setLong(0, tmp);
+    Long tmp = frame.popLong();
+    frame.setLong(0, tmp);
   }
 }

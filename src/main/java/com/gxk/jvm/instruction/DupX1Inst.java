@@ -7,10 +7,10 @@ public class DupX1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Slot s1 = frame.operandStack.popSlot();
-    Slot s2 = frame.operandStack.popSlot();
-    frame.operandStack.pushSlot(s1);
-    frame.operandStack.pushSlot(s2);
-    frame.operandStack.pushSlot(s1);
+    Slot s1 = frame.popSlot();
+    Slot s2 = frame.popSlot();
+    frame.pushSlot(s1);
+    frame.pushSlot(s2);
+    frame.pushSlot(s1);
   }
 }

@@ -16,7 +16,7 @@ public class LStoreNInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Long tmp = frame.operandStack.popLong();
-    frame.localVars.setLong(n, tmp);
+    Long tmp = frame.popLong();
+    frame.setLong(n, tmp);
   }
 }

@@ -6,16 +6,16 @@ public class FCmpLInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float v2 = frame.operandStack.popFloat();
-    float v1 = frame.operandStack.popFloat();
+    float v2 = frame.popFloat();
+    float v1 = frame.popFloat();
     if (v1 == v2) {
-      frame.operandStack.pushInt(0);
+      frame.pushInt(0);
       return;
     }
     if (v1 < v2) {
-      frame.operandStack.pushInt(-1);
+      frame.pushInt(-1);
       return;
     }
-    frame.operandStack.pushInt(1);
+    frame.pushInt(1);
   }
 }

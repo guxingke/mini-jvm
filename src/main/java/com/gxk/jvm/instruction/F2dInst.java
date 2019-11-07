@@ -13,7 +13,7 @@ public class F2dInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.operandStack.popFloat();
-    frame.operandStack.pushDouble(((double) tmp));
+    float tmp = frame.popFloat();
+    frame.pushDouble(((double) tmp));
   }
 }

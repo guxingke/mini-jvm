@@ -9,6 +9,6 @@ public class IConst1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushInt(1);
+    frame.pushInt(1);
   }
 }

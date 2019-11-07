@@ -6,6 +6,6 @@ public class IConst5Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushInt(5);
+    frame.pushInt(5);
   }
 }

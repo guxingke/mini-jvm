@@ -7,9 +7,9 @@ public class DALoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer index = frame.operandStack.popInt();
-    KArray array = (KArray) frame.operandStack.popRef();
+    Integer index = frame.popInt();
+    KArray array = (KArray) frame.popRef();
     double item = (double) array.items[index];
-    frame.operandStack.pushDouble(item);
+    frame.pushDouble(item);
   }
 }

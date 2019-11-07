@@ -6,7 +6,7 @@ public class ILoad0Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.localVars.getInt(0);
-    frame.operandStack.pushInt(tmp);
+    Integer tmp = frame.getInt(0);
+    frame.pushInt(tmp);
   }
 }

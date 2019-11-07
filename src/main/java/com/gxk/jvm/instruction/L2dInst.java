@@ -13,7 +13,7 @@ public class L2dInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    long tmp = frame.operandStack.popLong();
-    frame.operandStack.pushDouble((double) tmp);
+    long tmp = frame.popLong();
+    frame.pushDouble((double) tmp);
   }
 }

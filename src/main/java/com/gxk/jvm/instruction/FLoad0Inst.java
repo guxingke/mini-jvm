@@ -6,7 +6,7 @@ public class FLoad0Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.localVars.getFloat(0);
-    frame.operandStack.pushFloat(tmp);
+    float tmp = frame.getFloat(0);
+    frame.pushFloat(tmp);
   }
 }

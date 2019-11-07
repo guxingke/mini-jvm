@@ -16,7 +16,7 @@ public class IloadNInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer tmp = frame.localVars.getInt(n);
-    frame.operandStack.pushInt(tmp);
+    Integer tmp = frame.getInt(n);
+    frame.pushInt(tmp);
   }
 }

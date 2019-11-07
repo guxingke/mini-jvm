@@ -6,10 +6,10 @@ public class FReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.operandStack.popFloat();
+    float tmp = frame.popFloat();
     frame.thread.popFrame();
     if (!frame.thread.empty()) {
-      frame.thread.currentFrame().operandStack.pushFloat(tmp);
+      frame.thread.currentFrame().pushFloat(tmp);
     }
 //    System.out.println("do ret " + tmp);
   }

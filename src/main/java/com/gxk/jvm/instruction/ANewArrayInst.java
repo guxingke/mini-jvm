@@ -37,10 +37,10 @@ public class ANewArrayInst implements Instruction{
       kClass.setStaticInit(2);
     }
 
-    Integer count = frame.operandStack.popInt();
+    Integer count = frame.popInt();
     KClass arrClass = new KClass("[" + kClass.getName(), kClass.classLoader);
     KObject[] objs = new KObject[count];
     KArray kArray = new KArray(arrClass, objs);
-    frame.operandStack.pushRef(kArray);
+    frame.pushRef(kArray);
   }
 }

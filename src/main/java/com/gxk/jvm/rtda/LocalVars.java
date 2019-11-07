@@ -60,19 +60,19 @@ public class LocalVars {
     return slots[index].ref;
   }
 
-  public void debug() {
-    System.out.println("LocalVars: ");
+  public void debug(String space) {
+    System.out.println(space + "LocalVars: ");
     for (int i = 0; i < this.slots.length; i++) {
       Slot slot = this.slots[i];
       if (slot == null) {
-        System.out.println(String.format("%d | null | null", i));
+        System.out.println(space + String.format("%d | null | null", i));
         continue;
       }
       if (slot.ref != null) {
-        System.out.println(String.format("%d | null | %s", i, slot.ref));
+        System.out.println(space + String.format("%d | null | %s", i, slot.ref));
         continue;
       }
-      System.out.println(String.format("%d | %s | null", i, slot.num));
+      System.out.println(space + String.format("%d | %s | null", i, slot.num));
     }
   }
 }

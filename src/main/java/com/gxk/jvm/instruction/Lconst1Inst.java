@@ -6,6 +6,6 @@ public class Lconst1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.operandStack.pushLong(1L);
+    frame.pushLong(1L);
   }
 }

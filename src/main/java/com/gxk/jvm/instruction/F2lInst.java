@@ -13,7 +13,7 @@ public class F2lInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    float tmp = frame.operandStack.popFloat();
-    frame.operandStack.pushLong((long) tmp);
+    float tmp = frame.popFloat();
+    frame.pushLong((long) tmp);
   }
 }

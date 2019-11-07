@@ -13,7 +13,7 @@ public class L2fInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    long tmp = frame.operandStack.popLong();
-    frame.operandStack.pushFloat((float) tmp);
+    long tmp = frame.popLong();
+    frame.pushFloat((float) tmp);
   }
 }
