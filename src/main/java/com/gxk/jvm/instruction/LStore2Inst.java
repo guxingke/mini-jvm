@@ -7,6 +7,6 @@ public class LStore2Inst implements Instruction {
   @Override
   public void execute(Frame frame) {
     Long tmp = frame.popLong();
-    frame.setLong(3, tmp);
+    frame.setLong(2, tmp);
   }
 }

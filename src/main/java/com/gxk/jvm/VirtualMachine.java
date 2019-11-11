@@ -108,6 +108,11 @@ public class VirtualMachine {
       frame.popRef();
       System.out.println(val);
     });
+    Heap.registerMethod("java/io/PrintStream_println_(Ljava/lang/Object;)V", frame -> {
+      Object val = frame.popRef();
+      frame.popRef();
+      System.out.println(val);
+    });
     // object
     Heap.registerMethod("java/lang/Object_hashCode_()I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
     Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {});
