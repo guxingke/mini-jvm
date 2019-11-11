@@ -5,6 +5,7 @@ import com.gxk.jvm.classfile.Field;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
+import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -66,6 +67,26 @@ public class ClassLoader {
   public KClass doLoadClass(String name, ClassFile classFile) {
     List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(this::map).collect(Collectors.toList());
     List<KField> fields = Arrays.stream(classFile.fields.fields).map(this::map).collect(Collectors.toList());
+
+    // field init
+    fields.forEach(it -> {
+      switch (it.descriptor) {
+        case "Z":
+        case "C":
+        case "B":
+        case "S":
+        case "I":
+        case "F":
+          it.val = new Slot[] {new Slot(0)};
+          break;
+        case "D":
+        case "J":
+          it.val = new Slot[] {new Slot(0), new Slot(0)};
+          break;
+        default:
+          it.val = new Slot[] {new Slot((Object) null)};
+      }
+    });
 
     int scIdx = classFile.superClass;
     if (scIdx == 0) {
