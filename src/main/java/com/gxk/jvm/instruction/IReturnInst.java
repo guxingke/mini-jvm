@@ -7,7 +7,7 @@ public class IReturnInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     Integer tmp = frame.popInt();
-    fame.thread.popFrame();
+    frame.thread.popFrame();
     if (!frame.thread.empty()) {
       frame.thread.currentFrame().pushInt(tmp);
     }

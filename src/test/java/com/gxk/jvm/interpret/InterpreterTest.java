@@ -159,6 +159,11 @@ public class InterpreterTest {
   }
 
   @Test
+  public void test_static_field_init() {
+    testMain("TestStatic1");
+  }
+
+  @Test
   public void test_object() {
     testMain("TestObject");
   }

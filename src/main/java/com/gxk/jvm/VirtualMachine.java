@@ -68,17 +68,46 @@ public class VirtualMachine {
       frame.popRef();
       System.out.println();
     });
-    Heap.registerMethod("java/io/PrintStream_println_(I)V", frame -> {
-      Object val = frame.popInt();
-      frame.popRef();
-      System.out.println(val);
-    });
     Heap.registerMethod("java/io/PrintStream_println_(Z)V", frame -> {
       int val = frame.popInt();
       frame.popRef();
       System.out.println(val == 1);
     });
-
+    Heap.registerMethod("java/io/PrintStream_println_(C)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.println(((char) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(B)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.println(((byte) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(S)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.println(((short) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(I)V", frame -> {
+      Object val = frame.popInt();
+      frame.popRef();
+      System.out.println(val);
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(F)V", frame -> {
+      float val = frame.popFloat();
+      frame.popRef();
+      System.out.println((val));
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(J)V", frame -> {
+      long val = frame.popLong();
+      frame.popRef();
+      System.out.println(val);
+    });
+    Heap.registerMethod("java/io/PrintStream_println_(D)V", frame -> {
+      double val = frame.popDouble();
+      frame.popRef();
+      System.out.println(val);
+    });
     // object
     Heap.registerMethod("java/lang/Object_hashCode_()I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
     Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {});

@@ -1,6 +1,7 @@
 package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.classloader.ClassLoader;
+import com.gxk.jvm.rtda.Slot;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import lombok.Data;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Data
 public class KClass {
+
   public final String name;
   public final String superClassName;
   public final List<KMethod> methods;
@@ -28,7 +30,8 @@ public class KClass {
     this.staticInit = 2;
   }
 
-  public KClass(String name, String superClassName, List<KMethod> methods, List<KField> fields, ClassLoader classLoader) {
+  public KClass(String name, String superClassName, List<KMethod> methods, List<KField> fields,
+      ClassLoader classLoader) {
     this.name = name;
     this.superClassName = superClassName;
     this.methods = methods;
@@ -48,7 +51,7 @@ public class KClass {
   }
 
   public KMethod getMethod(String name, String descriptor) {
-    for (KMethod  method: methods) {
+    for (KMethod method : methods) {
       if (Objects.equals(method.name, name) && Objects.equals(method.descriptor, descriptor)) {
         return method;
       }
@@ -73,12 +76,32 @@ public class KClass {
   }
 
   public KObject newObject() {
-    List<KField> newFields = fields.stream().map(it -> new KField(it.name, it.descriptor)).collect(Collectors.toList());
+    List<KField> newFields = fields.stream().map(this::map).collect(Collectors.toList());
     KObject object = new KObject(newFields, this);
     if (this.superClass != null) {
       object.setSuperObject(this.superClass.newObject());
     }
     return object;
+  }
+
+  private KField map(KField source) {
+    if (source.isStatic()) {
+      return source;
+    }
+    switch (source.descriptor) {
+      case "Z":
+      case "C":
+      case "B":
+      case "S":
+      case "I":
+      case "F":
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0)});
+      case "D":
+      case "J":
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0), new Slot(0)});
+      default:
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot((Object) null)});
+    }
   }
 
   public boolean isStaticInit() {

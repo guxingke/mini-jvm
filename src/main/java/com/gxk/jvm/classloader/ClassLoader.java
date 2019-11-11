@@ -106,6 +106,6 @@ public class ClassLoader {
   }
 
   public KField map(Field field) {
-    return new KField(field.getName(), field.getDescriptor().descriptor);
+    return new KField(field.getAccessFlags(), field.getName(), field.getDescriptor().descriptor);
   }
 }
