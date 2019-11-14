@@ -183,6 +183,10 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
     Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {});
     Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {});
+
+    // Unsafe
+    Heap.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {});
+
     // string
     Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame ->  {
       System.out.println();

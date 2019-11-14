@@ -50,6 +50,11 @@ public class InvokeStaticInst implements Instruction {
     }
 
     KMethod method = kClass.getMethod(methodName, descriptor);
+
+    if (method.isNative()) {
+      throw new IllegalStateException("un impl native method call, " + method);
+    }
+
     Frame newFrame = new Frame(method, frame.thread);
     // fill args
     List<String> args = method.getArgs();
