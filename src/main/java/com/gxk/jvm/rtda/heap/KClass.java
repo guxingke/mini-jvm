@@ -112,6 +112,16 @@ public class KClass {
     this.staticInit = level;
   }
 
+  public KClass getUnStaticInitSuperClass() {
+    if (!this.isStaticInit()) {
+      return this;
+    }
+    if (this.superClass == null) {
+      return null;
+    }
+    return this.superClass.getUnStaticInitSuperClass();
+  }
+
   @Override
   public String toString() {
     return "KClass{" +
