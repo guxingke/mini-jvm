@@ -16,7 +16,8 @@ public class DirEntry implements Entry {
 
   @Override
   public ClassFile findClass(String clazzName) {
-    return Arrays.stream(
+    if (!clazzName.contains("/")) {
+      return Arrays.stream(
         Objects.requireNonNull(dirPath.toFile().listFiles((dir, name) -> Objects.equals(name, clazzName + ".class"))))
         .findFirst()
         .map(it -> {
@@ -27,5 +28,14 @@ public class DirEntry implements Entry {
           }
         })
         .orElse(null);
+    }
+
+    int idx = clazzName.indexOf("/");
+    String subDir = clazzName.substring(0, idx);
+    Path subPath = dirPath.resolve(subDir);
+    if (!subPath.toFile().exists()) {
+      return null;
+    }
+    return new DirEntry(subPath).findClass(clazzName.substring(idx + 1));
   }
 }

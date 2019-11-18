@@ -42,29 +42,28 @@ public class Interpreter {
     thread.pushFrame(frame);
 
     KClass clazz = frame.method.clazz;
+    if (clazz != null) {
+      // super clazz static init
+      KClass superClazz = clazz.getUnStaticInitSuperClass();
+      while (superClazz!=null) {
+        if (!superClazz.isStaticInit()) {
+          // init
+          KMethod cinit = superClazz.getMethod("<clinit>", "()V");
+          if (cinit == null) {
+            superClazz.setStaticInit(2);
+            frame.nextPc = frame.thread.getPc();
+            return;
+          }
 
-    // super clazz static init
-    KClass superClazz = clazz.getUnStaticInitSuperClass();
-    while (superClazz!=null) {
-
-      if (!superClazz.isStaticInit()) {
-        // init
-        KMethod cinit = superClazz.getMethod("<clinit>", "()V");
-        if (cinit == null) {
-          superClazz.setStaticInit(2);
-          frame.nextPc = frame.thread.getPc();
-          return;
+          Frame newFrame = new Frame(cinit, frame.thread);
+          superClazz.setStaticInit(1);
+          KClass finalKClass = superClazz;
+          newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+          frame.thread.pushFrame(newFrame);
         }
-
-        Frame newFrame = new Frame(cinit, frame.thread);
-        superClazz.setStaticInit(1);
-        KClass finalKClass = superClazz;
-        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
-        frame.thread.pushFrame(newFrame);
+        superClazz = clazz.getUnStaticInitSuperClass();
       }
-      superClazz = clazz.getUnStaticInitSuperClass();
     }
-
 
     loop(thread);
   }

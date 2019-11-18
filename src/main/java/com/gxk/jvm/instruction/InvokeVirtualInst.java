@@ -6,7 +6,12 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class InvokeVirtualInst implements Instruction {
@@ -45,45 +50,71 @@ public class InvokeVirtualInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    Frame newFrame = new Frame(method, frame.thread);
+    // super method
     // fill args
     List<String> args = method.getArgs();
-    int slotIdx = method.getArgSlotSize() + 1;
-
-    int idx = args.size() - 1;
-    while (idx >= 0) {
-      String arg = args.get(idx);
+    List<Object> argObjs = new ArrayList<>();
+    for (int i = args.size() - 1; i >= 0; i--) {
+      String arg = args.get(i);
       switch (arg) {
         case "I":
         case "B":
         case "C":
         case "S":
         case "Z":
-          slotIdx--;
-          newFrame.setInt(slotIdx, frame.popInt());
-          break;
-        case "J":
-          slotIdx -= 2;
-          newFrame.setLong(slotIdx, frame.popLong());
+          argObjs.add(frame.popInt());
           break;
         case "F":
-          slotIdx -= 1;
-          newFrame.setFloat(slotIdx, frame.popFloat());
+          argObjs.add(frame.popFloat());
+          break;
+        case "J":
+          argObjs.add(frame.popLong());
           break;
         case "D":
-          slotIdx -= 2;
-          newFrame.setDouble(slotIdx, frame.popDouble());
-          idx -= 2;
+          argObjs.add(frame.popDouble());
           break;
         default:
-          slotIdx--;
-          newFrame.setRef(slotIdx, frame.popRef());
+          argObjs.add(frame.popRef());
           break;
       }
-      idx--;
     }
 
-    newFrame.setRef(0, frame.popRef());
+    Collections.reverse(argObjs);
+
+    KObject ref = (KObject) frame.popRef();
+    KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+    Frame newFrame = new Frame(implMethod, frame.thread);
+
+    int slotIdx = 1;
+    for (int i = 0; i < args.size(); i++) {
+      String arg = args.get(i);
+      switch (arg) {
+        case "I":
+        case "B":
+        case "C":
+        case "S":
+        case "Z":
+          newFrame.setInt(slotIdx, (Integer) argObjs.get(i));
+          break;
+        case "J":
+          newFrame.setLong(slotIdx, (Long) argObjs.get(i));
+          slotIdx++;
+          break;
+        case "F":
+          newFrame.setFloat(slotIdx, (Float) argObjs.get(i));
+          break;
+        case "D":
+          newFrame.setDouble(slotIdx, (Double) argObjs.get(i));
+          slotIdx++;
+          break;
+        default:
+          newFrame.setRef(slotIdx, argObjs.get(i));
+          break;
+      }
+      slotIdx++;
+    }
+
+    newFrame.setRef(0, ref);
     frame.thread.pushFrame(newFrame);
   }
 
