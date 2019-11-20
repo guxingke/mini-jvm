@@ -205,6 +205,16 @@ public class InterpreterTest {
     testMain("Int2Impl");
   }
 
+  @Test
+  public void test_int32() {
+    testMain("Int3Impl2");
+  }
+
+  @Test
+  public void test_int42() {
+    testMain("Int4Impl2");
+  }
+
   private void testMain(String hello) {
     KMethod method = loadAndGetMainMethod(hello);
     new Interpreter().interpret(method);
