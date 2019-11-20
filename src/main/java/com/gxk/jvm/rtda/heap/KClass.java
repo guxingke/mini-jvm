@@ -14,26 +14,34 @@ public class KClass {
 
   public final String name;
   public final String superClassName;
+  public final List<String> interfaceNames;
   public final List<KMethod> methods;
   public final List<KField> fields;
   public final ClassLoader classLoader;
 
   private KClass superClass;
+  private List<KClass> interfaces;
   private int staticInit = 0;
 
   public KClass(String name, ClassLoader classLoader) {
     this.name = name;
     this.superClassName = "java/lang/Object";
+    this.interfaceNames = new ArrayList<>();
+    this.interfaces = new ArrayList<>();
     this.classLoader = classLoader;
     this.methods = new ArrayList<>();
     this.fields = new ArrayList<>();
     this.staticInit = 2;
   }
 
-  public KClass(String name, String superClassName, List<KMethod> methods, List<KField> fields,
-      ClassLoader classLoader) {
+  public KClass(String name,
+                String superClassName, List<String> interfaceNames,
+                List<KMethod> methods, List<KField> fields,
+                ClassLoader classLoader) {
     this.name = name;
     this.superClassName = superClassName;
+    this.interfaceNames = interfaceNames;
+    this.interfaces = new ArrayList<>();
     this.methods = methods;
     this.fields = fields;
     this.classLoader = classLoader;
@@ -48,6 +56,10 @@ public class KClass {
       }
     }
     return null;
+  }
+
+  public KMethod getClinitMethod() {
+    return getMethod("<clinit>", "()V");
   }
 
   public KMethod getMethod(String name, String descriptor) {

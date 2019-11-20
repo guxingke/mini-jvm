@@ -2,6 +2,7 @@ package com.gxk.jvm.classloader;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.Field;
+import com.gxk.jvm.classfile.Interface;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
@@ -13,6 +14,7 @@ import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +63,7 @@ public class ClassLoader {
       kClass.setSuperClass(this.loadClass(kClass.superClassName));
     }
 
+
     return kClass;
   }
 
@@ -88,13 +91,19 @@ public class ClassLoader {
       }
     });
 
+
     int scIdx = classFile.superClass;
-    if (scIdx == 0) {
-      return new KClass(name, null, methods, fields, this);
+    String superClassName = null;
+    if (scIdx != 0) {
+      superClassName = Utils.getClassName(classFile.cpInfo, scIdx);
     }
 
-    String superClassName = Utils.getClassName(classFile.cpInfo, scIdx);
-    return new KClass(name, superClassName, methods, fields, this);
+    List<String> interfaceNames = new ArrayList<>();
+    if (classFile.interfaces.interfaces.length != 0) {
+      interfaceNames = Arrays.stream(classFile.interfaces.interfaces).map(Interface::getName).collect(Collectors.toList());
+    }
+
+    return new KClass(name, superClassName, interfaceNames, methods, fields, this);
   }
 
   public KMethod map(Method cfMethod) {

@@ -54,7 +54,7 @@ public abstract class ClassReader {
     int superClass = is.readUnsignedShort();
 
     int interfaceCount = is.readUnsignedShort();
-    Interfaces interfaces = readInterfaces(is, interfaceCount);
+    Interfaces interfaces = readInterfaces(is, interfaceCount,constantPool);
 
     int fieldCount = is.readUnsignedShort();
     Fields fields = readFields(is, fieldCount, constantPool);
@@ -106,11 +106,14 @@ public abstract class ClassReader {
     return new Fields(fields);
   }
 
-  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount) throws IOException {
+  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount, ConstantPool cp) throws IOException {
+    Interface[] interfaces = new Interface[interfaceCount];
     for (int i = 0; i < interfaceCount; i++) {
-      int xx = is.readUnsignedShort();
+      int idx = is.readUnsignedShort();
+      String name = Utils.getClassName(cp, idx);
+      interfaces[i] = new Interface(name);
     }
-    return null;
+    return new Interfaces(interfaces);
   }
 
   //method_info {

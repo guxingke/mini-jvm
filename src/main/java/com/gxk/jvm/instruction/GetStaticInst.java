@@ -7,6 +7,9 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GetStaticInst implements Instruction {
   public final String clazz;
   public final String fieldName;
@@ -49,8 +52,52 @@ public class GetStaticInst implements Instruction {
 
     KField field = kClass.getField(fieldName, fieldDescriptor);
     if (field == null) {
+      // interface
+      if (kClass.interfaceNames.isEmpty()) {
+        throw new IllegalStateException();
+      }
+
+      // already load interface
+      if (!kClass.getInterfaces().isEmpty()) {
+        for (KClass intClass : kClass.getInterfaces()) {
+          field = intClass.getField(fieldName, fieldDescriptor);
+          if (field != null) {
+            break;
+          }
+        }
+      } else {
+        List<KClass> interfaces = new ArrayList<>();
+        for (String interfaceName : kClass.interfaceNames) {
+          KClass tmp = Heap.findClass(interfaceName);
+          if (tmp == null) {
+            tmp = frame.method.clazz.getClassLoader().loadClass(interfaceName);
+          }
+
+          interfaces.add(tmp);
+
+          if (!tmp.isStaticInit()) {
+            KMethod cinit = tmp.getClinitMethod();
+            if (cinit == null) {
+              throw new IllegalStateException();
+            }
+
+            Frame newFrame = new Frame(cinit, frame.thread);
+            tmp.setStaticInit(1);
+            KClass finalKClass = tmp;
+            newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+            frame.thread.pushFrame(newFrame);
+            frame.nextPc = frame.thread.getPc();
+          }
+        }
+        kClass.setInterfaces(interfaces);
+        return;
+      }
+    }
+
+    if (field == null) {
       throw new IllegalStateException();
     }
+
     if (field.val == null) {
       throw new IllegalStateException();
     }

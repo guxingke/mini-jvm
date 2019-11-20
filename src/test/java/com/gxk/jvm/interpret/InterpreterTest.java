@@ -200,6 +200,11 @@ public class InterpreterTest {
     new Interpreter().interpret(method, new String[0]);
   }
 
+  @Test
+  public void test_int2() {
+    testMain("Int2Impl");
+  }
+
   private void testMain(String hello) {
     KMethod method = loadAndGetMainMethod(hello);
     new Interpreter().interpret(method);

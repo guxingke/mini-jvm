@@ -23,6 +23,12 @@ public class ClassReaderTest {
     test(loop);
   }
 
+  @Test
+  public void test_int1() throws IOException {
+    String int1 = "example/Int3Impl.class";
+    test(int1);
+  }
+
   public void test(String p) throws IOException {
     Path path = Paths.get(p);
     ClassFile cf = ClassReader.read(path);

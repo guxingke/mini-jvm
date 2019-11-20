@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class Interfaces {
 
+  public final Interface[] interfaces;
 }
