@@ -5,6 +5,7 @@ import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class ClassLoaderTest {
   public void setup() {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse("example:"+ "onjava8:" + jarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + "onjava8" +EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
     classLoader = new ClassLoader("boot", entry);
     VirtualMachine.loadLibrary();
   }
@@ -34,7 +35,7 @@ public class ClassLoaderTest {
 
   @Test
   public void test_object() {
-    KClass kClass = classLoader.loadClass("java/lang/Object");
+    KClass kClass = classLoader.loadClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(kClass);
   }
 
@@ -52,7 +53,7 @@ public class ClassLoaderTest {
 
   @Test
   public void test_system() {
-    KClass kClass = classLoader.loadClass("java/lang/System");
+    KClass kClass = classLoader.loadClass("java/lang/System".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(kClass);
   }
 }

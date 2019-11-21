@@ -1,5 +1,9 @@
 package com.gxk.jvm;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class Main {
 
   public static void main(String[] args)  {
@@ -13,6 +17,21 @@ public class Main {
 
     if (cmd.version) {
       System.out.println("java version \"1.8.0\"");
+      return;
+    }
+
+    if (cmd.help) {
+      InputStream is = Main.class.getClassLoader().getResourceAsStream("help.txt");
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+          out.append(line).append("\n");
+        }
+        System.out.println(out);
+      } catch (Exception e) {
+        System.out.println("something bad");
+      }
       return;
     }
 

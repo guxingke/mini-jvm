@@ -32,6 +32,34 @@ public class ArgsTest {
   }
 
   @Test
+  public void test_help() {
+    Args args = Args.parseArgs("-help");
+    assertTrue(args.help);
+  }
+
+  @Test
+  public void test_verbose() {
+    Args args = Args.parseArgs("-verbose", "Main");
+
+    assertTrue(args.verbose);
+    assertEquals("Main", args.clazz);
+  }
+
+  @Test
+  public void test_verbose_cp() {
+    Args args = Args.parseArgs("-verbose", "-cp", "example", "Main");
+    assertTrue(args.verbose);
+    assertEquals("example", args.classpath);
+    assertEquals("Main", args.clazz);
+  }
+
+  @Test
+  public void test_verbose_cp2() {
+    Args args = Args.parseArgs("-cp", "example", "-verbose", "Main");
+    assertTrue(!args.verbose);
+  }
+
+  @Test
   public void test_version() {
     Args args = Args.parseArgs("-version");
     assertTrue(args.version);

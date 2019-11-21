@@ -6,13 +6,16 @@ package com.gxk.jvm;
 class Args {
 
   private static final String MINUS_VERSION = "-version";
+  private static final String MINUS_HELP= "-help";
+  private static final String MINUS_VERBOSE= "-verbose";
   private static final String MINUS_CP = "-cp";
-  private static final int ARGS_LIMIT = 3;
   boolean version;
+  boolean help;
+  boolean verbose;
+
   String classpath;
   String clazz;
   String[] args;
-
 
   static Args parseArgs(String... cliArgs) {
     Args args = new Args();
@@ -22,23 +25,35 @@ class Args {
       return args;
     }
 
-    if (MINUS_CP.equals(cliArgs[0])) {
-      args.classpath = cliArgs[1];
-      args.clazz = cliArgs[2];
+    if (MINUS_HELP.equals(cliArgs[0])) {
+      args.help = true;
+      return args;
+    }
 
-      if (cliArgs.length > ARGS_LIMIT) {
-        String[] programArgs = new String[cliArgs.length - 3];
-        System.arraycopy(cliArgs, 3, programArgs, 0, programArgs.length);
+    int idx = 0;
+    if (MINUS_VERBOSE.equals(cliArgs[idx])) {
+      idx++;
+      args.verbose= true;
+    }
+
+    if (MINUS_CP.equals(cliArgs[idx])) {
+      idx++;
+      args.classpath = cliArgs[idx++];
+      args.clazz = cliArgs[idx++];
+
+      if (cliArgs.length > idx) {
+        String[] programArgs = new String[cliArgs.length - idx];
+        System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
 
         args.args = programArgs;
       }
       return args;
     }
 
-    args.clazz = cliArgs[0];
-    if (cliArgs.length > 1) {
-      String[] programArgs = new String[cliArgs.length - 1];
-      System.arraycopy(cliArgs, 1, programArgs, 0, programArgs.length);
+    args.clazz = cliArgs[idx++];
+    if (cliArgs.length > idx) {
+      String[] programArgs = new String[cliArgs.length - idx];
+      System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
       args.args = programArgs;
     }
 
