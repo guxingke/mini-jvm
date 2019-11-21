@@ -7,10 +7,8 @@ import com.gxk.jvm.instruction.IConst0Inst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.ILoad0Inst;
 import com.gxk.jvm.instruction.ILoad1Inst;
-import com.gxk.jvm.instruction.ILoad2Inst;
 import com.gxk.jvm.instruction.IStore0Inst;
 import com.gxk.jvm.instruction.IStore1Inst;
-import com.gxk.jvm.instruction.IStore2Inst;
 import com.gxk.jvm.instruction.IfICmpGtInst;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
@@ -24,23 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-//main: 2
-//0 iconst_0
-//1 istore_1
-//2 iconst_1
-//3 istore_2
-//4 iload_2
-//5 bipush 10
-//7 if_icmpgt 20
-//10 iload_1
-//11 iload_2
-//12 iadd
-//13 istore_1
-//14 iinc 2 1
-//17 goto 4
-//20 iload_1
-//21 ireturn
 
 public class ByteCodeInterpreter {
 
