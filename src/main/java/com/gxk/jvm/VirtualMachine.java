@@ -23,6 +23,9 @@ public class VirtualMachine {
     }
 
     EnvHolder.init();
+    if (cmd.verbose) {
+      EnvHolder.verbose = true;
+    }
 
     Path jarPath = Paths.get(home, "jre", "lib");
     String classpath = cmd.classpath + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*";

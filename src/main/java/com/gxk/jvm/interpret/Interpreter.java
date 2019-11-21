@@ -9,6 +9,7 @@ import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.util.EnvHolder;
 
 public class Interpreter {
 
@@ -77,9 +78,13 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-//      debugBefore(inst, frame);
+      if (EnvHolder.verbose) {
+        debugBefore(inst, frame);
+      }
       inst.execute(frame);
-//      debugAfter(inst, frame);
+      if (EnvHolder.verbose) {
+        debugAfter(inst, frame);
+      }
 
       if (thread.empty()) {
         break;

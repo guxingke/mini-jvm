@@ -6,6 +6,8 @@ public abstract class EnvHolder {
   public static String PATH_SEPARATOR;
   public static String FILE_SEPARATOR;
 
+  public static boolean verbose;
+
   static {
     init();
   }
