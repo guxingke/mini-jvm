@@ -18,7 +18,7 @@ public class ClasspathTest {
 
     Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
 
-    ClassFile cf = entry.findClass("java/lang/Object");
+    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(cf);
   }
 
