@@ -16,4 +16,8 @@ public interface Instruction {
   default void debug(String space){
     System.out.println(space + this.toString());
   }
+
+  default String format() {
+    return "nil";
+  }
 }

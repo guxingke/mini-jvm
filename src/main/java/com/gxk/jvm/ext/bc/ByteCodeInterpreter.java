@@ -7,8 +7,10 @@ import com.gxk.jvm.instruction.IConst0Inst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.ILoad0Inst;
 import com.gxk.jvm.instruction.ILoad1Inst;
+import com.gxk.jvm.instruction.ILoad2Inst;
 import com.gxk.jvm.instruction.IStore0Inst;
 import com.gxk.jvm.instruction.IStore1Inst;
+import com.gxk.jvm.instruction.IStore2Inst;
 import com.gxk.jvm.instruction.IfICmpGtInst;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
@@ -52,7 +54,7 @@ public class ByteCodeInterpreter {
 
     // init method args
     Map<Integer, Integer> methodArgs = new HashMap<>(argsCnt);
-    for (int i = 0; i < args.length; i++) {
+    for (int i = 0; i < argsCnt; i++) {
       methodArgs.put(i, 0);
     }
     if (args.length > 0) {
@@ -82,11 +84,17 @@ public class ByteCodeInterpreter {
         case "istore_1":
           instruction = new IStore1Inst();
           break;
+        case "istore_2":
+          instruction = new IStore2Inst();
+          break;
         case "iload_0":
           instruction = new ILoad0Inst();
           break;
         case "iload_1":
           instruction = new ILoad1Inst();
+          break;
+        case "iload_2":
+          instruction = new ILoad2Inst();
           break;
         case "bipush":
           instruction = new BiPushInst(Byte.parseByte(terms[2]));
@@ -120,6 +128,11 @@ public class ByteCodeInterpreter {
     KMethod method = new KMethod(1, "main", "()I", stacks, locals, instructionMap);
     Frame frame = new Frame(method, thread);
     thread.pushFrame(frame);
+
+    // args
+    for (int i = 0; i < argsCnt; i++) {
+      frame.setInt(i, methodArgs.get(i));
+    }
 
     interpreter.loop(thread);
   }

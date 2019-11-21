@@ -22,4 +22,9 @@ public class IIncInst implements Instruction {
     tmp += val;
     frame.setInt(index, tmp);
   }
+
+  @Override
+  public String format() {
+    return String.format("%s %d %d", "iinc", index, val);
+  }
 }

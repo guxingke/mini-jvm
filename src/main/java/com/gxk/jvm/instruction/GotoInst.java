@@ -19,4 +19,9 @@ public class GotoInst implements Instruction {
   public void execute(Frame frame) {
     frame.nextPc = frame.thread.getPc() + offset;
   }
+
+  @Override
+  public String format() {
+    return String.format("%s %d", "goto", offset);
+  }
 }

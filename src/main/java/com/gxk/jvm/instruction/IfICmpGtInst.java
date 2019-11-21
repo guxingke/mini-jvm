@@ -22,4 +22,9 @@ public class IfICmpGtInst implements Instruction {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
+
+  @Override
+  public String format() {
+    return String.format("%s %d", "if_icmpgt", offset);
+  }
 }

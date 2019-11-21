@@ -9,4 +9,9 @@ public class IStore2Inst implements Instruction {
     Integer tmp = frame.popInt();
     frame.setInt(2, tmp);
   }
+
+  @Override
+  public String format() {
+    return "istore_2";
+  }
 }

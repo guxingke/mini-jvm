@@ -1,0 +1,16 @@
+main 2 3 1
+0 iconst_0
+1 istore_1
+2 iconst_1
+3 istore_2
+4 iload_2
+5 iload_0
+6 if_icmpgt 13
+9 iload_1
+10 iload_2
+11 iadd
+12 istore_1
+13 iinc 2 1
+16 goto -12
+19 iload_1
+20 ireturn

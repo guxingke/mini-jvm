@@ -1,21 +1,29 @@
 package com.gxk.jvm;
 
+import com.gxk.jvm.classfile.ClassFile;
+import com.gxk.jvm.classfile.ClassReader;
+import com.gxk.jvm.classfile.Method;
+import com.gxk.jvm.classfile.attribute.Code;
+import com.gxk.jvm.ext.bc.ByteCodeGenerator;
 import com.gxk.jvm.ext.bc.ByteCodeInterpreter;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
 
   public static void main(String[] args)  {
-    // special case
-    if (args[0].startsWith("--")) {
-      doSpecialCase(args);
+    if (args.length == 0) {
+      System.out.println("usage: java [options] class [args]\n");
       return;
     }
 
-    if (args.length == 0) {
-      System.out.println("usage: java [options] class [args]\n");
+    // special case
+    if (args[0].startsWith("--")) {
+      doSpecialCase(args);
       return;
     }
 
@@ -50,10 +58,35 @@ public class Main {
     // parse args
     switch (args[0]) {
       case "--":
-        // bytecode interpreter
+        // byte code interpreter
         String file = args[1];
-        ByteCodeInterpreter.interpreter(file);
+
+        if (args.length == 2) {
+          ByteCodeInterpreter.interpreter(file);
+          break;
+        }
+
+        int size = args.length - 2;
+        String[] args2 = new String[size];
+        System.arraycopy(args, 2, args2, 0, args2.length);
+
+        Integer[] pargs = new Integer[size];
+        for (int i = 0; i < args2.length; i++) {
+          pargs[i] = Integer.parseInt(args2[i]);
+        }
+
+        ByteCodeInterpreter.interpreter(file, pargs);
         break;
+      case "--bc":
+        String clazzPath = args[1];
+        String methodName = "bc";
+        if (args.length == 3) {
+          methodName = args[2];
+        }
+
+        ByteCodeGenerator.gen(clazzPath, methodName);
+        break;
+
     }
   }
 }

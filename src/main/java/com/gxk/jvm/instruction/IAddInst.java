@@ -10,4 +10,9 @@ public class IAddInst implements Instruction {
     Integer a2 = frame.popInt();
     frame.pushInt(a1 + a2);
   }
+
+  @Override
+  public String format() {
+    return "iadd";
+  }
 }
