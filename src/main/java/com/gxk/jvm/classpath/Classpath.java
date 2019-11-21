@@ -1,5 +1,6 @@
 package com.gxk.jvm.classpath;
 
+import com.gxk.jvm.util.EnvHolder;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class Classpath {
 
   public static Entry parse(String classpath) {
-    if (classpath.contains(":")) {
+    if (classpath.contains(EnvHolder.PATH_SEPARATOR)) {
       return doParseCompositeEntry(classpath);
     }
     Entry entry = parseEntry(classpath);
@@ -24,7 +25,7 @@ public abstract class Classpath {
 
   public static Entry doParseCompositeEntry(String classpath) {
     List<Entry> entries = new ArrayList<>();
-    for (String path : classpath.split(":")) {
+    for (String path : classpath.split(EnvHolder.PATH_SEPARATOR)) {
       Entry entry = parseEntry(path);
       if (entry == null) {
         throw new IllegalArgumentException("un parse classpath " + classpath);
@@ -67,7 +68,7 @@ public abstract class Classpath {
   }
 
   public static boolean isWildcard(String path) {
-    return path.endsWith("/*");
+    return path.endsWith(EnvHolder.FILE_SEPARATOR + "*");
   }
 
   public static boolean isJar(String path) {

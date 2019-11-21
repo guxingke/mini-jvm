@@ -10,6 +10,7 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.util.EnvHolder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -21,14 +22,16 @@ public class VirtualMachine {
       throw new IllegalStateException("must set env JAVA_HOME");
     }
 
+    EnvHolder.init();
+
     Path jarPath = Paths.get(home, "jre", "lib");
-    String classpath = cmd.classpath + ":" + jarPath.toFile().getAbsolutePath() + "/*";
+    String classpath = cmd.classpath + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*";
     Entry entry = Classpath.parse(classpath);
 
     ClassLoader classLoader = new ClassLoader("boot", entry);
     initVm(classLoader);
 
-    String mainClass = cmd.clazz.replace(".", "/");
+    String mainClass = cmd.clazz.replace(".", EnvHolder.PATH_SEPARATOR);
     classLoader.loadClass(mainClass);
 
     KClass clazz = Heap.findClass(mainClass);

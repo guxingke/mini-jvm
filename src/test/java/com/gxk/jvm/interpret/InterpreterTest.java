@@ -22,6 +22,7 @@ import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.After;
 import org.junit.Test;
 
@@ -229,7 +230,7 @@ public class InterpreterTest {
   private KClass loadAndGetClazz(String clazzName) {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse("example:onjava8:" + jarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + "onjava8" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
     ClassLoader loader = new ClassLoader("boot", entry);
     VirtualMachine.initVm(loader);
     KClass clazz = loader.loadClass(clazzName);

@@ -3,6 +3,7 @@ package com.gxk.jvm.classpath;
 import static org.junit.Assert.*;
 
 import com.gxk.jvm.classfile.ClassFile;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -15,7 +16,7 @@ public class ClasspathTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
 
-    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
 
     ClassFile cf = entry.findClass("java/lang/Object");
     assertNotNull(cf);
@@ -26,9 +27,10 @@ public class ClasspathTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib");
 
-    Entry entry = Classpath.parse("example:" + jarPath.toFile().getAbsolutePath() + "/*");
+    Entry entry = Classpath.parse(
+        "example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*");
 
-    ClassFile cf = entry.findClass("java/lang/Object");
+    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(cf);
   }
 
@@ -61,7 +63,7 @@ public class ClasspathTest {
   @Test
   public void doParseJar_package() {
     Entry entry = Classpath.doParseJar("example.jar");
-    ClassFile cf = entry.findClass("example/Hello");
+    ClassFile cf = entry.findClass("example/Hello".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(cf);
   }
 
@@ -70,7 +72,7 @@ public class ClasspathTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.doParseJar(jarPath.toFile().getAbsolutePath());
-    ClassFile cf = entry.findClass("java/lang/Object");
+    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
     assertNotNull(cf);
   }
 
@@ -97,13 +99,13 @@ public class ClasspathTest {
 
   @Test
   public void isWildcard() {
-    boolean ret = Classpath.isWildcard("./*");
+    boolean ret = Classpath.isWildcard("." + EnvHolder.FILE_SEPARATOR + "*");
     assertTrue(ret);
   }
 
   @Test
   public void isWildcard_bad_case() {
-    boolean ret = Classpath.isWildcard("./**");
+    boolean ret = Classpath.isWildcard("." + EnvHolder.FILE_SEPARATOR + "**");
     assertTrue(!ret);
   }
 
