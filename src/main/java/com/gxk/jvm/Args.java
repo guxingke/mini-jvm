@@ -13,7 +13,7 @@ class Args {
   boolean help;
   boolean verbose;
 
-  String classpath;
+  String classpath = ".";
   String clazz;
   String[] args;
 
