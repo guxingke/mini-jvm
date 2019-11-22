@@ -76,7 +76,7 @@ public class ByteCodeInterpreter {
           instruction = new IConst0Inst();
           break;
         case "iconst_1":
-          instruction = new IConst0Inst();
+          instruction = new IConst1Inst();
           break;
         case "istore_0":
           instruction = new IStore0Inst();
