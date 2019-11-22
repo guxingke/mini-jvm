@@ -41,6 +41,7 @@ class Args {
       args.classpath = cliArgs[idx++];
       args.clazz = cliArgs[idx++];
 
+      args.args = new String[0];
       if (cliArgs.length > idx) {
         String[] programArgs = new String[cliArgs.length - idx];
         System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);

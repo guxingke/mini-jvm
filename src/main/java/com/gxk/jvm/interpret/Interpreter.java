@@ -21,7 +21,8 @@ public class Interpreter {
     Thread thread = new Thread(1024);
     Frame frame = new Frame(method, thread);
     if (args == null) {
-      args = new String[0];
+      this.doInterpret(thread, frame);
+      return;
     }
 
     KObject[] kargs = new KObject[args.length];
