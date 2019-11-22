@@ -4,6 +4,7 @@ import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.GotoInst;
 import com.gxk.jvm.instruction.IAddInst;
 import com.gxk.jvm.instruction.IConst0Inst;
+import com.gxk.jvm.instruction.IConst1Inst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.ILoad0Inst;
 import com.gxk.jvm.instruction.ILoad1Inst;
