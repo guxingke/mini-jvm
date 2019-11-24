@@ -4,6 +4,7 @@ import com.gxk.jvm.instruction.BiPushInst;
 import com.gxk.jvm.instruction.GotoInst;
 import com.gxk.jvm.instruction.IAddInst;
 import com.gxk.jvm.instruction.IConst0Inst;
+import com.gxk.jvm.instruction.IConst1Inst;
 import com.gxk.jvm.instruction.IIncInst;
 import com.gxk.jvm.instruction.ILoad0Inst;
 import com.gxk.jvm.instruction.ILoad1Inst;
@@ -76,7 +77,7 @@ public class ByteCodeInterpreter {
           instruction = new IConst0Inst();
           break;
         case "iconst_1":
-          instruction = new IConst0Inst();
+          instruction = new IConst1Inst();
           break;
         case "istore_0":
           instruction = new IStore0Inst();
