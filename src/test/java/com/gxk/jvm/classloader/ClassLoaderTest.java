@@ -35,7 +35,7 @@ public class ClassLoaderTest {
 
   @Test
   public void test_object() {
-    KClass kClass = classLoader.loadClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
+    KClass kClass = classLoader.loadClass("java/lang/Object");
     assertNotNull(kClass);
   }
 
@@ -53,7 +53,7 @@ public class ClassLoaderTest {
 
   @Test
   public void test_system() {
-    KClass kClass = classLoader.loadClass("java/lang/System".replace("/", EnvHolder.FILE_SEPARATOR));
+    KClass kClass = classLoader.loadClass("java/lang/System");
     assertNotNull(kClass);
   }
 }

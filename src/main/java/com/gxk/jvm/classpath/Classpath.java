@@ -13,6 +13,7 @@ public abstract class Classpath {
 
   public static Entry parse(String classpath) {
     if (classpath.contains(EnvHolder.PATH_SEPARATOR)) {
+
       return doParseCompositeEntry(classpath);
     }
     Entry entry = parseEntry(classpath);
@@ -23,8 +24,16 @@ public abstract class Classpath {
     return entry;
   }
 
+  /**
+   *
+   *
+   * @param classpath
+   * @return
+   */
   public static Entry doParseCompositeEntry(String classpath) {
+
     List<Entry> entries = new ArrayList<>();
+
     for (String path : classpath.split(EnvHolder.PATH_SEPARATOR)) {
       Entry entry = parseEntry(path);
       if (entry == null) {
@@ -32,17 +41,25 @@ public abstract class Classpath {
       }
       entries.add(entry);
     }
+//    File file = new File("");
+//    File[] files = file.listFiles();
+//    for(int i=0;i<files.length;i++){
+//
+//      entries.add(entry);
+//    }
+
+
     return new CompositeEntry(entries);
   }
 
   public static Entry parseEntry(String path) {
     Entry entry = null;
-    if (isDir(path)) {
+    if (isWildcard(path)) {
+      entry = doParseWildcard(path.substring(0, path.length() - 2));
+    } else if (isDir(path)) {
       entry = doParseDir(path);
     } else if (isJar(path)) {
       entry = doParseJar(path);
-    } else if (isWildcard(path)) {
-      entry = doParseWildcard(path.substring(0, path.length() - 2));
     }
     return entry;
   }
