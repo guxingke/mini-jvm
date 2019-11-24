@@ -119,6 +119,68 @@ public class VirtualMachine {
       frame.popRef();
       System.out.println(val);
     });
+
+    Heap.registerMethod("java/io/PrintStream_print_(Ljava/lang/String;)V", frame -> {
+      Object val = frame.popRef();
+      frame.popRef();
+      if (val instanceof String) {
+        System.out.print(val);
+        return;
+      }
+
+      KField value = ((KObject) val).getField("value", "[C");
+      KArray arr = (KArray) value.val[0].ref;
+      char[] chars = new char[arr.items.length];
+      for (int i = 0; i < arr.items.length; i++) {
+        chars[i] = ((Character) arr.items[i]);
+      }
+      System.out.print(new String(chars));
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(Z)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.print(val == 1);
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(C)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.print(((char) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(B)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.print(((byte) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(S)V", frame -> {
+      int val = frame.popInt();
+      frame.popRef();
+      System.out.print(((short) val));
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(I)V", frame -> {
+      Object val = frame.popInt();
+      frame.popRef();
+      System.out.print(val);
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(F)V", frame -> {
+      float val = frame.popFloat();
+      frame.popRef();
+      System.out.print((val));
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(J)V", frame -> {
+      long val = frame.popLong();
+      frame.popRef();
+      System.out.print(val);
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(D)V", frame -> {
+      double val = frame.popDouble();
+      frame.popRef();
+      System.out.print(val);
+    });
+    Heap.registerMethod("java/io/PrintStream_print_(Ljava/lang/Object;)V", frame -> {
+      Object val = frame.popRef();
+      frame.popRef();
+      System.out.print(val);
+    });
     // object
     Heap.registerMethod("java/lang/Object_hashCode_()I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
     Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {});

@@ -37,12 +37,12 @@ public abstract class Classpath {
 
   public static Entry parseEntry(String path) {
     Entry entry = null;
-    if (isDir(path)) {
+    if (isWildcard(path)) {
+      entry = doParseWildcard(path.substring(0, path.length() - 2));
+    } else if (isDir(path)) {
       entry = doParseDir(path);
     } else if (isJar(path)) {
       entry = doParseJar(path);
-    } else if (isWildcard(path)) {
-      entry = doParseWildcard(path.substring(0, path.length() - 2));
     }
     return entry;
   }
