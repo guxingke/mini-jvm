@@ -62,4 +62,8 @@ public class KMethod {
   public boolean isNative() {
     return (this.accessFlags & 0x0100) != 0;
   }
+
+  public boolean isStatic() {
+    return (this.accessFlags & 0x0008) != 0;
+  }
 }

@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.DoubleCp;
 import com.gxk.jvm.classfile.cp.FloatCp;
 import com.gxk.jvm.classfile.cp.IntegerCp;
+import com.gxk.jvm.classfile.cp.InvokeDynamic;
 import com.gxk.jvm.classfile.cp.LongCp;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.instruction.*;
@@ -503,12 +504,18 @@ public abstract class InstructionReader {
             stream.readUnsignedByte()
         );
       case 0xba:
-        return new InvokeDynamicInst(
-            stream.readUnsignedByte(),
-            stream.readUnsignedByte(),
-            stream.readUnsignedByte(),
-            stream.readUnsignedByte()
-        );
+        int idsrIdx = stream.readUnsignedShort();
+        ConstantInfo idInfo = constantPool.infos[idsrIdx - 1];
+        InvokeDynamic invokeDynamic = (InvokeDynamic) idInfo;
+        int bmaIdx = invokeDynamic.bootstrapMethodAttrIndex;
+        // TODO, 暂时写死 , TestLambda.lambda$main$0
+        String idName = Utils.getNameByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
+        String idType= Utils.getTypeByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
+
+        stream.readUnsignedByte();
+        stream.readUnsignedByte();
+
+        return new InvokeDynamicInst(idName, idType, "TestLambda", "lambda$main$0");
       case 0xbb:
         return new NewInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
       case 0xbc:

@@ -105,6 +105,9 @@ public class InvokeInterfaceInst implements Instruction {
     Frame newFrame = new Frame(implMethod, frame.thread);
 
     int slotIdx = 1;
+    if (implMethod.isStatic()) {
+      slotIdx = 0;
+    }
     for (int i = 0; i < args.size(); i++) {
       String arg = args.get(i);
       switch (arg) {
@@ -133,7 +136,9 @@ public class InvokeInterfaceInst implements Instruction {
       slotIdx++;
     }
 
-    newFrame.setRef(0, ref);
+    if (!implMethod.isStatic()) {
+      newFrame.setRef(0, ref);
+    }
     frame.thread.pushFrame(newFrame);
   }
 }

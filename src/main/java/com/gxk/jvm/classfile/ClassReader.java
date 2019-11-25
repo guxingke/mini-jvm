@@ -1,5 +1,6 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classfile.attribute.LineNumberTable;
 import com.gxk.jvm.classfile.attribute.SourceFile;
@@ -272,6 +273,22 @@ public abstract class ClassReader {
             lines[i1] = new LineNumberTable.Line(is.readUnsignedShort(), is.readUnsignedShort());
           }
           attribute = new LineNumberTable(lines);
+          break;
+        case BootstrapMethods:
+          int bsmLen = is.readUnsignedShort();
+          BootstrapMethods.BootstrapMethod[] bootstrapMethods = new BootstrapMethods.BootstrapMethod[bsmLen];
+          for (int i1 = 0; i1 < bsmLen; i1++) {
+            int bsmr = is.readUnsignedShort();
+            int nbma = is.readUnsignedShort();
+            Integer[] args = new Integer[nbma];
+            for (int i2 = 0; i2 < nbma; i2++) {
+              args[i] = is.readUnsignedShort();
+            }
+
+            bootstrapMethods[i1] = new BootstrapMethods.BootstrapMethod(bsmr, args);
+          }
+
+          attribute = new BootstrapMethods(bootstrapMethods);
           break;
         default:
           byte[] bytes = Utils.readNBytes(is, attributeLength);

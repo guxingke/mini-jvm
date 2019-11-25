@@ -8,7 +8,7 @@ import org.junit.Test;
  */
 public class InterpreterLambdaTest extends BaseInterpreterTest {
 
-//  @Test
+  @Test
   public void test_runnable() {
     testMain("TestLambda");
   }
