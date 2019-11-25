@@ -18,19 +18,20 @@ public class ClasspathTest {
 
     Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
 
-    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
+    ClassFile cf = entry.findClass("java/lang/Object");
     assertNotNull(cf);
   }
 
   @Test
   public void parse_2() {
     String home = System.getenv("JAVA_HOME");
+
     Path jarPath = Paths.get(home, "jre", "lib");
 
-    Entry entry = Classpath.parse(
-        "example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*");
+    Entry entry = Classpath.parse("example" + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR +"*");
 
-    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
+    ClassFile cf = entry.findClass("java/lang/Object");
+
     assertNotNull(cf);
   }
 
@@ -63,7 +64,7 @@ public class ClasspathTest {
   @Test
   public void doParseJar_package() {
     Entry entry = Classpath.doParseJar("example.jar");
-    ClassFile cf = entry.findClass("example/Hello".replace("/", EnvHolder.FILE_SEPARATOR));
+    ClassFile cf = entry.findClass("example/Hello");
     assertNotNull(cf);
   }
 
@@ -72,7 +73,7 @@ public class ClasspathTest {
     String home = System.getenv("JAVA_HOME");
     Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
     Entry entry = Classpath.doParseJar(jarPath.toFile().getAbsolutePath());
-    ClassFile cf = entry.findClass("java/lang/Object".replace("/", EnvHolder.FILE_SEPARATOR));
+    ClassFile cf = entry.findClass("java/lang/Object");
     assertNotNull(cf);
   }
 

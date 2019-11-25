@@ -19,6 +19,6 @@ public abstract class EnvHolder {
 
   public static boolean isWindows() {
     String osName = System.getProperty("os.name").toUpperCase();
-    return Objects.equals("WINDOWS", osName);
+    return osName.startsWith("WINDOWS");
   }
 }

@@ -13,6 +13,7 @@ public abstract class Classpath {
 
   public static Entry parse(String classpath) {
     if (classpath.contains(EnvHolder.PATH_SEPARATOR)) {
+
       return doParseCompositeEntry(classpath);
     }
     Entry entry = parseEntry(classpath);
@@ -23,8 +24,16 @@ public abstract class Classpath {
     return entry;
   }
 
+  /**
+   *
+   *
+   * @param classpath
+   * @return
+   */
   public static Entry doParseCompositeEntry(String classpath) {
+
     List<Entry> entries = new ArrayList<>();
+
     for (String path : classpath.split(EnvHolder.PATH_SEPARATOR)) {
       Entry entry = parseEntry(path);
       if (entry == null) {
