@@ -24,12 +24,6 @@ public abstract class Classpath {
     return entry;
   }
 
-  /**
-   *
-   *
-   * @param classpath
-   * @return
-   */
   public static Entry doParseCompositeEntry(String classpath) {
 
     List<Entry> entries = new ArrayList<>();

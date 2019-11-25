@@ -1,0 +1,46 @@
+package com.gxk.jvm.interpret.misc;
+
+import com.gxk.jvm.interpret.BaseInterpreterTest;
+import com.gxk.jvm.interpret.Interpreter;
+import com.gxk.jvm.rtda.heap.KMethod;
+import org.junit.Test;
+
+public class InterpreterMiscTest extends BaseInterpreterTest {
+
+  @Test
+  public void test_hello_main() {
+    testMain("Hello");
+  }
+
+  @Test
+  public void test_hello_sb() {
+    testMain("Hello2");
+  }
+
+  @Test
+  public void test_hello_sb2() {
+    testMain("Hello3");
+  }
+
+  @Test
+  public void test_hello_long() {
+    testMain("Hello4");
+  }
+
+  @Test
+  public void test_static_field() {
+    testMain("TestStatic");
+  }
+
+  @Test
+  public void test_array_0() {
+    KMethod method = loadAndGetMainMethod("HelloWorld");
+    new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
+  }
+
+  @Test
+  public void test_array_1() {
+    KMethod method = loadAndGetMainMethod("HelloWorld");
+    new Interpreter().interpret(method, new String[0]);
+  }
+}
