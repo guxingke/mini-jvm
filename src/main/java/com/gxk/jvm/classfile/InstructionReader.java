@@ -508,14 +508,12 @@ public abstract class InstructionReader {
         ConstantInfo idInfo = constantPool.infos[idsrIdx - 1];
         InvokeDynamic invokeDynamic = (InvokeDynamic) idInfo;
         int bmaIdx = invokeDynamic.bootstrapMethodAttrIndex;
-        // TODO, 暂时写死 , TestLambda.lambda$main$0
         String idName = Utils.getNameByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
         String idType= Utils.getTypeByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
 
         stream.readUnsignedByte();
         stream.readUnsignedByte();
-
-        return new InvokeDynamicInst(idName, idType, "TestLambda", "lambda$main$0");
+        return new InvokeDynamicInst(idName, idType, bmaIdx);
       case 0xbb:
         return new NewInst(Utils.getClassName(constantPool, stream.readUnsignedShort()));
       case 0xbc:

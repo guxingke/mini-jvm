@@ -282,7 +282,7 @@ public abstract class ClassReader {
             int nbma = is.readUnsignedShort();
             Integer[] args = new Integer[nbma];
             for (int i2 = 0; i2 < nbma; i2++) {
-              args[i] = is.readUnsignedShort();
+              args[i2] = is.readUnsignedShort();
             }
 
             bootstrapMethods[i1] = new BootstrapMethods.BootstrapMethod(bsmr, args);

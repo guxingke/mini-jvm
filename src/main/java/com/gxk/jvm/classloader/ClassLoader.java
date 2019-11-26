@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.Field;
 import com.gxk.jvm.classfile.Interface;
 import com.gxk.jvm.classfile.Method;
+import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.Slot;
@@ -103,7 +104,9 @@ public class ClassLoader {
       interfaceNames = Arrays.stream(classFile.interfaces.interfaces).map(Interface::getName).collect(Collectors.toList());
     }
 
-    return new KClass(name, superClassName, interfaceNames, methods, fields, this);
+    BootstrapMethods bootstrapMethods = classFile.getBootstrapMethods();
+
+    return new KClass(name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this);
   }
 
   public KMethod map(Method cfMethod) {

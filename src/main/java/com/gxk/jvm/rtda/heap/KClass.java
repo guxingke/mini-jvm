@@ -1,5 +1,7 @@
 package com.gxk.jvm.rtda.heap;
 
+import com.gxk.jvm.classfile.ConstantPool;
+import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Slot;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ public class KClass {
   public final List<String> interfaceNames;
   public final List<KMethod> methods;
   public final List<KField> fields;
+  public final BootstrapMethods bootstrapMethods;
+  public final ConstantPool constantPool;
   public final ClassLoader classLoader;
 
   private KClass superClass;
@@ -28,6 +32,8 @@ public class KClass {
     this.superClassName = "java/lang/Object";
     this.interfaceNames = new ArrayList<>();
     this.interfaces = new ArrayList<>();
+    this.bootstrapMethods = null;
+    this.constantPool = null;
     this.classLoader = classLoader;
     this.methods = new ArrayList<>();
     this.fields = new ArrayList<>();
@@ -35,15 +41,22 @@ public class KClass {
   }
 
   public KClass(String name,
-                String superClassName, List<String> interfaceNames,
-                List<KMethod> methods, List<KField> fields,
-                ClassLoader classLoader) {
+                String superClassName,
+                List<String> interfaceNames,
+                List<KMethod> methods,
+                List<KField> fields,
+                BootstrapMethods bootstrapMethods,
+                ConstantPool constantPool,
+                ClassLoader classLoader
+  ) {
     this.name = name;
     this.superClassName = superClassName;
     this.interfaceNames = interfaceNames;
     this.interfaces = new ArrayList<>();
     this.methods = methods;
     this.fields = fields;
+    this.bootstrapMethods = bootstrapMethods;
+    this.constantPool = constantPool;
     this.classLoader = classLoader;
 
     methods.forEach(it -> it.clazz = this);

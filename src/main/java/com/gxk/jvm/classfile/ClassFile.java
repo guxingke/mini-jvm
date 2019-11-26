@@ -1,5 +1,6 @@
 package com.gxk.jvm.classfile;
 
+import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import lombok.AllArgsConstructor;
 
 /**
@@ -26,6 +27,15 @@ public class ClassFile {
   public final Methods methods;
   public final int attributesCount;
   public final Attributes attributes;
+
+  public BootstrapMethods getBootstrapMethods() {
+    for (Attribute attribute : attributes.attributes) {
+      if (attribute instanceof BootstrapMethods) {
+        return (BootstrapMethods) attribute;
+      }
+    }
+    return null;
+  }
 
   @Override
   public String toString() {
