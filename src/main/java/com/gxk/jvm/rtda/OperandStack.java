@@ -67,6 +67,10 @@ public class OperandStack {
     this.slots.push(val);
   }
 
+  public Stack<Slot> getSlots() {
+    return this.slots;
+  }
+
   public void debug(String space) {
     System.out.println(space + "OperandStack: ");
     for (int i = 0; i < this.slots.size(); i++) {

@@ -1,6 +1,8 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.Stack;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -134,6 +136,15 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     newFrame.setRef(0, ref);
+
+    // hack for lambda
+    String key = String.format("%s_%s_%s", implMethod.clazz.getName(), implMethod.getName(), implMethod.getDescriptor());
+    nm = Heap.findMethod(key);
+    if (nm != null) {
+      nm.invoke(newFrame);
+      return;
+    }
+
     frame.thread.pushFrame(newFrame);
   }
 }

@@ -4,6 +4,9 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.cp.MethodHandle;
 import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.LocalVars;
+import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.Stack;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -56,13 +59,50 @@ public class InvokeDynamicInst implements Instruction {
 
     String lcname = frame.method.clazz.getName() + "$" + frame.method.getName() + "$" + bsTargetClass + "$" + bsTargetMethod;
     List<KMethod> lcMehods = new ArrayList<>();
+    KMethod lm = new KMethod(1, methodName, bstMethodDesc0, method.getMaxStacks(), maxLocals + 1, null);
+    lcMehods.add(lm);
 
-    Map<Integer, Instruction> map = new HashMap<>();
-    map.put(0, new ALoad1Inst());
-    map.put(1, new InvokeStaticInst(bsTargetClass, bsTargetMethod, bstMethodDesc));
-    map.put(4, new ReturnInst());
+    String format = String.format("%s_%s_%s", lcname, lm.name, lm.descriptor);
+    Heap.registerMethod(format, (f) -> {
+      LocalVars lv = f.getLocalVars();
+      Slot[] slots = lv.getSlots();
+      Slot[] newSlots = new Slot[0];
+      if (slots.length > 1) {
+        newSlots = new Slot[slots.length - 1];
+        System.arraycopy(slots, 1, newSlots, 0, newSlots.length);
+      }
 
-    lcMehods.add(new KMethod(1, methodName, bstMethodDesc0, maxLocals, maxLocals + 1, map));
+      KClass bsc= Heap.findClass(bsTargetClass);
+      if (bsc== null) {
+        bsc = frame.method.clazz.getClassLoader().loadClass(bsTargetClass);
+      }
+
+      if (!bsc.isStaticInit()) {
+        KMethod cinit = bsc.getClinitMethod();
+        if (cinit == null) {
+          throw new IllegalStateException();
+        }
+
+        Frame newFrame = new Frame(cinit, frame.thread);
+        bsc.setStaticInit(1);
+        KClass finalClass = bsc;
+        newFrame.setOnPop(() -> finalClass.setStaticInit(2));
+        frame.thread.pushFrame(newFrame);
+
+        frame.nextPc = frame.thread.getPc();
+        return;
+      }
+
+      KMethod bsm = bsc.getMethod(bsTargetMethod, bstMethodDesc);
+
+      if (bsm == null) {
+        throw new IllegalStateException();
+      }
+
+      Frame newFrame = new Frame(bsm, new LocalVars(newSlots), f.thread);
+      f.thread.pushFrame(newFrame);
+      f.nextPc = frame.thread.getPc();
+    });
 
     KClass lcClazz = new KClass(lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader);
 

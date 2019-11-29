@@ -24,6 +24,14 @@ public class Frame {
     this.instructionMap = method.getInstructionMap();
   }
 
+  public Frame(KMethod method, LocalVars localVars, Thread thread) {
+    this.method = method;
+    this.localVars = localVars;
+    this.operandStack = new OperandStack(method.getMaxStacks());
+    this.thread = thread;
+    this.instructionMap = method.getInstructionMap();
+  }
+
   public void debug(String space) {
     System.out.println(space + "nextPc = " + nextPc);
     localVars.debug(space);
@@ -133,4 +141,13 @@ public class Frame {
   public Object getRef(Integer index) {
     return this.localVars.getRef(index);
   }
+
+  public LocalVars getLocalVars() {
+    return this.localVars;
+  }
+
+  public OperandStack getOperandStack() {
+    return this.operandStack;
+  }
+
 }

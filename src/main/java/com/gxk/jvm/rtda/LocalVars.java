@@ -7,6 +7,14 @@ public class LocalVars {
     this.slots = new Slot[size];
   }
 
+  public LocalVars(Slot[] slots) {
+    this.slots = slots;
+  }
+
+  public Slot[] getSlots() {
+    return this.slots;
+  }
+
   public void setInt(Integer index, Integer val) {
     slots[index] = new Slot(val);
   }
