@@ -95,15 +95,54 @@ public class InvokeInterfaceInst implements Instruction {
       }
     }
 
-    Collections.reverse(argObjs);
-
     KObject ref = (KObject) frame.popRef();
-
     KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
     // method is default method
     if (implMethod == null) {
       implMethod = method;
     }
+
+    // hack for lambda
+    String key = String.format("%s_%s_%s", implMethod.clazz.getName(), implMethod.getName(), implMethod.getDescriptor());
+    nm = Heap.findMethod(key);
+    if (nm != null) {
+      // restore frame
+      ArrayList<String> tmpArgs = new ArrayList<>(args);
+      Collections.reverse(tmpArgs);
+
+      frame.pushRef(ref);
+      for (int i = 0; i < tmpArgs.size(); i++) {
+        String arg = tmpArgs.get(i);
+        Object obj = argObjs.get(argObjs.size() - 1 - i);
+        switch (arg) {
+          case "I":
+          case "B":
+          case "C":
+          case "S":
+          case "Z":
+            frame.pushInt(((Integer) obj));
+            break;
+          case "J":
+            frame.pushLong(((Long) obj));
+            break;
+          case "F":
+            frame.pushFloat(((Float) obj));
+            break;
+          case "D":
+            frame.pushDouble(((Double) obj));
+            break;
+          default:
+            frame.pushRef(obj);
+            break;
+        }
+      }
+
+      nm.invoke(frame);
+      return;
+    }
+
+    Collections.reverse(argObjs);
+
     Frame newFrame = new Frame(implMethod, frame.thread);
 
     int slotIdx = 1;
@@ -137,13 +176,7 @@ public class InvokeInterfaceInst implements Instruction {
 
     newFrame.setRef(0, ref);
 
-    // hack for lambda
-    String key = String.format("%s_%s_%s", implMethod.clazz.getName(), implMethod.getName(), implMethod.getDescriptor());
-    nm = Heap.findMethod(key);
-    if (nm != null) {
-      nm.invoke(newFrame);
-      return;
-    }
+
 
     frame.thread.pushFrame(newFrame);
   }

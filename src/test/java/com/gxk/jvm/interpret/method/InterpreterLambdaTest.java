@@ -1,7 +1,6 @@
 package com.gxk.jvm.interpret.method;
 
 import com.gxk.jvm.interpret.BaseInterpreterTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -29,9 +28,13 @@ public class InterpreterLambdaTest extends BaseInterpreterTest {
     testMain("TestLambda4");
   }
 
-  @Ignore
   @Test
   public void test_curry() {
     testMain("Curry2Args");
+  }
+
+  @Test
+  public void test_curry3() {
+    testMain("Curry3Args");
   }
 }

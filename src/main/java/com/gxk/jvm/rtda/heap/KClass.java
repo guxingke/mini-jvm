@@ -3,9 +3,12 @@ package com.gxk.jvm.rtda.heap;
 import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
+import com.gxk.jvm.rtda.LocalVars;
 import com.gxk.jvm.rtda.Slot;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+
 import lombok.Data;
 
 import java.util.List;
@@ -87,6 +90,15 @@ public class KClass {
     return this.superClass.getMethod(name, descriptor);
   }
 
+  public KMethod getLambdaMethod(String name) {
+    for (KMethod method : methods) {
+      if (Objects.equals(method.name, name)) {
+        return method;
+      }
+    }
+    return null;
+  }
+
   public KField getField(String fieldName, String fieldDescriptor) {
     for (KField field : fields) {
       if (Objects.equals(field.name, fieldName) && Objects.equals(field.descriptor, fieldDescriptor)) {
@@ -109,6 +121,10 @@ public class KClass {
     return object;
   }
 
+  public KLambdaObject newLambdaObject(LocalVars localVars) {
+    return new KLambdaObject(this, localVars);
+  }
+
   private KField map(KField source) {
     if (source.isStatic()) {
       return source;
@@ -120,12 +136,12 @@ public class KClass {
       case "S":
       case "I":
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0)});
       case "D":
       case "J":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0), new Slot(0)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0), new Slot(0)});
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot((Object) null)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot((Object) null)});
     }
   }
 
@@ -150,13 +166,13 @@ public class KClass {
   @Override
   public String toString() {
     return "KClass{" +
-        "name='" + name + '\'' +
-        ", superClassName='" + superClassName + '\'' +
-        ", methods=" + methods.size() +
-        ", fields=" + fields.size() +
-        ", classLoader=" + classLoader.getClass().getName() +
-        ", superClass=" + (superClass == null ? "null" : superClass.getName()) +
-        ", staticInit=" + staticInit +
-        '}';
+      "name='" + name + '\'' +
+      ", superClassName='" + superClassName + '\'' +
+      ", methods=" + methods.size() +
+      ", fields=" + fields.size() +
+      ", classLoader=" + classLoader.getClass().getName() +
+      ", superClass=" + (superClass == null ? "null" : superClass.getName()) +
+      ", staticInit=" + staticInit +
+      '}';
   }
 }
