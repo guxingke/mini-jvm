@@ -4,6 +4,7 @@ import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
+import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
@@ -50,6 +51,7 @@ public class VirtualMachine {
     loadLibrary();
 
     classLoader.loadClass("java/lang/String");
+    classLoader.loadClass("java/lang/Integer");
   }
 
   public static void loadLibrary() {
@@ -270,6 +272,14 @@ public class VirtualMachine {
       float tmp = frame.popFloat();
       int v = Float.floatToRawIntBits(tmp);
       frame.pushInt(v);
+    });
+
+    // Integer
+    Heap.registerMethod("java/lang/Integer_valueOf_(I)Ljava/lang/Integer;", frame -> {
+      KClass clazz = Heap.findClass("java/lang/Integer");
+      KObject kObject = clazz.newObject();
+      kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt())});
+      frame.pushRef(kObject);
     });
   }
 }

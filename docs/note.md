@@ -6,3 +6,6 @@
 ```
 -cp onjava8 GreenhouseController
 ```
+
+## lambda 相关
+lambda 实现没有采用推荐方式, 可能会有问题. 暂时略过.

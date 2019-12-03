@@ -3,7 +3,7 @@ import java.util.function.Supplier;
 public class TestClosure2 {
 
   Supplier<Integer> makeFun() {
-    Integer xx = new Integer(10);
+    Integer xx = 10;
     return () -> xx;
   }
 
