@@ -43,7 +43,7 @@ mini-jvm HelloWold hello mini-jvm
 # 输入 mini-jvm -help 了解更多.
 ```
 
-### 彩蛋 1 , 简单理解 JVM 基于栈的解释器.
+### 彩蛋 1 , 理解 JVM 基于栈的解释器.
 ```bash
 cat <<EOF > Sum10.java
 public class Sum10 {
@@ -83,19 +83,20 @@ mini-jvm -- sum10.bc
 
 ## 规划
 - Class 文件解析 90%
-- 字节码执行 80%
-- 类加载 80%
-- 方法调用 80%
+- 字节码执行 90%
+- 类加载 90%
+- 方法调用 90%
 - 实例化 90%
-- native 方法 50%
+- native 方法 70%
 - 异常处理 0%
 - 多线程 0%
-- self-booting 0%
+- self-booting 10%
 
 ## 局限
 1. 不实现 GC
 
 ## 变更记录
+- 支持 Lambda 调用, closure, currying 可用.
 - Hello World 级别可用
 
 ## 参考
