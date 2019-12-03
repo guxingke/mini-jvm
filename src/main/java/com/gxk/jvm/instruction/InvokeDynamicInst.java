@@ -61,80 +61,82 @@ public class InvokeDynamicInst implements Instruction {
     lcMehods.add(lm);
 
     String format = String.format("%s_%s_%s", lcname, lm.name, lm.descriptor);
-    Heap.registerMethod(format, (f) -> {
-      KClass bsc= Heap.findClass(bsTargetClass);
-      KMethod bsm = bsc.getLambdaMethod(bsTargetMethod);
+    if (Heap.findMethod(format) == null) {
+      Heap.registerMethod(format, (f) -> {
+        KClass bsc= Heap.findClass(bsTargetClass);
+        KMethod bsm = bsc.getLambdaMethod(bsTargetMethod);
 
-      List<String> args = bsm.getArgs();
-      int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
+        List<String> args = bsm.getArgs();
+        int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
 
-      List<Object> argObjs = new ArrayList<>();
-      for (int i = bsSize - 1; i >= 0; i--) {
-        String arg = args.get(i);
-        switch (arg) {
-          case "I":
-          case "B":
-          case "C":
-          case "S":
-          case "Z":
-            argObjs.add(f.popInt());
-            break;
-          case "F":
-            argObjs.add(f.popFloat());
-            break;
-          case "J":
-            argObjs.add(f.popLong());
-            break;
-          case "D":
-            argObjs.add(f.popDouble());
-            break;
-          default:
-            argObjs.add(f.popRef());
-            break;
+        List<Object> argObjs = new ArrayList<>();
+        for (int i = bsSize - 1; i >= 0; i--) {
+          String arg = args.get(i);
+          switch (arg) {
+            case "I":
+            case "B":
+            case "C":
+            case "S":
+            case "Z":
+              argObjs.add(f.popInt());
+              break;
+            case "F":
+              argObjs.add(f.popFloat());
+              break;
+            case "J":
+              argObjs.add(f.popLong());
+              break;
+            case "D":
+              argObjs.add(f.popDouble());
+              break;
+            default:
+              argObjs.add(f.popRef());
+              break;
+          }
         }
-      }
 
-      KLambdaObject ref = (KLambdaObject) f.popRef();
-      Collections.reverse(argObjs);
+        KLambdaObject ref = (KLambdaObject) f.popRef();
+        Collections.reverse(argObjs);
 
-      Frame newFrame = new Frame(bsm, f.thread);
+        Frame newFrame = new Frame(bsm, f.thread);
 
-      // FIXME 稍有不妥
-      for (Object arg : ref.args) {
-        argObjs.add(0, arg);
-      }
-
-      int slotIdx = 0;
-      for (int i = 0; i < args.size(); i++) {
-        String arg = args.get(i);
-        switch (arg) {
-          case "I":
-          case "B":
-          case "C":
-          case "S":
-          case "Z":
-            newFrame.setInt(slotIdx, (Integer) argObjs.get(i));
-            break;
-          case "J":
-            newFrame.setLong(slotIdx, (Long) argObjs.get(i));
-            slotIdx++;
-            break;
-          case "F":
-            newFrame.setFloat(slotIdx, (Float) argObjs.get(i));
-            break;
-          case "D":
-            newFrame.setDouble(slotIdx, (Double) argObjs.get(i));
-            slotIdx++;
-            break;
-          default:
-            newFrame.setRef(slotIdx, argObjs.get(i));
-            break;
+        // FIXME 稍有不妥
+        for (Object arg : ref.args) {
+          argObjs.add(0, arg);
         }
-        slotIdx++;
-      }
 
-      f.thread.pushFrame(newFrame);
-    });
+        int slotIdx = 0;
+        for (int i = 0; i < args.size(); i++) {
+          String arg = args.get(i);
+          switch (arg) {
+            case "I":
+            case "B":
+            case "C":
+            case "S":
+            case "Z":
+              newFrame.setInt(slotIdx, (Integer) argObjs.get(i));
+              break;
+            case "J":
+              newFrame.setLong(slotIdx, (Long) argObjs.get(i));
+              slotIdx++;
+              break;
+            case "F":
+              newFrame.setFloat(slotIdx, (Float) argObjs.get(i));
+              break;
+            case "D":
+              newFrame.setDouble(slotIdx, (Double) argObjs.get(i));
+              slotIdx++;
+              break;
+            default:
+              newFrame.setRef(slotIdx, argObjs.get(i));
+              break;
+          }
+          slotIdx++;
+        }
+
+        f.thread.pushFrame(newFrame);
+      });
+    }
 
     KClass lcClazz = new KClass(lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader);
 

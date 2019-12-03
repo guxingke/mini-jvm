@@ -37,4 +37,14 @@ public class InterpreterLambdaTest extends BaseInterpreterTest {
   public void test_curry3() {
     testMain("Curry3Args");
   }
+
+  @Test
+  public void test_closure() {
+    testMain("TestClosure");
+  }
+
+  @Test
+  public void test_closure2() {
+    testMain("TestClosure2");
+  }
 }
