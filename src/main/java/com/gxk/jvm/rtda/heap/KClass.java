@@ -121,8 +121,8 @@ public class KClass {
     return object;
   }
 
-  public KLambdaObject newLambdaObject(LocalVars localVars) {
-    return new KLambdaObject(this, localVars);
+  public KLambdaObject newLambdaObject(List<Object> args) {
+    return new KLambdaObject(this, args);
   }
 
   private KField map(KField source) {

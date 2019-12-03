@@ -1,12 +1,12 @@
 package com.gxk.jvm.rtda.heap;
 
-import com.gxk.jvm.rtda.LocalVars;
+import java.util.List;
 
 public class KLambdaObject extends KObject{
-  public final LocalVars localVars;
+  public final List<Object> args;
 
-  public KLambdaObject(KClass clazz, LocalVars localVars) {
+  public KLambdaObject(KClass clazz, List<Object> vars) {
     super(clazz);
-    this.localVars = localVars;
+    this.args = vars;
   }
 }

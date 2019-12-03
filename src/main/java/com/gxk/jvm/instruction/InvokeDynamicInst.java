@@ -100,9 +100,8 @@ public class InvokeDynamicInst implements Instruction {
       Frame newFrame = new Frame(bsm, f.thread);
 
       // FIXME 稍有不妥
-      Slot[] slots = ref.localVars.getSlots();
-      for (Slot slot : slots) {
-        argObjs.add(0, slot.ref);
+      for (Object arg : ref.args) {
+        argObjs.add(0, arg);
       }
 
       int slotIdx = 0;
@@ -142,15 +141,34 @@ public class InvokeDynamicInst implements Instruction {
     int realSize = method.getArgs().size();
     int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
 
-    Slot[] slots = new Slot[realSize - bsSize];
-    int idx = 0;
+    List<Object> args = new ArrayList<>(realSize - bsSize);
     while (realSize > bsSize) {
-      slots[idx++] = frame.popSlot();
+      String arg = method.getArgs().get(bsSize);
+        switch (arg) {
+          case "I":
+          case "B":
+          case "C":
+          case "S":
+          case "Z":
+            args.add(frame.popInt());
+            break;
+          case "F":
+            args.add(frame.popFloat());
+            break;
+          case "J":
+            args.add(frame.popLong());
+            break;
+          case "D":
+            args.add(frame.popDouble());
+            break;
+          default:
+            args.add(frame.popRef());
+            break;
+        }
       bsSize++;
     }
 
-    LocalVars vars = new LocalVars(slots);
-    KLambdaObject kObject = lcClazz.newLambdaObject(vars);
+    KLambdaObject kObject = lcClazz.newLambdaObject(args);
     frame.pushRef(kObject);
   }
 }
