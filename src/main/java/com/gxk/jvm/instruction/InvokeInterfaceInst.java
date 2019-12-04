@@ -9,6 +9,7 @@ import com.gxk.jvm.rtda.heap.KLambdaObject;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.util.Utils;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -73,27 +74,7 @@ public class InvokeInterfaceInst implements Instruction {
     List<Object> argObjs = new ArrayList<>();
     for (int i = args.size() - 1; i >= 0; i--) {
       String arg = args.get(i);
-      switch (arg) {
-        case "I":
-        case "B":
-        case "C":
-        case "S":
-        case "Z":
-          argObjs.add(frame.popInt());
-          break;
-        case "F":
-          argObjs.add(frame.popFloat());
-          break;
-        case "J":
-          argObjs.add(frame.popLong());
-          break;
-        case "D":
-          argObjs.add(frame.popDouble());
-          break;
-        default:
-          argObjs.add(frame.popRef());
-          break;
-      }
+      argObjs.add(Utils.pop(frame, arg));
     }
 
     KObject ref = (KObject) frame.popRef();
@@ -115,27 +96,7 @@ public class InvokeInterfaceInst implements Instruction {
       for (int i = 0; i < tmpArgs.size(); i++) {
         String arg = tmpArgs.get(i);
         Object obj = argObjs.get(argObjs.size() - 1 - i);
-        switch (arg) {
-          case "I":
-          case "B":
-          case "C":
-          case "S":
-          case "Z":
-            frame.pushInt(((Integer) obj));
-            break;
-          case "J":
-            frame.pushLong(((Long) obj));
-            break;
-          case "F":
-            frame.pushFloat(((Float) obj));
-            break;
-          case "D":
-            frame.pushDouble(((Double) obj));
-            break;
-          default:
-            frame.pushRef(obj);
-            break;
-        }
+        Utils.push(frame, arg, obj);
       }
 
       nm.invoke(frame);
@@ -149,36 +110,10 @@ public class InvokeInterfaceInst implements Instruction {
     int slotIdx = 1;
     for (int i = 0; i < args.size(); i++) {
       String arg = args.get(i);
-      switch (arg) {
-        case "I":
-        case "B":
-        case "C":
-        case "S":
-        case "Z":
-          newFrame.setInt(slotIdx, (Integer) argObjs.get(i));
-          break;
-        case "J":
-          newFrame.setLong(slotIdx, (Long) argObjs.get(i));
-          slotIdx++;
-          break;
-        case "F":
-          newFrame.setFloat(slotIdx, (Float) argObjs.get(i));
-          break;
-        case "D":
-          newFrame.setDouble(slotIdx, (Double) argObjs.get(i));
-          slotIdx++;
-          break;
-        default:
-          newFrame.setRef(slotIdx, argObjs.get(i));
-          break;
-      }
-      slotIdx++;
+      slotIdx += Utils.setLocals(newFrame, slotIdx, arg, argObjs.get(i));
     }
 
     newFrame.setRef(0, ref);
-
-
-
     frame.thread.pushFrame(newFrame);
   }
 }

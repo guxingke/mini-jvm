@@ -8,6 +8,8 @@ import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
+import com.gxk.jvm.rtda.Frame;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,5 +138,76 @@ public abstract class Utils {
       }
     }
     return rets;
+  }
+
+  public static Object pop(Frame frame, String descriptor) {
+    switch (descriptor) {
+      case "I":
+      case "B":
+      case "C":
+      case "S":
+      case "Z":
+        return frame.popInt();
+      case "F":
+        return frame.popFloat();
+      case "J":
+        return frame.popLong();
+      case "D":
+        return frame.popDouble();
+      default:
+        return frame.popRef();
+    }
+  }
+
+  public static int setLocals(Frame frame, int idx, String descriptor, Object val) {
+    int ret = 1;
+    switch (descriptor) {
+      case "I":
+      case "B":
+      case "C":
+      case "S":
+      case "Z":
+        frame.setInt(idx, (Integer) val);
+        break;
+      case "J":
+        frame.setLong(idx, (Long) val);
+        ret++;
+        break;
+      case "F":
+        frame.setFloat(idx, (Float) val);
+        break;
+      case "D":
+        frame.setDouble(idx, (Double) val);
+        ret++;
+        break;
+      default:
+        frame.setRef(idx, val);
+        break;
+    }
+    return ret;
+  }
+
+  public static void push(Frame frame, String descriptor, Object obj) {
+    switch (descriptor) {
+      case "I":
+      case "B":
+      case "C":
+      case "S":
+      case "Z":
+        frame.pushInt(((Integer) obj));
+        break;
+      case "J":
+        frame.pushLong(((Long) obj));
+        break;
+      case "F":
+        frame.pushFloat(((Float) obj));
+        break;
+      case "D":
+        frame.pushDouble(((Double) obj));
+        break;
+      default:
+        frame.pushRef(obj);
+        break;
+    }
   }
 }

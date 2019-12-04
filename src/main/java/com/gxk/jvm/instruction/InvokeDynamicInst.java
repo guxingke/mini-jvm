@@ -4,8 +4,6 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.cp.MethodHandle;
 import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.LocalVars;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KLambdaObject;
@@ -72,27 +70,7 @@ public class InvokeDynamicInst implements Instruction {
         List<Object> argObjs = new ArrayList<>();
         for (int i = bsSize - 1; i >= 0; i--) {
           String arg = args.get(i);
-          switch (arg) {
-            case "I":
-            case "B":
-            case "C":
-            case "S":
-            case "Z":
-              argObjs.add(f.popInt());
-              break;
-            case "F":
-              argObjs.add(f.popFloat());
-              break;
-            case "J":
-              argObjs.add(f.popLong());
-              break;
-            case "D":
-              argObjs.add(f.popDouble());
-              break;
-            default:
-              argObjs.add(f.popRef());
-              break;
-          }
+          argObjs.add(Utils.pop(f, arg));
         }
 
         KLambdaObject ref = (KLambdaObject) f.popRef();
@@ -100,7 +78,6 @@ public class InvokeDynamicInst implements Instruction {
 
         Frame newFrame = new Frame(bsm, f.thread);
 
-        // FIXME 稍有不妥
         for (Object arg : ref.args) {
           argObjs.add(0, arg);
         }
@@ -109,30 +86,8 @@ public class InvokeDynamicInst implements Instruction {
         int aoi = bsm.isStatic() ? 0 : 1;
         for (int i = 0; i < args.size(); i++) {
           String arg = args.get(i);
-          switch (arg) {
-            case "I":
-            case "B":
-            case "C":
-            case "S":
-            case "Z":
-              newFrame.setInt(slotIdx, (Integer) argObjs.get(aoi));
-              break;
-            case "J":
-              newFrame.setLong(slotIdx, (Long) argObjs.get(aoi));
-              slotIdx++;
-              break;
-            case "F":
-              newFrame.setFloat(slotIdx, (Float) argObjs.get(aoi));
-              break;
-            case "D":
-              newFrame.setDouble(slotIdx, (Double) argObjs.get(aoi));
-              slotIdx++;
-              break;
-            default:
-              newFrame.setRef(slotIdx, argObjs.get(aoi));
-              break;
-          }
-          slotIdx++;
+          int si = Utils.setLocals(newFrame, slotIdx, arg, argObjs.get(aoi));
+          slotIdx += si;
           aoi++;
         }
 
@@ -152,27 +107,7 @@ public class InvokeDynamicInst implements Instruction {
     List<Object> args = new ArrayList<>(realSize - bsSize);
     while (realSize > bsSize) {
       String arg = method.getArgs().get(bsSize);
-        switch (arg) {
-          case "I":
-          case "B":
-          case "C":
-          case "S":
-          case "Z":
-            args.add(frame.popInt());
-            break;
-          case "F":
-            args.add(frame.popFloat());
-            break;
-          case "J":
-            args.add(frame.popLong());
-            break;
-          case "D":
-            args.add(frame.popDouble());
-            break;
-          default:
-            args.add(frame.popRef());
-            break;
-        }
+      args.add(Utils.pop(frame, arg));
       bsSize++;
     }
     if (!lm.isStatic()) {
