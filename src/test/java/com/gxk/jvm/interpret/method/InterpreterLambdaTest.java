@@ -47,4 +47,14 @@ public class InterpreterLambdaTest extends BaseInterpreterTest {
   public void test_closure2() {
     testMain("TestClosure2");
   }
+
+  @Test
+  public void test_function_composition() {
+    testMain("TestFunctionComposition");
+  }
+
+  @Test
+  public void test_function_composition2() {
+    testMain("TestFunctionComposition2");
+  }
 }

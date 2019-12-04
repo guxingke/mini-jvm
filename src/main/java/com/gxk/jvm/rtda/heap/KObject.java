@@ -48,10 +48,6 @@ public class KObject {
 
   @Override
   public String toString() {
-    return "KObject{" +
-        "clazz=" + clazz+
-        ", fields=" + fields.size()+
-        ", superObject=" + superObject +
-        '}';
+    return clazz.name + "@" + this.hashCode();
   }
 }
