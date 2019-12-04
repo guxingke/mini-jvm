@@ -57,7 +57,7 @@ public class InvokeDynamicInst implements Instruction {
 
     String lcname = frame.method.clazz.getName() + "$" + frame.method.getName() + "$" + bsTargetClass + "$" + bsTargetMethod;
     List<KMethod> lcMehods = new ArrayList<>();
-    KMethod lm = new KMethod(1, methodName, bstMethodDesc0, method.getMaxStacks(), maxLocals + 1, null);
+    KMethod lm = new KMethod(method.getAccessFlags(), methodName, bstMethodDesc0, method.getMaxStacks(), maxLocals + 1, null);
     lcMehods.add(lm);
 
     String format = String.format("%s_%s_%s", lcname, lm.name, lm.descriptor);
@@ -105,7 +105,8 @@ public class InvokeDynamicInst implements Instruction {
           argObjs.add(0, arg);
         }
 
-        int slotIdx = 0;
+        int slotIdx = bsm.isStatic() ? 0 : 1;
+        int aoi = bsm.isStatic() ? 0 : 1;
         for (int i = 0; i < args.size(); i++) {
           String arg = args.get(i);
           switch (arg) {
@@ -114,24 +115,29 @@ public class InvokeDynamicInst implements Instruction {
             case "C":
             case "S":
             case "Z":
-              newFrame.setInt(slotIdx, (Integer) argObjs.get(i));
+              newFrame.setInt(slotIdx, (Integer) argObjs.get(aoi));
               break;
             case "J":
-              newFrame.setLong(slotIdx, (Long) argObjs.get(i));
+              newFrame.setLong(slotIdx, (Long) argObjs.get(aoi));
               slotIdx++;
               break;
             case "F":
-              newFrame.setFloat(slotIdx, (Float) argObjs.get(i));
+              newFrame.setFloat(slotIdx, (Float) argObjs.get(aoi));
               break;
             case "D":
-              newFrame.setDouble(slotIdx, (Double) argObjs.get(i));
+              newFrame.setDouble(slotIdx, (Double) argObjs.get(aoi));
               slotIdx++;
               break;
             default:
-              newFrame.setRef(slotIdx, argObjs.get(i));
+              newFrame.setRef(slotIdx, argObjs.get(aoi));
               break;
           }
           slotIdx++;
+          aoi++;
+        }
+
+        if (!bsm.isStatic()) {
+          newFrame.setRef(0, argObjs.get(0));
         }
 
         f.thread.pushFrame(newFrame);
@@ -168,6 +174,10 @@ public class InvokeDynamicInst implements Instruction {
             break;
         }
       bsSize++;
+    }
+    if (!lm.isStatic()) {
+      // this
+      args.add(frame.popRef());
     }
 
     KLambdaObject kObject = lcClazz.newLambdaObject(args);

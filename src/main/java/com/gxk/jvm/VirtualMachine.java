@@ -118,6 +118,11 @@ public class VirtualMachine {
     });
     Heap.registerMethod("java/io/PrintStream_println_(Ljava/lang/Object;)V", frame -> {
       Object val = frame.popRef();
+      if (val instanceof KObject) {
+        if (((KObject) val).clazz.name.equals("java/lang/Integer")) {
+          val = ((KObject) val).getField("value", "I").val[0].num;
+        }
+      }
       frame.popRef();
       System.out.println(val);
     });
