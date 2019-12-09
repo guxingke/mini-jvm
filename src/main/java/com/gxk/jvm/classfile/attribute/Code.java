@@ -3,6 +3,7 @@ package com.gxk.jvm.classfile.attribute;
 import com.gxk.jvm.classfile.Attribute;
 import com.gxk.jvm.classfile.Attributes;
 import com.gxk.jvm.classfile.CodeFromByte;
+import com.gxk.jvm.classfile.ExceptionTable;
 import com.gxk.jvm.instruction.Instruction;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,7 +34,7 @@ public class Code extends Attribute {
   public final int maxStacks;
   public final int maxLocals;
   public final Instruction[] instructions;
-  public final byte[] exceptionTable;
+  public final ExceptionTable exceptionTable;
   public final Attributes attributes;
 
   public Map<Integer, Instruction> getInstructions() {

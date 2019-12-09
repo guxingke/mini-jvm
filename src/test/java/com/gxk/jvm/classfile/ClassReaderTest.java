@@ -29,6 +29,13 @@ public class ClassReaderTest {
     test(int1);
   }
 
+  @Test
+  public void test_exception() throws IOException {
+    String clazz = "example/TestException.class";
+    test(clazz);
+  }
+
+
   public void test(String p) throws IOException {
     Path path = Paths.get(p);
     ClassFile cf = ClassReader.read(path);

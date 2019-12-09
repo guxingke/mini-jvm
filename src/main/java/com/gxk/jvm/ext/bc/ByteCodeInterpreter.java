@@ -126,7 +126,7 @@ public class ByteCodeInterpreter {
 
     Interpreter interpreter = new Interpreter();
     Thread thread = new Thread(2);
-    KMethod method = new KMethod(1, "main", "()I", stacks, locals, instructionMap);
+    KMethod method = new KMethod(1, "main", "()I", stacks, locals, instructionMap, null);
     Frame frame = new Frame(method, thread);
     thread.pushFrame(frame);
 

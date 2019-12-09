@@ -1,10 +1,10 @@
 package com.gxk.jvm.rtda.heap;
 
+import com.gxk.jvm.classfile.ExceptionTable;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.Data;
 
 import java.util.Map;
@@ -19,6 +19,7 @@ public class KMethod {
   public final int maxStacks;
   public final int maxLocals;
   public final Map<Integer, Instruction> instructionMap;
+  public final ExceptionTable exceptionTable;
 
   public KClass clazz;
 
@@ -65,5 +66,9 @@ public class KMethod {
 
   public boolean isStatic() {
     return (this.accessFlags & 0x0008) != 0;
+  }
+
+  public String nativeMethodKey() {
+    return String.format("%s_%s_%s", this.clazz.name, name, descriptor);
   }
 }

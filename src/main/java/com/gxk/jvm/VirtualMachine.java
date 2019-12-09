@@ -286,5 +286,21 @@ public class VirtualMachine {
       kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt())});
       frame.pushRef(kObject);
     });
+
+    // Throwable
+    Heap.registerMethod("java/lang/Throwable_<clinit>_()V", frame -> {
+      System.out.println();
+    });
+    Heap.registerMethod("java/lang/Throwable_<init>_(Ljava/lang/String)Ljava/lang/Throwable;", frame -> {
+      System.out.println();
+    });
+    Heap.registerMethod("java/lang/Throwable_fillInStackTrace_(I)Ljava/lang/Throwable;", frame -> {
+      System.out.println();
+    });
+    Heap.registerMethod("java/lang/Throwable_getStackTraceDepth_()I", frame -> {
+      System.out.println();
+    });
+    Heap.registerMethod("java/lang/Throwable_getStackTraceElement_(I)Ljava/lang/StackTraceElement;", frame -> {});
+
   }
 }

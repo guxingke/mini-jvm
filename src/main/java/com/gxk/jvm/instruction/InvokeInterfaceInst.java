@@ -50,14 +50,21 @@ public class InvokeInterfaceInst implements Instruction {
         throw new IllegalStateException();
       }
 
-      Frame newFrame = new Frame(cinit, frame.thread);
-      clazz.setStaticInit(1);
-      KClass finalClass = clazz;
-      newFrame.setOnPop(() -> finalClass.setStaticInit(2));
-      frame.thread.pushFrame(newFrame);
+      // hack by native method
+      String key = String.format("%s_%s_%s", cinit.clazz.name, cinit.name, cinit.descriptor);
+      NativeMethod ciNm = Heap.findMethod(key);
+      if (ciNm != null) {
+        ciNm.invoke(frame);
+      } else {
+        Frame newFrame = new Frame(cinit, frame.thread);
+        clazz.setStaticInit(1);
+        KClass finalClass = clazz;
+        newFrame.setOnPop(() -> finalClass.setStaticInit(2));
+        frame.thread.pushFrame(newFrame);
 
-      frame.nextPc = frame.thread.getPc();
-      return;
+        frame.nextPc = frame.thread.getPc();
+        return;
+      }
     }
 
     KMethod method = clazz.getMethod(methodName, methodDescriptor);

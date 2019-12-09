@@ -6,6 +6,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.NativeMethod;
 
 public class NewInst implements Instruction {
 
@@ -35,21 +36,27 @@ public class NewInst implements Instruction {
 
     if (!kClass.isStaticInit()) {
       // init
-      KMethod cinit = kClass.getMethod("<clinit>", "()V");
+      KMethod cinit = kClass.getClinitMethod();
       if (cinit == null) {
         kClass.setStaticInit(2);
         frame.nextPc = frame.thread.getPc();
         return;
       }
 
-      Frame newFrame = new Frame(cinit, frame.thread);
-      kClass.setStaticInit(1);
-      KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
-      frame.thread.pushFrame(newFrame);
+      String clNm = cinit.nativeMethodKey();
+      NativeMethod clm = Heap.findMethod(clNm);
+      if (clm != null) {
+        clm.invoke(frame);
+      } else {
+        Frame newFrame = new Frame(cinit, frame.thread);
+        kClass.setStaticInit(1);
+        KClass finalKClass = kClass;
+        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        frame.thread.pushFrame(newFrame);
 
-      frame.nextPc = frame.thread.getPc();
-      return;
+        frame.nextPc = frame.thread.getPc();
+        return;
+      }
     }
 
     KObject obj = kClass.newObject();

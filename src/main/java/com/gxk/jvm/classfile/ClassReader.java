@@ -22,7 +22,6 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -255,16 +254,27 @@ public abstract class ClassReader {
           Instruction[] instructions = readByteCode(byteCode, constantPool);
 
           int exceptionTableLength = is.readUnsignedShort();
-          if (exceptionTableLength > 0) {
-            // 定长 8
-            byte[] bytes1 = Utils.readNBytes(is, exceptionTableLength * 8);
-//            System.out.println("byteArrayToHex(bytes) = " + byteArrayToHex(bytes1));
-          }
+          Exception[] exceptions = new Exception[exceptionTableLength];
+          for (int i1 = 0; i1 < exceptionTableLength; i1++) {
+            int etsp = is.readUnsignedShort();
+            int etep = is.readUnsignedShort();
+            int ethp = is.readUnsignedShort();
+            int ctIdx = is.readUnsignedShort();
 
+            // null => catch any exception
+            String etClassname = null;
+            if (ctIdx != 0) {
+              etClassname = Utils.getClassName(constantPool, ctIdx);
+            }
+
+            Exception exception = new Exception(etsp, etep, ethp, etClassname);
+            exceptions[i] = exception;
+          }
+          ExceptionTable exceptionTable = new ExceptionTable(exceptions);
           int codeAttributeCount = is.readUnsignedShort();
           Attributes codeAttributes = readAttributes(is, codeAttributeCount, constantPool);
 
-          attribute = new Code(maxStack, maxLocals, instructions, null, codeAttributes);
+          attribute = new Code(maxStack, maxLocals, instructions, exceptionTable, codeAttributes);
           break;
         case LineNumberTable:
           int length = is.readUnsignedShort();
@@ -313,7 +323,7 @@ public abstract class ClassReader {
             break;
           }
           instructions.add(inst);
-        } catch (Exception e) {
+        } catch (java.lang.Exception e) {
           e.printStackTrace();
         }
       }
