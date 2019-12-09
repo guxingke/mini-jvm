@@ -1,5 +1,6 @@
 package com.gxk.jvm.rtda.heap;
 
+import com.gxk.jvm.classfile.Exception;
 import com.gxk.jvm.classfile.ExceptionTable;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
@@ -70,5 +71,16 @@ public class KMethod {
 
   public String nativeMethodKey() {
     return String.format("%s_%s_%s", this.clazz.name, name, descriptor);
+  }
+
+  public Integer getHandlerPc(Integer pc, String name) {
+    for (Exception exception : this.exceptionTable.exceptions) {
+      if (Objects.equals(exception.clazz, name)) {
+        if (pc >= exception.startPc && pc < exception.endPc) {
+          return exception.handlerPc;
+        }
+      }
+    }
+    return null;
   }
 }

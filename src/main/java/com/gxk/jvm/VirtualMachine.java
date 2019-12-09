@@ -287,20 +287,25 @@ public class VirtualMachine {
       frame.pushRef(kObject);
     });
 
+    // Exception
+    Heap.registerMethod("java/lang/Exception_<init>_(Ljava/lang/String;)V", frame -> {
+      KObject str = (KObject) frame.popRef();
+      KObject thisObj = (KObject) frame.popRef();
+      KField msgField = thisObj.getField("detailMessage", "Ljava/lang/String;");
+      msgField.val = new Slot[] {new Slot(str)};
+    });
+
     // Throwable
     Heap.registerMethod("java/lang/Throwable_<clinit>_()V", frame -> {
-      System.out.println();
     });
     Heap.registerMethod("java/lang/Throwable_<init>_(Ljava/lang/String)Ljava/lang/Throwable;", frame -> {
-      System.out.println();
     });
     Heap.registerMethod("java/lang/Throwable_fillInStackTrace_(I)Ljava/lang/Throwable;", frame -> {
-      System.out.println();
     });
     Heap.registerMethod("java/lang/Throwable_getStackTraceDepth_()I", frame -> {
-      System.out.println();
     });
-    Heap.registerMethod("java/lang/Throwable_getStackTraceElement_(I)Ljava/lang/StackTraceElement;", frame -> {});
+    Heap.registerMethod("java/lang/Throwable_getStackTraceElement_(I)Ljava/lang/StackTraceElement;", frame -> {
+    });
 
   }
 }

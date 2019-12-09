@@ -6,8 +6,7 @@ import org.junit.Test;
 
 public class InterpreterExceptionTest extends BaseInterpreterTest {
 
-//  @Test
-  @Ignore
+  @Test
   public void test_simple() {
     testMain("TestException");
   }
