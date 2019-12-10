@@ -268,7 +268,7 @@ public abstract class ClassReader {
             }
 
             Exception exception = new Exception(etsp, etep, ethp, etClassname);
-            exceptions[i] = exception;
+            exceptions[i1] = exception;
           }
           ExceptionTable exceptionTable = new ExceptionTable(exceptions);
           int codeAttributeCount = is.readUnsignedShort();

@@ -10,4 +10,9 @@ public class InterpreterExceptionTest extends BaseInterpreterTest {
   public void test_simple() {
     testMain("TestException");
   }
+
+  @Test
+  public void test_exception_finally() {
+    testMain("TestException2");
+  }
 }

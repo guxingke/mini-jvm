@@ -75,7 +75,7 @@ public class KMethod {
 
   public Integer getHandlerPc(Integer pc, String name) {
     for (Exception exception : this.exceptionTable.exceptions) {
-      if (Objects.equals(exception.clazz, name)) {
+      if (exception.clazz == null || Objects.equals(exception.clazz, name)) {
         if (pc >= exception.startPc && pc < exception.endPc) {
           return exception.handlerPc;
         }
