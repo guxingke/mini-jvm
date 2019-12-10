@@ -26,6 +26,9 @@ public class Thread {
     if (pop.getOnPop() != null) {
       pop.getOnPop().run();
     }
+    if (!this.empty()) {
+      this.pc = this.stack.peek().getPc();
+    }
     return pop;
   }
 

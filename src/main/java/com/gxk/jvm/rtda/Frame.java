@@ -13,6 +13,7 @@ public class Frame {
   private final Map<Integer, Instruction> instructionMap;
   public final Thread thread;
   public int nextPc;
+  private int pc;
 
   private Runnable onPop;
 
@@ -41,6 +42,7 @@ public class Frame {
   }
 
   public Instruction getInst(int pc) {
+    this.pc = pc;
     return this.instructionMap.get(pc);
   }
 
@@ -150,4 +152,7 @@ public class Frame {
     return this.operandStack;
   }
 
+  public int getPc() {
+    return pc;
+  }
 }
