@@ -2,9 +2,7 @@ package com.gxk.jvm.classpath;
 
 import com.gxk.jvm.classfile.ClassFile;
 import java.util.List;
-import lombok.Data;
 
-@Data
 public class CompositeEntry implements Entry {
 
   private final List<Entry> entries;

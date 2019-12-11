@@ -6,11 +6,9 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
 import java.util.Objects;
-import lombok.Data;
 
 import java.util.Map;
 
-@Data
 public class KMethod {
 
   public final int accessFlags;
@@ -23,6 +21,17 @@ public class KMethod {
   public final ExceptionTable exceptionTable;
 
   public KClass clazz;
+
+  public KMethod(int accessFlags, String name, String descriptor, int maxStacks, int maxLocals,
+      Map<Integer, Instruction> instructionMap, ExceptionTable exceptionTable) {
+    this.accessFlags = accessFlags;
+    this.name = name;
+    this.descriptor = descriptor;
+    this.maxStacks = maxStacks;
+    this.maxLocals = maxLocals;
+    this.instructionMap = instructionMap;
+    this.exceptionTable = exceptionTable;
+  }
 
   public String getReturnType() {
     return this.descriptor.substring(this.descriptor.indexOf(")") + 1);
@@ -57,7 +66,7 @@ public class KMethod {
         ", maxStacks=" + maxStacks +
         ", maxLocals=" + maxLocals +
         ", instructionMap=" + instructionMap +
-        ", clazz=" + clazz.getName() +
+        ", clazz=" + clazz.name +
         '}';
   }
 

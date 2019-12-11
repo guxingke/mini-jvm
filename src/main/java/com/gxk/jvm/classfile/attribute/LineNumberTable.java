@@ -1,12 +1,7 @@
 package com.gxk.jvm.classfile.attribute;
 
 import com.gxk.jvm.classfile.Attribute;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class LineNumberTable extends Attribute {
 
   //  LineNumberTable_attribute {
@@ -19,11 +14,18 @@ public class LineNumberTable extends Attribute {
 //  }
   public final Line[] lines;
 
-  @AllArgsConstructor
-  @Data
+  public LineNumberTable(Line[] lines) {
+    this.lines = lines;
+  }
+
   public static class Line {
 
     public final int startPc;
     public final int lineNumber;
+
+    public Line(int startPc, int lineNumber) {
+      this.startPc = startPc;
+      this.lineNumber = lineNumber;
+    }
   }
 }

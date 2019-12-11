@@ -1,13 +1,16 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import lombok.Data;
 
-@Data
 public class MultiANewArrayInst implements Instruction{
 
   public final int index;
   public final int dimensions;
+
+  public MultiANewArrayInst(int index, int dimensions) {
+    this.index = index;
+    this.dimensions = dimensions;
+  }
 
   @Override
   public int offset() {

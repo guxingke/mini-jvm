@@ -3,9 +3,7 @@ package com.gxk.jvm.classfile.cp;
 import com.gxk.jvm.classfile.ConstantInfo;
 import com.gxk.jvm.classfile.ConstantPoolInfoEnum;
 import java.nio.charset.StandardCharsets;
-import lombok.Data;
 
-@Data
 public class Utf8 extends ConstantInfo {
 
   public final byte[] bytes;

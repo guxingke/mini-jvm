@@ -31,7 +31,7 @@ public abstract class Utils {
   }
 
   public static String getClassName(ConstantPool cp, int classIndex) {
-    int nameIndex = ((ClassCp) cp.infos[classIndex - 1]).getNameIndex();
+    int nameIndex = ((ClassCp) cp.infos[classIndex - 1]).nameIndex;
     return ((Utf8) cp.infos[nameIndex - 1]).getString();
   }
 
@@ -48,7 +48,7 @@ public abstract class Utils {
   }
 
   public static String getNameByNameAndTypeIdx(ConstantPool cp, int natIdx) {
-    int nameIndex = ((NameAndType) cp.infos[natIdx - 1]).getNameIndex();
+    int nameIndex = ((NameAndType) cp.infos[natIdx - 1]).nameIndex;
     return getString(cp, nameIndex);
   }
 

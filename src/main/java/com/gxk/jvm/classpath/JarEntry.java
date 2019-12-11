@@ -10,12 +10,14 @@ import java.nio.file.Path;
 import java.util.jar.JarFile;
 
 import com.gxk.jvm.classfile.ClassReader;
-import lombok.Data;
 
-@Data
 public class JarEntry implements Entry {
 
   public final Path path;
+
+  public JarEntry(Path path) {
+    this.path = path;
+  }
 
   @Override
   public ClassFile findClass(String name) {

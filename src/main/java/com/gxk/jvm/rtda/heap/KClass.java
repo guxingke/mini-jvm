@@ -3,18 +3,14 @@ package com.gxk.jvm.rtda.heap;
 import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
-import com.gxk.jvm.rtda.LocalVars;
 import com.gxk.jvm.rtda.Slot;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import lombok.Data;
-
 import java.util.List;
 import java.util.Objects;
 
-@Data
 public class KClass {
 
   public final String name;
@@ -163,6 +159,14 @@ public class KClass {
     return this.superClass.getUnStaticInitSuperClass();
   }
 
+  public void setInterfaces(List<KClass> interfaces) {
+    this.interfaces = interfaces;
+  }
+
+  public List<KClass> getInterfaces() {
+    return interfaces;
+  }
+
   @Override
   public String toString() {
     return "KClass{" +
@@ -171,7 +175,7 @@ public class KClass {
       ", methods=" + methods.size() +
       ", fields=" + fields.size() +
       ", classLoader=" + classLoader.getClass().getName() +
-      ", superClass=" + (superClass == null ? "null" : superClass.getName()) +
+      ", superClass=" + (superClass == null ? "null" : superClass.name) +
       ", staticInit=" + staticInit +
       '}';
   }

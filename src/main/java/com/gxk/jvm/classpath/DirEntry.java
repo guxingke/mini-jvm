@@ -7,12 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
-import lombok.Data;
 
-@Data
 public class DirEntry implements Entry {
 
   public final Path dirPath;
+
+  public DirEntry(Path dirPath) {
+    this.dirPath = dirPath;
+  }
 
   @Override
   public ClassFile findClass(String clazzName) {

@@ -6,14 +6,18 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import java.util.List;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class InvokeStaticInst implements Instruction {
 
   public final String clazzName;
   public final String methodName;
   public final String descriptor;
+
+  public InvokeStaticInst(String clazzName, String methodName, String descriptor) {
+    this.clazzName = clazzName;
+    this.methodName = methodName;
+    this.descriptor = descriptor;
+  }
 
   @Override
   public int offset() {
@@ -30,7 +34,7 @@ public class InvokeStaticInst implements Instruction {
 
     KClass kClass = Heap.findClass(clazzName);
     if (kClass == null) {
-      kClass = frame.method.clazz.getClassLoader().loadClass(clazzName);
+      kClass = frame.method.clazz.classLoader.loadClass(clazzName);
     }
 
     if (!kClass.isStaticInit()) {

@@ -2,9 +2,7 @@ package com.gxk.jvm.classfile.cp;
 
 import com.gxk.jvm.classfile.ConstantInfo;
 import com.gxk.jvm.classfile.ConstantPoolInfoEnum;
-import lombok.Data;
 
-@Data
 public class ClassCp extends ConstantInfo {
 
   public final int nameIndex;

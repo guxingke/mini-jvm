@@ -2,17 +2,12 @@ package com.gxk.jvm.classfile.attribute;
 
 import com.gxk.jvm.classfile.Attribute;
 import com.gxk.jvm.classfile.Attributes;
-import com.gxk.jvm.classfile.CodeFromByte;
 import com.gxk.jvm.classfile.ExceptionTable;
 import com.gxk.jvm.instruction.Instruction;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class Code extends Attribute {
 
   //  Code_attribute {
@@ -36,6 +31,15 @@ public class Code extends Attribute {
   public final Instruction[] instructions;
   public final ExceptionTable exceptionTable;
   public final Attributes attributes;
+
+  public Code(int maxStacks, int maxLocals, Instruction[] instructions,
+      ExceptionTable exceptionTable, Attributes attributes) {
+    this.maxStacks = maxStacks;
+    this.maxLocals = maxLocals;
+    this.instructions = instructions;
+    this.exceptionTable = exceptionTable;
+    this.attributes = attributes;
+  }
 
   public Map<Integer, Instruction> getInstructions() {
     Map<Integer, Instruction> map = new HashMap<>(instructions.length);

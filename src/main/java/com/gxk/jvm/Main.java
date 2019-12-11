@@ -1,17 +1,10 @@
 package com.gxk.jvm;
 
-import com.gxk.jvm.classfile.ClassFile;
-import com.gxk.jvm.classfile.ClassReader;
-import com.gxk.jvm.classfile.Method;
-import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.ext.bc.ByteCodeGenerator;
 import com.gxk.jvm.ext.bc.ByteCodeInterpreter;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
 

@@ -1,14 +1,12 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
-import lombok.AllArgsConstructor;
 
 /**
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">
  * </a>https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1</a>
  * <p>
  */
-@AllArgsConstructor
 public class ClassFile {
 
   public final int magic;
@@ -27,6 +25,28 @@ public class ClassFile {
   public final Methods methods;
   public final int attributesCount;
   public final Attributes attributes;
+
+  public ClassFile(int magic, int minorVersion, int majorVersion, int constantPoolSize,
+      ConstantPool cpInfo, int accessFlags, int thisClass, int superClass, int interfacesCount,
+      Interfaces interfaces, int fieldCount, Fields fields, int methodsCount, Methods methods, int attributesCount,
+      Attributes attributes) {
+    this.magic = magic;
+    this.minorVersion = minorVersion;
+    this.majorVersion = majorVersion;
+    this.constantPoolSize = constantPoolSize;
+    this.cpInfo = cpInfo;
+    this.accessFlags = accessFlags;
+    this.thisClass = thisClass;
+    this.superClass = superClass;
+    this.interfacesCount = interfacesCount;
+    this.interfaces = interfaces;
+    this.fieldCount = fieldCount;
+    this.fields = fields;
+    this.methodsCount = methodsCount;
+    this.methods = methods;
+    this.attributesCount = attributesCount;
+    this.attributes = attributes;
+  }
 
   public BootstrapMethods getBootstrapMethods() {
     for (Attribute attribute : attributes.attributes) {

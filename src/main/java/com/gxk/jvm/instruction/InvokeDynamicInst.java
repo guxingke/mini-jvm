@@ -9,19 +9,23 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KLambdaObject;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.util.Utils;
-import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@AllArgsConstructor
 public class InvokeDynamicInst implements Instruction {
 
   public final String methodName;
   public final String methodDescriptor;
 
   public final int bsIdx;
+
+  public InvokeDynamicInst(String methodName, String methodDescriptor, int bsIdx) {
+    this.methodName = methodName;
+    this.methodDescriptor = methodDescriptor;
+    this.bsIdx = bsIdx;
+  }
 
   @Override
   public int offset() {
@@ -36,26 +40,26 @@ public class InvokeDynamicInst implements Instruction {
     }
 
     BootstrapMethods.BootstrapMethod bootstrapMethod = bootstrapMethods.methods[bsIdx];
-    Integer argsRef = bootstrapMethod.getArgsRefs()[1];
+    Integer argsRef = bootstrapMethod.argsRefs[1];
     MethodHandle info = (MethodHandle) frame.method.clazz.constantPool.infos[argsRef - 1];
     String bsTargetClass = Utils.getClassNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
     String bsTargetMethod = Utils.getMethodNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
 
-    Integer descRef0 = bootstrapMethod.getArgsRefs()[0];
+    Integer descRef0 = bootstrapMethod.argsRefs[0];
     MethodType methodType0= (MethodType) frame.method.clazz.constantPool.infos[descRef0 - 1];
     String bstMethodDesc0 = Utils.getString(frame.method.clazz.constantPool, methodType0.descriptorIndex);
 
-    Integer descRef = bootstrapMethod.getArgsRefs()[2];
+    Integer descRef = bootstrapMethod.argsRefs[2];
     MethodType methodType= (MethodType) frame.method.clazz.constantPool.infos[descRef - 1];
     String bstMethodDesc = Utils.getString(frame.method.clazz.constantPool, methodType.descriptorIndex);
 
     KClass clazz = Heap.findClass(bsTargetClass);
     KMethod method = clazz.getLambdaMethod(bsTargetMethod);
-    int maxLocals = method.getMaxLocals();
+    int maxLocals = method.maxLocals;
 
-    String lcname = frame.method.clazz.getName() + "$" + frame.method.getName() + "$" + bsTargetClass + "$" + bsTargetMethod;
+    String lcname = frame.method.clazz.name + "$" + frame.method.name + "$" + bsTargetClass + "$" + bsTargetMethod;
     List<KMethod> lcMehods = new ArrayList<>();
-    KMethod lm = new KMethod(method.getAccessFlags(), methodName, bstMethodDesc0, method.getMaxStacks(), maxLocals + 1, null, null);
+    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null);
     lcMehods.add(lm);
 
     String format = String.format("%s_%s_%s", lcname, lm.name, lm.descriptor);

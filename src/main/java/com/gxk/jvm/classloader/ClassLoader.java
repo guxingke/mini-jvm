@@ -44,7 +44,7 @@ public class ClassLoader {
 
   public void doRegister(KClass clazz) {
     Heap.registerClass(clazz.name, clazz);
-    for (KMethod method : clazz.getMethods()) {
+    for (KMethod method : clazz.methods) {
       if (method.isNative()) {
         String key = String.format("%s_%s_%s", method.clazz.name, method.name, method.descriptor);
         NativeMethod nm = Heap.findMethod(key);
@@ -114,10 +114,10 @@ public class ClassLoader {
     if (code == null) {
       return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0, null, null);
     }
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions(), code.getExceptionTable());
+    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable);
   }
 
   public KField map(Field field) {
-    return new KField(field.getAccessFlags(), field.getName(), field.getDescriptor().descriptor);
+    return new KField(field.accessFlags, field.name, field.descriptor.descriptor);
   }
 }

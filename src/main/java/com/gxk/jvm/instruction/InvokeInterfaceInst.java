@@ -1,22 +1,16 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.Stack;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KLambdaObject;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
-import lombok.AllArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@AllArgsConstructor
 public class InvokeInterfaceInst implements Instruction {
 
   public final String clazzName;
@@ -25,6 +19,14 @@ public class InvokeInterfaceInst implements Instruction {
 
   public final int count;
   public final int zero;
+
+  public InvokeInterfaceInst(String clazzName, String methodName, String methodDescriptor, int count, int zero) {
+    this.clazzName = clazzName;
+    this.methodName = methodName;
+    this.methodDescriptor = methodDescriptor;
+    this.count = count;
+    this.zero = zero;
+  }
 
   @Override
   public int offset() {
@@ -41,7 +43,7 @@ public class InvokeInterfaceInst implements Instruction {
 
     KClass clazz = Heap.findClass(this.clazzName);
     if (clazz == null) {
-      clazz = frame.method.clazz.getClassLoader().loadClass(clazzName);
+      clazz = frame.method.clazz.classLoader.loadClass(clazzName);
     }
 
     if (!clazz.isStaticInit()) {
@@ -92,7 +94,7 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     // hack for lambda
-    String key = String.format("%s_%s_%s", implMethod.clazz.getName(), implMethod.getName(), implMethod.getDescriptor());
+    String key = String.format("%s_%s_%s", implMethod.clazz.name, implMethod.name, implMethod.descriptor);
     nm = Heap.findMethod(key);
     if (nm != null) {
       // restore frame

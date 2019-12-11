@@ -44,12 +44,12 @@ public class ByteCodeGenerator {
 
     KMethod method = map(target);
 
-    String header = "main " + method.getMaxStacks() + " " + method.getMaxLocals() + " " + method.getArgs().size();
+    String header = "main " + method.maxStacks + " " + method.maxLocals + " " + method.getArgs().size();
     System.out.println(header);
 
-    List<Integer> keys = method.getInstructionMap().keySet().stream().sorted().collect(Collectors.toList());
+    List<Integer> keys = method.instructionMap.keySet().stream().sorted().collect(Collectors.toList());
     for (Integer key : keys) {
-      Instruction instruction = method.getInstructionMap().get(key);
+      Instruction instruction = method.instructionMap.get(key);
       System.out.println(key + " " + instruction.format());
     }
   }
@@ -59,6 +59,6 @@ public class ByteCodeGenerator {
     if (code == null) {
       return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0, null, null);
     }
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.getMaxStacks(), code.getMaxLocals(), code.getInstructions(), null);
+    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.maxStacks, code.maxLocals, code.getInstructions(), null);
   }
 }

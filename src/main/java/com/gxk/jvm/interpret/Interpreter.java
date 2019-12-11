@@ -28,7 +28,7 @@ public class Interpreter {
     KObject[] kargs = new KObject[args.length];
     KClass strClazz = Heap.findClass("java/lang/String");
     for (int i = 0; i < kargs.length; i++) {
-      KObject obj = new KObject(strClazz.getFields(), strClazz);
+      KObject obj = new KObject(strClazz.fields, strClazz);
       obj.setField("value", "[C", new Slot[]{new Slot(args[i])});
       kargs[i] = obj;
     }
@@ -94,7 +94,7 @@ public class Interpreter {
 
   void debugBefore(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
-    System.out.println(space + frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ============================== begin");
+    System.out.println(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ============================== begin");
     inst.debug(space);
     frame.debug(space);
     System.out.println(space + "---------------------");
@@ -105,7 +105,7 @@ public class Interpreter {
     System.out.println(space + "---------------------");
     inst.debug(space);
     frame.debug(space);
-    System.out.println(space + frame.thread.size() + " <> " + frame.method.getName() + "_" + frame.method.getDescriptor() + " ==============================   end");
+    System.out.println(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ==============================   end");
     System.out.println();
   }
 

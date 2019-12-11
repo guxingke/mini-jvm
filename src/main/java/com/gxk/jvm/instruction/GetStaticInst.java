@@ -31,7 +31,7 @@ public class GetStaticInst implements Instruction {
   public void execute(Frame frame) {
     KClass kClass = Heap.findClass(clazz);
     if (kClass == null) {
-      kClass = frame.method.clazz.getClassLoader().loadClass(clazz);
+      kClass = frame.method.clazz.classLoader.loadClass(clazz);
     }
 
     if (!kClass.isStaticInit()) {
@@ -70,7 +70,7 @@ public class GetStaticInst implements Instruction {
         for (String interfaceName : kClass.interfaceNames) {
           KClass tmp = Heap.findClass(interfaceName);
           if (tmp == null) {
-            tmp = frame.method.clazz.getClassLoader().loadClass(interfaceName);
+            tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
           }
 
           interfaces.add(tmp);

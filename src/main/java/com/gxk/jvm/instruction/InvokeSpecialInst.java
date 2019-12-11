@@ -6,9 +6,7 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import java.util.List;
-import lombok.Data;
 
-@Data
 public class InvokeSpecialInst implements Instruction {
 
   public final String clazz;

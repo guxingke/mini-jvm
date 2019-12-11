@@ -1,14 +1,11 @@
 package com.gxk.jvm.rtda.heap;
 
-import lombok.Data;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * jvm heap
  */
-@Data
 public abstract class Heap {
   private static final Map<String, NativeMethod> NATIVE_METHOD_MAP;
   private static final Map<String, KClass> STRING_K_CLASS_MAP;

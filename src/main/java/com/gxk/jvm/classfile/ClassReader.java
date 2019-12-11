@@ -95,7 +95,7 @@ public abstract class ClassReader {
 
       Attributes attributes = readAttributes(is, attributesCount, constantPool);
 
-      ConstantInfo info = constantPool.getInfos()[nameIndex - 1];
+      ConstantInfo info = constantPool.infos[nameIndex - 1];
       String name = ((Utf8) info).getString();
 
       String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();
@@ -135,7 +135,7 @@ public abstract class ClassReader {
 
       Attributes attributes = readAttributes(is, attributesCount, constantPool);
 
-      ConstantInfo info = constantPool.getInfos()[nameIndex - 1];
+      ConstantInfo info = constantPool.infos[nameIndex - 1];
       String name = ((Utf8) info).getString();
 
       String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();

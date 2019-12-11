@@ -6,12 +6,14 @@ import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
-import lombok.Data;
 
-@Data
 public class ANewArrayInst implements Instruction{
 
   public final String className;
+
+  public ANewArrayInst(String className) {
+    this.className = className;
+  }
 
   @Override
   public int offset() {
@@ -38,7 +40,7 @@ public class ANewArrayInst implements Instruction{
     }
 
     Integer count = frame.popInt();
-    KClass arrClass = new KClass("[" + kClass.getName(), kClass.classLoader);
+    KClass arrClass = new KClass("[" + kClass.name, kClass.classLoader);
     KObject[] objs = new KObject[count];
     KArray kArray = new KArray(arrClass, objs);
     frame.pushRef(kArray);

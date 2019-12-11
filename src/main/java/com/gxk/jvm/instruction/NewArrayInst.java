@@ -3,11 +3,13 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import lombok.Data;
 
-@Data
 public class NewArrayInst implements Instruction {
   public final int type;
+
+  public NewArrayInst(int type) {
+    this.type = type;
+  }
 
   @Override
   public void execute(Frame frame) {

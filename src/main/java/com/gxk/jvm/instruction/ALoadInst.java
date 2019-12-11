@@ -1,11 +1,13 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import lombok.Data;
 
-@Data
 public class ALoadInst implements Instruction {
   public final int index;
+
+  public ALoadInst(int index) {
+    this.index = index;
+  }
 
   @Override
   public int offset() {

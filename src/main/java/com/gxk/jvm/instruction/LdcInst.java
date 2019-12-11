@@ -33,7 +33,7 @@ public class LdcInst implements Instruction {
       case "Ljava/lang/String":
         KClass klass = Heap.findClass("java/lang/String");
         if (klass == null) {
-          klass = frame.method.clazz.getClassLoader().loadClass("java/lang/String");
+          klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
         if (!klass.isStaticInit()) {
           Frame newFrame = new Frame(klass.getMethod("<clinit>", "()V"), frame.thread);
@@ -61,7 +61,7 @@ public class LdcInst implements Instruction {
       case "L":
         KClass klass2 = Heap.findClass(val.toString());
         if (klass2 == null) {
-          klass2 = frame.method.clazz.getClassLoader().loadClass(val.toString());
+          klass2 = frame.method.clazz.classLoader.loadClass(val.toString());
         }
         if (!klass2.isStaticInit()) {
           Frame newFrame = new Frame(klass2.getMethod("<clinit>", "()V"), frame.thread);

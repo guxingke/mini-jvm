@@ -19,18 +19,18 @@ public class Frame {
 
   public Frame(KMethod method, Thread thread) {
     this.method = method;
-    this.localVars = new LocalVars(method.getMaxLocals());
-    this.operandStack = new OperandStack(method.getMaxStacks());
+    this.localVars = new LocalVars(method.maxLocals);
+    this.operandStack = new OperandStack(method.maxStacks);
     this.thread = thread;
-    this.instructionMap = method.getInstructionMap();
+    this.instructionMap = method.instructionMap;
   }
 
   public Frame(KMethod method, LocalVars localVars, Thread thread) {
     this.method = method;
     this.localVars = localVars;
-    this.operandStack = new OperandStack(method.getMaxStacks());
+    this.operandStack = new OperandStack(method.maxStacks);
     this.thread = thread;
-    this.instructionMap = method.getInstructionMap();
+    this.instructionMap = method.instructionMap;
   }
 
   public void debug(String space) {
