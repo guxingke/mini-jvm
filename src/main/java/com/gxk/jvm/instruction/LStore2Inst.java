@@ -9,4 +9,9 @@ public class LStore2Inst implements Instruction {
     Long tmp = frame.popLong();
     frame.setLong(2, tmp);
   }
+
+  @Override
+  public String format() {
+    return "lstore_2";
+  }
 }

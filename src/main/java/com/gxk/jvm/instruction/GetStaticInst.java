@@ -108,6 +108,12 @@ public class GetStaticInst implements Instruction {
     }
   }
 
+
+  @Override
+  public String format() {
+    return "getstatic " + clazz + " " + fieldName + " " + fieldDescriptor;
+  }
+
   @Override
   public String toString() {
     return "GetStaticInst{" +

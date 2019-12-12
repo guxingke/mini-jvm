@@ -9,4 +9,9 @@ public class LLoad2Inst implements Instruction {
     Long tmp = frame.getLong(2);
     frame.pushLong(tmp);
   }
+
+  @Override
+  public String format() {
+    return "lload2";
+  }
 }

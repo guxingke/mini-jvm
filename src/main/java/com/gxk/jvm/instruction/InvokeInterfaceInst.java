@@ -125,5 +125,11 @@ public class InvokeInterfaceInst implements Instruction {
     newFrame.setRef(0, ref);
     frame.thread.pushFrame(newFrame);
   }
+
+  @Override
+  public String format() {
+    return "invokevirtual" + clazzName + " " + methodName + " " + methodDescriptor;
+  }
+
 }
 

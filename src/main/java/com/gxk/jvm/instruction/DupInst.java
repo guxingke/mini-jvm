@@ -6,9 +6,13 @@ public class DupInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    // TODO ...
     Object obj = frame.popRef();
     frame.pushRef(obj);
     frame.pushRef(obj);
+  }
+
+  @Override
+  public String format() {
+    return "dup";
   }
 }

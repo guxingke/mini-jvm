@@ -122,5 +122,11 @@ public class InvokeDynamicInst implements Instruction {
     KLambdaObject kObject = lcClazz.newLambdaObject(args);
     frame.pushRef(kObject);
   }
+
+  @Override
+  public String format() {
+    return "invokedynamic " + methodName + " " + methodDescriptor + " " + bsIdx;
+  }
+
 }
 

@@ -9,4 +9,9 @@ public class ReturnInst implements Instruction {
     // do nothing
     frame.thread.popFrame();
   }
+
+  @Override
+  public String format() {
+    return "return";
+  }
 }

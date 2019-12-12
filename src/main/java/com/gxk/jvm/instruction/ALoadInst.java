@@ -19,4 +19,9 @@ public class ALoadInst implements Instruction {
     Object tmp = frame.getRef(index);
     frame.pushRef(tmp);
   }
+
+  @Override
+  public String format() {
+    return "aload " + index;
+  }
 }

@@ -62,5 +62,10 @@ public class NewInst implements Instruction {
     KObject obj = kClass.newObject();
     frame.pushRef(obj);
   }
+
+  @Override
+  public String format() {
+    return "new " + clazz;
+  }
 }
 

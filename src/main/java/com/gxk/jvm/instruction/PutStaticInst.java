@@ -36,6 +36,11 @@ public class PutStaticInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "putstatic " + clazz + " " + fieldName + " " + fieldDescriptor;
+  }
+
+  @Override
   public String toString() {
     return "PutStaticInst{" +
         "clazz='" + clazz + '\'' +

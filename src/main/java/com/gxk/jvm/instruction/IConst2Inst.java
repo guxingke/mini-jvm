@@ -8,4 +8,9 @@ public class IConst2Inst implements Instruction {
   public void execute(Frame frame) {
     frame.pushInt(2);
   }
+
+  @Override
+  public String format() {
+    return "iconst_2";
+  }
 }

@@ -77,6 +77,11 @@ public class InvokeVirtualInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "invokevirtual " + clazz + " " + methodName + " " + methodDescriptor;
+  }
+
+  @Override
   public String toString() {
     return "InvokeVirtualInst{" +
         "clazz='" + clazz + '\'' +

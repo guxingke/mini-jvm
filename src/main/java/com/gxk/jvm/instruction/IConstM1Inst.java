@@ -8,4 +8,9 @@ public class IConstM1Inst implements Instruction {
   public void execute(Frame frame) {
     frame.pushInt(-1);
   }
+
+  @Override
+  public String format() {
+    return "iconst_m1";
+  }
 }

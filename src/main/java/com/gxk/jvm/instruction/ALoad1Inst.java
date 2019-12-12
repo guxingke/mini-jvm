@@ -9,4 +9,9 @@ public class ALoad1Inst implements Instruction {
     Object tmp = frame.getRef(1);
     frame.pushRef(tmp);
   }
+
+  @Override
+  public String format() {
+    return "aload_1";
+  }
 }

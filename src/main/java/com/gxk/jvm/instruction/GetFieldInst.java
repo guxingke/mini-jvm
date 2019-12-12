@@ -44,6 +44,11 @@ public class GetFieldInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "getfield " + clazz + " " + fieldName + " " + fieldDescriptor;
+  }
+
+  @Override
   public String toString() {
     return "GetFieldInst{" +
         "clazz='" + clazz + '\'' +

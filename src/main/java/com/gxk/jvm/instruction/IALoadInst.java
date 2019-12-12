@@ -12,4 +12,9 @@ public class IALoadInst implements Instruction {
     int item = (int) array.items[index];
     frame.pushInt(item);
   }
+
+  @Override
+  public String format() {
+    return "iaload";
+  }
 }

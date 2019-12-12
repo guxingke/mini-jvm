@@ -100,6 +100,11 @@ public class InvokeStaticInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "invokestatic " + clazzName + " " + methodName + " " + descriptor;
+  }
+
+  @Override
   public String toString() {
     return "InvokeStaticInst{" +
         "clazzName='" + clazzName + '\'' +

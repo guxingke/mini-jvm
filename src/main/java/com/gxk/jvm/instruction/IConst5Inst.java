@@ -8,4 +8,9 @@ public class IConst5Inst implements Instruction {
   public void execute(Frame frame) {
     frame.pushInt(5);
   }
+
+  @Override
+  public String format() {
+    return "iconst_5";
+  }
 }

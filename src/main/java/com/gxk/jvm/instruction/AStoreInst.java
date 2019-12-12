@@ -20,4 +20,10 @@ public class AStoreInst implements Instruction {
     Object tmp = frame.popRef();
     frame.setRef(index, tmp);
   }
+
+  @Override
+  public String format() {
+    return "astore " + index;
+  }
+
 }

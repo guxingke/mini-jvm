@@ -87,4 +87,9 @@ public class InvokeSpecialInst implements Instruction {
     newFrame.setRef(0, frame.popRef());
     frame.thread.pushFrame(newFrame);
   }
+
+  @Override
+  public String format() {
+    return "invokespecail " + clazz + " " + methodName + " " + methodDescriptor;
+  }
 }

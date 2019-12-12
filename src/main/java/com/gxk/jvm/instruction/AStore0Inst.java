@@ -9,4 +9,9 @@ public class AStore0Inst implements Instruction {
     Object tmp = frame.popRef();
     frame.setRef(0, tmp);
   }
+
+  @Override
+  public String format() {
+    return "astore_0";
+  }
 }

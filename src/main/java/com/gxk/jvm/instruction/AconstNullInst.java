@@ -19,4 +19,9 @@ public class AconstNullInst implements Instruction {
   public void execute(Frame frame) {
     frame.pushRef(null);
   }
+
+  @Override
+  public String format() {
+    return "aconst_null";
+  }
 }

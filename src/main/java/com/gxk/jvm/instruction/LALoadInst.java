@@ -12,4 +12,9 @@ public class LALoadInst implements Instruction {
     long item = (Long) array.items[index];
     frame.pushLong(item);
   }
+
+  @Override
+  public String format() {
+    return "laload";
+  }
 }

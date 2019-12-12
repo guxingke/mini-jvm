@@ -24,4 +24,14 @@ public class Ldc2wInst implements Instruction {
       frame.pushDouble(val2);
     }
   }
+
+  @Override
+  public String format() {
+    if (val != null) {
+      return "ldc2 " + val;
+    }
+
+    return "ldc2 " + val2;
+  }
+
 }

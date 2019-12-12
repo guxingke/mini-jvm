@@ -23,7 +23,6 @@ public class PutFieldInst implements Instruction {
     this.fieldDescriptor = fieldDescriptor;
   }
 
-
   @Override
   public void execute(Frame frame) {
     if (fieldDescriptor.equalsIgnoreCase("J")) {
@@ -36,5 +35,10 @@ public class PutFieldInst implements Instruction {
 
     Slot v = frame.popSlot();
     ((KObject) frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
+  }
+
+  @Override
+  public String format() {
+    return "putfield " + clazz + " " + fieldName + " " + fieldDescriptor;
   }
 }
