@@ -11,4 +11,9 @@ public class IReturnInst implements Instruction {
     frame.thread.popFrame();
     System.out.println(tmp);
   }
+
+  @Override
+  public String format() {
+    return "ireturn";
+  }
 }

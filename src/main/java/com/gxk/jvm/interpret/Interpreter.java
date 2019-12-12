@@ -10,6 +10,7 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
+import com.gxk.jvm.util.Logger;
 
 public class Interpreter {
 
@@ -81,6 +82,10 @@ public class Interpreter {
       if (EnvHolder.verbose) {
         debugBefore(inst, frame);
       }
+      // trace
+      if (EnvHolder.trace) {
+        trace(inst, frame);
+      }
       inst.execute(frame);
       if (EnvHolder.verbose) {
         debugAfter(inst, frame);
@@ -90,6 +95,11 @@ public class Interpreter {
         break;
       }
     }
+  }
+
+  private void trace(Instruction inst, Frame frame) {
+    String space = genSpace((frame.thread.size() - 1) * 2);
+    Logger.trace("{}{}", space, inst.format());
   }
 
   void debugBefore(Instruction inst, Frame frame) {

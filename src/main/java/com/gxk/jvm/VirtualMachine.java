@@ -27,6 +27,9 @@ public class VirtualMachine {
     if (cmd.verbose) {
       EnvHolder.verbose = true;
     }
+    if (cmd.trace) {
+      EnvHolder.trace = true;
+    }
 
     Path jarPath = Paths.get(home, "jre", "lib");
     String classpath = cmd.classpath + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*";
@@ -49,9 +52,7 @@ public class VirtualMachine {
 
   public static void initVm(ClassLoader classLoader) {
     loadLibrary();
-
-    classLoader.loadClass("java/lang/String");
-    classLoader.loadClass("java/lang/Integer");
+    loadFoundationClass(classLoader);
   }
 
   public static void loadLibrary() {
@@ -279,6 +280,18 @@ public class VirtualMachine {
       frame.pushInt(v);
     });
 
+    // Double
+    Heap.registerMethod("java/lang/Double_doubleToRawLongBits_(D)J", frame -> {
+      Double tmp = frame.popDouble();
+      long v = Double.doubleToRawLongBits(tmp);
+      frame.pushLong(v);
+    });
+    Heap.registerMethod("java/lang/Double_longBitsToDouble_(J)D", frame -> {
+      Long tmp = frame.popLong();
+      double v = Double.longBitsToDouble(tmp);
+      frame.pushDouble(v);
+    });
+
     // Integer
     Heap.registerMethod("java/lang/Integer_valueOf_(I)Ljava/lang/Integer;", frame -> {
       KClass clazz = Heap.findClass("java/lang/Integer");
@@ -306,6 +319,20 @@ public class VirtualMachine {
     });
     Heap.registerMethod("java/lang/Throwable_getStackTraceElement_(I)Ljava/lang/StackTraceElement;", frame -> {
     });
+  }
 
+  private static void loadFoundationClass(ClassLoader classLoader) {
+    // string
+    classLoader.loadClass("java/lang/String");
+
+    // primitive
+    classLoader.loadClass("java/lang/Character");
+    classLoader.loadClass("java/lang/Boolean");
+    classLoader.loadClass("java/lang/Byte");
+    classLoader.loadClass("java/lang/Short");
+    classLoader.loadClass("java/lang/Integer");
+    classLoader.loadClass("java/lang/Long");
+    classLoader.loadClass("java/lang/Float");
+    classLoader.loadClass("java/lang/Double");
   }
 }

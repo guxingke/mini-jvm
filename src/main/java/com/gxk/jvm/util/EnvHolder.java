@@ -1,12 +1,11 @@
 package com.gxk.jvm.util;
 
-import java.util.Objects;
-
 public abstract class EnvHolder {
   public static String PATH_SEPARATOR;
   public static String FILE_SEPARATOR;
 
   public static boolean verbose;
+  public static boolean trace;
 
   static {
     init();
