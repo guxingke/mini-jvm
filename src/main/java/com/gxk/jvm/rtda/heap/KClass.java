@@ -80,6 +80,14 @@ public class KClass {
         return method;
       }
     }
+
+    for (KClass inter : this.interfaces) {
+      KMethod method = inter.getMethod(name, descriptor);
+      if (method != null) {
+        return method;
+      }
+    }
+
     if (this.superClass == null) {
       return null;
     }

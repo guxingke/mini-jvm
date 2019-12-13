@@ -44,6 +44,49 @@ public class InvokeVirtualInst implements Instruction {
     KMethod method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
+      // try find interfaces
+      if (clazz.interfaceNames.isEmpty()) {
+        throw new IllegalStateException();
+      }
+
+      // already load interface
+      if (!clazz.getInterfaces().isEmpty()) {
+        for (KClass intClass : clazz.getInterfaces()) {
+          method= intClass.getMethod(methodName, methodDescriptor);
+          if (method != null) {
+            break;
+          }
+        }
+      } else {
+        List<KClass> interfaces = new ArrayList<>();
+        for (String interfaceName : clazz.interfaceNames) {
+          KClass tmp = Heap.findClass(interfaceName);
+          if (tmp == null) {
+            tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
+          }
+
+          interfaces.add(tmp);
+
+          if (!tmp.isStaticInit()) {
+            KMethod cinit = tmp.getClinitMethod();
+            if (cinit == null) {
+              throw new IllegalStateException();
+            }
+
+            Frame newFrame = new Frame(cinit, frame.thread);
+            tmp.setStaticInit(1);
+            KClass finalKClass = tmp;
+            newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+            frame.thread.pushFrame(newFrame);
+            frame.nextPc = frame.thread.getPc();
+          }
+        }
+        clazz.setInterfaces(interfaces);
+        return;
+      }
+    }
+
+    if (method == null) {
       throw new IllegalStateException();
     }
 
