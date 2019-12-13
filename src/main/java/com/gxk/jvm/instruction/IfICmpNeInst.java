@@ -22,4 +22,9 @@ public class IfICmpNeInst implements Instruction {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
+
+  @Override
+  public String format() {
+    return "if_cmpne " + offset;
+  }
 }

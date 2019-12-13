@@ -12,4 +12,9 @@ public class CAloadInst implements Instruction {
     char item = (char) array.items[index];
     frame.pushInt(((int) (item)));
   }
+
+  @Override
+  public String format() {
+    return "caload";
+  }
 }

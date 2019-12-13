@@ -18,4 +18,9 @@ public class IUShrInst implements Instruction {
     int ret = (v1 >> s) + (2 << ~s);
     frame.pushInt(ret);
   }
+
+  @Override
+  public String format() {
+    return "iushr";
+  }
 }

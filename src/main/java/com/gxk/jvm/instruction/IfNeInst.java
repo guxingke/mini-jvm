@@ -21,4 +21,9 @@ public class IfNeInst implements Instruction {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
+
+  @Override
+  public String format() {
+    return "if_ne " + offset;
+  }
 }

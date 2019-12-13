@@ -12,4 +12,9 @@ public class IShlInst implements Instruction {
     int ret = v1 << s;
     frame.pushInt(ret);
   }
+
+  @Override
+  public String format() {
+    return "ishl";
+  }
 }

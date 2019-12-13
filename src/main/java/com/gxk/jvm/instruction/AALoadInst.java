@@ -12,4 +12,9 @@ public class AALoadInst implements Instruction {
     Object item = array.items[index];
     frame.pushRef(item);
   }
+
+  @Override
+  public String format() {
+    return "aaload";
+  }
 }

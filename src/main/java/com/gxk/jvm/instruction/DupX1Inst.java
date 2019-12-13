@@ -13,4 +13,9 @@ public class DupX1Inst implements Instruction {
     frame.pushSlot(s2);
     frame.pushSlot(s1);
   }
+
+  @Override
+  public String format() {
+    return "dupx1";
+  }
 }

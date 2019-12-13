@@ -10,4 +10,9 @@ public class IDivInst implements Instruction {
     Integer v1 = frame.popInt();
     frame.pushInt(v1 / v2);
   }
+
+  @Override
+  public String format() {
+    return "idiv";
+  }
 }

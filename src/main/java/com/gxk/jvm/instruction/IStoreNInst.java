@@ -21,6 +21,11 @@ public class IStoreNInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "istore " + n;
+  }
+
+  @Override
   public String toString() {
     return "IStoreNInst{" +
         "n=" + n +

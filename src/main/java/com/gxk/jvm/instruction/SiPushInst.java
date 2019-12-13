@@ -19,4 +19,9 @@ public class SiPushInst implements Instruction {
   public void execute(Frame frame) {
     frame.pushInt((int) (this.val));
   }
+
+  @Override
+  public String format() {
+    return "sipush " + val;
+  }
 }

@@ -30,4 +30,9 @@ public class AThrowInst implements Instruction {
     thread.currentFrame().pushRef(exc);
     thread.currentFrame().nextPc = handlerPc;
   }
+
+  @Override
+  public String format() {
+    return "athrow";
+  }
 }

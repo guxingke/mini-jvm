@@ -82,6 +82,11 @@ public class LdcInst implements Instruction {
   }
 
   @Override
+  public String format() {
+    return "ldc " + descriptor + " " + val;
+  }
+
+  @Override
   public String toString() {
     return "LdcInst{" +
         "descriptor='" + descriptor + '\'' +

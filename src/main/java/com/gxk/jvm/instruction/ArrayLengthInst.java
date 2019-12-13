@@ -11,4 +11,9 @@ public class ArrayLengthInst implements Instruction {
     int length = kArray.items.length;
     frame.pushInt(length);
   }
+
+  @Override
+  public String format() {
+    return "arraylength";
+  }
 }

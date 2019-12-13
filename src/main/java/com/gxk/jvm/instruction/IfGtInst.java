@@ -21,4 +21,9 @@ public class IfGtInst implements Instruction {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
+
+  @Override
+  public String format() {
+    return "if_gt " + offset;
+  }
 }

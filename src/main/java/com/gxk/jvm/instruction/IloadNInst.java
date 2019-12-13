@@ -19,4 +19,9 @@ public class IloadNInst implements Instruction {
     Integer tmp = frame.getInt(n);
     frame.pushInt(tmp);
   }
+
+  @Override
+  public String format() {
+    return "iload " + n;
+  }
 }

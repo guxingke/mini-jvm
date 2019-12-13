@@ -13,4 +13,9 @@ public class AReturnInst implements Instruction {
     }
 //    System.out.println("do ret " + tmp);
   }
+
+  @Override
+  public String format() {
+    return "areturn";
+  }
 }

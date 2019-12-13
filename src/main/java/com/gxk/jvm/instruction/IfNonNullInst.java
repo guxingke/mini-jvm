@@ -21,4 +21,10 @@ public class IfNonNullInst implements Instruction {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
+
+  @Override
+  public String format() {
+    return "if_nonnull " + offset;
+  }
+
 }

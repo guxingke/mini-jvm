@@ -45,4 +45,9 @@ public class ANewArrayInst implements Instruction{
     KArray kArray = new KArray(arrClass, objs);
     frame.pushRef(kArray);
   }
+
+  @Override
+  public String format() {
+    return "anewarray";
+  }
 }

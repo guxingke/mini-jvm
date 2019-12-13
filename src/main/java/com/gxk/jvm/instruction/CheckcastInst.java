@@ -14,4 +14,9 @@ public class CheckcastInst implements Instruction {
   public void execute(Frame frame) {
 //FIXME    throw new UnsupportedOperationException();
   }
+
+  @Override
+  public String format() {
+    return "checkcast " + clazz;
+  }
 }

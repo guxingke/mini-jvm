@@ -8,4 +8,9 @@ public class PopInst implements Instruction {
   public void execute(Frame frame) {
     frame.popRef();
   }
+
+  @Override
+  public String format() {
+    return "pop";
+  }
 }

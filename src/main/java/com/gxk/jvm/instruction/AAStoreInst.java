@@ -12,4 +12,9 @@ public class AAStoreInst implements Instruction {
     KArray array = (KArray) frame.popRef();
     array.items[index] = val;
   }
+
+  @Override
+  public String format() {
+    return "aastore";
+  }
 }
