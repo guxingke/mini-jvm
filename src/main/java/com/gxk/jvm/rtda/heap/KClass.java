@@ -139,13 +139,15 @@ public class KClass {
       case "B":
       case "S":
       case "I":
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.INT)});
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.FLOAT)});
       case "D":
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
       case "J":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0), new Slot(0)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot((Object) null)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(null)});
     }
   }
 

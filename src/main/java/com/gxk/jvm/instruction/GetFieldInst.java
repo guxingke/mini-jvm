@@ -27,15 +27,6 @@ public class GetFieldInst implements Instruction {
   public void execute(Frame frame) {
     KObject obj = ((KObject) frame.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
-    if (field.val == null) {
-      // init
-      switch (fieldDescriptor) {
-        case "I":
-          field.val = new Slot[]{new Slot(0)};
-          break;
-      }
-    }
-
     Slot[] val = field.val;
 
     for (Slot slot : val) {

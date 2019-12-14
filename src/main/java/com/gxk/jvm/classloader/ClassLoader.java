@@ -80,15 +80,17 @@ public class ClassLoader {
         case "B":
         case "S":
         case "I":
+          it.val = new Slot[] {new Slot(0, Slot.INT)};
         case "F":
-          it.val = new Slot[] {new Slot(0)};
+          it.val = new Slot[] {new Slot(0, Slot.FLOAT)};
           break;
         case "D":
+          it.val = new Slot[] {new Slot(0,Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)};
         case "J":
-          it.val = new Slot[] {new Slot(0), new Slot(0)};
+          it.val = new Slot[] {new Slot(0,Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)};
           break;
         default:
-          it.val = new Slot[] {new Slot((Object) null)};
+          it.val = new Slot[] {new Slot(null)};
       }
     });
 

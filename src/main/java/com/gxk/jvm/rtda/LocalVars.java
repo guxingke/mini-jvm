@@ -16,7 +16,7 @@ public class LocalVars {
   }
 
   public void setInt(Integer index, Integer val) {
-    slots[index] = new Slot(val);
+    slots[index] = new Slot(val, Slot.INT);
   }
 
   public Integer getInt(Integer index) {
@@ -25,7 +25,7 @@ public class LocalVars {
 
   public void setFloat(Integer index, Float val) {
     int tmp = Float.floatToIntBits(val);
-    slots[index] = new Slot(tmp);
+    slots[index] = new Slot(tmp, Slot.FLOAT);
   }
 
   public Float getFloat(Integer index) {
@@ -34,8 +34,8 @@ public class LocalVars {
   }
 
   public Long getLong(Integer index) {
-    Integer low = slots[index].num;
-    Integer high = slots[index + 1].num;
+    Integer high = slots[index].num;
+    Integer low = slots[index + 1].num;
 
     long l1 = (high & 0x000000ffffffffL) << 32;
     long l2 = low & 0x00000000ffffffffL;
@@ -43,16 +43,21 @@ public class LocalVars {
   }
 
   public void setLong(Integer index, Long val) {
-    int low = (int) (val & 0x000000ffffffffL); //低32位
     int high = (int) (val >> 32); //高32位
+    int low = (int) (val & 0x000000ffffffffL); //低32位
 
-    slots[index] = new Slot(low);
-    slots[index + 1] = new Slot((high));
+    slots[index] = new Slot(high, Slot.LONG_HIGH);
+    slots[index + 1] = new Slot(low, Slot.LONG_LOW);
   }
 
   public void setDouble(int index, Double val) {
     long tmp = Double.doubleToLongBits(val);
-    this.setLong(index, tmp);
+
+    int high = (int) (tmp >> 32); //高32位
+    int low = (int) (tmp & 0x000000ffffffffL); //低32位
+
+    slots[index] = new Slot(high, Slot.DOUBLE_HIGH);
+    slots[index + 1] = new Slot(low, Slot.DOUBLE_LOW);
   }
 
   public Double getDouble(int index) {

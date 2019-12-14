@@ -300,7 +300,7 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/Integer_valueOf_(I)Ljava/lang/Integer;", frame -> {
       KClass clazz = Heap.findClass("java/lang/Integer");
       KObject kObject = clazz.newObject();
-      kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt())});
+      kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt(), Slot.INT)});
       frame.pushRef(kObject);
     });
 
