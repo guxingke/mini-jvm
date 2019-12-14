@@ -193,7 +193,11 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/Object_hashCode_()I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
     Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {});
     Heap.registerMethod("java/lang/Object_clone_()Ljava/lang/Object;", (frame) -> frame.pushRef(frame.popRef()));
-    Heap.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (frame) -> frame.pushRef(frame.popRef().getClass()));
+    Heap.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (frame) -> {
+      KObject val = (KObject) frame.popRef();
+      frame.pushRef(val.clazz);
+    });
+
     Heap.registerMethod("java/lang/Object_wait_(J)V", (frame) -> {});
     Heap.registerMethod("java/lang/Object_notify_()V", (frame) -> {});
     Heap.registerMethod("java/lang/Object_notifyAll_()V", (frame) -> {});

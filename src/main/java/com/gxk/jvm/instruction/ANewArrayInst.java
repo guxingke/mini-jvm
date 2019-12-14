@@ -40,9 +40,16 @@ public class ANewArrayInst implements Instruction{
     }
 
     Integer count = frame.popInt();
-    KClass arrClass = new KClass("[" + kClass.name, kClass.classLoader);
+    String name = "[L" + kClass.name + ";";
+
+    KClass clazz = Heap.findClass(name);
+    if (clazz == null) {
+       clazz = new KClass(name, kClass.classLoader);
+      clazz.setStaticInit(2);
+      Heap.registerClass(name, clazz);
+    }
     KObject[] objs = new KObject[count];
-    KArray kArray = new KArray(arrClass, objs);
+    KArray kArray = new KArray(clazz, objs);
     frame.pushRef(kArray);
   }
 

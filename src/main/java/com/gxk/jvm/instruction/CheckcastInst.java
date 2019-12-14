@@ -11,6 +11,11 @@ public class CheckcastInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 3;
+  }
+
+  @Override
   public void execute(Frame frame) {
 //FIXME    throw new UnsupportedOperationException();
   }

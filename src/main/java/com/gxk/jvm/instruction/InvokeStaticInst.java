@@ -5,6 +5,8 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class InvokeStaticInst implements Instruction {
