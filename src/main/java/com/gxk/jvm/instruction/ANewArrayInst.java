@@ -7,7 +7,7 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 
-public class ANewArrayInst implements Instruction{
+public class ANewArrayInst implements Instruction {
 
   public final String className;
 
@@ -44,7 +44,8 @@ public class ANewArrayInst implements Instruction{
 
     KClass clazz = Heap.findClass(name);
     if (clazz == null) {
-       clazz = new KClass(name, kClass.classLoader);
+      clazz = new KClass(name, kClass.classLoader);
+      clazz.setSuperClass(Heap.findClass("java/lang/Object"));
       clazz.setStaticInit(2);
       Heap.registerClass(name, clazz);
     }

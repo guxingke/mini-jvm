@@ -11,6 +11,11 @@ public class InstanceofInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 3;
+  }
+
+  @Override
   public void execute(Frame frame) {
     throw new UnsupportedOperationException("InstanceofInst");
   }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class KObject {
+public class KObject implements Cloneable {
 
   public final List<KField> fields;
   public final KClass clazz;
@@ -44,6 +44,11 @@ public class KObject {
   public void setField(String name, String desc, Slot[] val) {
     KField field = this.getField(name, desc);
     field.val = val;
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
   }
 
   @Override

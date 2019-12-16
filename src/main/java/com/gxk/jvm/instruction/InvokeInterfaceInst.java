@@ -128,7 +128,7 @@ public class InvokeInterfaceInst implements Instruction {
 
   @Override
   public String format() {
-    return "invokevirtual" + clazzName + " " + methodName + " " + methodDescriptor;
+    return "invokeinterface " + clazzName + " " + methodName + " " + methodDescriptor;
   }
 
 }

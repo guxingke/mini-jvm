@@ -30,6 +30,7 @@ public class LdcInst implements Instruction {
         break;
       case "F":
         frame.pushFloat(((float) val));
+        break;
       case "Ljava/lang/String":
         KClass klass = Heap.findClass("java/lang/String");
         if (klass == null) {

@@ -34,7 +34,7 @@ public class InvokeVirtualInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(String.format("%s_%s_%s", clazz, methodName, methodDescriptor));
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
@@ -88,6 +88,13 @@ public class InvokeVirtualInst implements Instruction {
 
     if (method == null) {
       throw new IllegalStateException();
+    }
+
+    // native method
+    nm = Heap.findMethod(Utils.genNativeMethodKey(method));
+    if (nm != null) {
+      nm.invoke(frame);
+      return;
     }
 
     if (method.isNative()) {

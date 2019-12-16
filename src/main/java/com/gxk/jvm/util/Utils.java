@@ -10,6 +10,7 @@ import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.rtda.Frame;
 
+import com.gxk.jvm.rtda.heap.KMethod;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -138,6 +139,14 @@ public abstract class Utils {
       }
     }
     return rets;
+  }
+
+  public static String genNativeMethodKey(KMethod method) {
+    return genNativeMethodKey(method.clazz.name, method.name, method.descriptor);
+  }
+
+  public static String genNativeMethodKey(String clazz, String name, String descriptor) {
+    return String.format("%s_%s_%s", clazz, name, descriptor);
   }
 
   public static Object pop(Frame frame, String descriptor) {

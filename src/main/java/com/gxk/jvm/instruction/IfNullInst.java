@@ -3,6 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 
 public class IfNullInst implements Instruction {
+
   public final int offset;
 
   public IfNullInst(int offset) {
@@ -16,6 +17,14 @@ public class IfNullInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    throw new UnsupportedOperationException();
+    Object ref = frame.popRef();
+    if (ref == null) {
+      frame.nextPc = frame.thread.getPc() + offset;
+    }
+  }
+
+  @Override
+  public String format() {
+    return "ifnull " + offset;
   }
 }

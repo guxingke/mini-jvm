@@ -2,9 +2,6 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class PutFieldInst implements Instruction {

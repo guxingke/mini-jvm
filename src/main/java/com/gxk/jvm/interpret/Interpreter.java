@@ -99,7 +99,7 @@ public class Interpreter {
 
   private void trace(Instruction inst, Frame frame) {
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace("{}{}", space, inst.format());
+    Logger.trace("{}{}", space, frame.thread.getPc() + " " + inst.format());
   }
 
   void debugBefore(Instruction inst, Frame frame) {

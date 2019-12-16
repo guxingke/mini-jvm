@@ -6,6 +6,7 @@ import com.gxk.jvm.classfile.ExceptionTable;
 import com.gxk.jvm.instruction.Instruction;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Code extends Attribute {
@@ -42,7 +43,7 @@ public class Code extends Attribute {
   }
 
   public Map<Integer, Instruction> getInstructions() {
-    Map<Integer, Instruction> map = new HashMap<>(instructions.length);
+    Map<Integer, Instruction> map = new LinkedHashMap<>(instructions.length);
     int pc = 0;
     for (Instruction instruction : instructions) {
       map.put(pc, instruction);
