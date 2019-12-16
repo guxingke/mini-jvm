@@ -1,5 +1,6 @@
 package com.gxk.jvm.rtda.heap;
 
+import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
@@ -21,13 +22,15 @@ public class KClass {
   public final BootstrapMethods bootstrapMethods;
   public final ConstantPool constantPool;
   public final ClassLoader classLoader;
+  public final ClassFile classFile;
 
   private KClass superClass;
   private List<KClass> interfaces;
   private int staticInit = 0;
 
-  public KClass(String name, ClassLoader classLoader) {
+  public KClass(String name, ClassLoader classLoader, ClassFile classFile) {
     this.name = name;
+    this.classFile = classFile;
     this.superClassName = "java/lang/Object";
     this.interfaceNames = new ArrayList<>();
     this.interfaces = new ArrayList<>();
@@ -46,11 +49,12 @@ public class KClass {
                 List<KField> fields,
                 BootstrapMethods bootstrapMethods,
                 ConstantPool constantPool,
-                ClassLoader classLoader
-  ) {
+                ClassLoader classLoader,
+                ClassFile classFile) {
     this.name = name;
     this.superClassName = superClassName;
     this.interfaceNames = interfaceNames;
+    this.classFile = classFile;
     this.interfaces = new ArrayList<>();
     this.methods = methods;
     this.fields = fields;

@@ -33,7 +33,7 @@ public class Interpreter {
       obj.setField("value", "[C", new Slot[]{new Slot(args[i])});
       kargs[i] = obj;
     }
-    KClass arrClazz = new KClass("[java/lang/String", method.clazz.classLoader);
+    KClass arrClazz = new KClass("[java/lang/String", method.clazz.classLoader, null);
     KArray array = new KArray(arrClazz, args);
     frame.setRef(0, array);
 
@@ -79,15 +79,15 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       frame.nextPc += inst.offset();
 
-      if (EnvHolder.verbose) {
+      if (EnvHolder.verboseDebug) {
         debugBefore(inst, frame);
       }
-      // trace
-      if (EnvHolder.trace) {
+      // verboseTrace
+      if (EnvHolder.verboseTrace) {
         trace(inst, frame);
       }
       inst.execute(frame);
-      if (EnvHolder.verbose) {
+      if (EnvHolder.verboseDebug) {
         debugAfter(inst, frame);
       }
 
@@ -104,19 +104,17 @@ public class Interpreter {
 
   void debugBefore(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
-    System.out.println(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ============================== begin");
-    inst.debug(space);
-    frame.debug(space);
-    System.out.println(space + "---------------------");
+    Logger.debug(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ============================== begin");
+    Logger.debug(inst.debug(space));
+    Logger.debug(frame.debug(space));
+    Logger.debug(space + "---------------------");
   }
 
   void debugAfter(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
-    System.out.println(space + "---------------------");
-    inst.debug(space);
-    frame.debug(space);
-    System.out.println(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ==============================   end");
-    System.out.println();
+    Logger.debug(space + "---------------------");
+    Logger.debug(inst.debug(space));
+    Logger.debug(frame.debug(space));
   }
 
   public String genSpace(int size) {

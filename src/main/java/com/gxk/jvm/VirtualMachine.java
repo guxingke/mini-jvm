@@ -27,8 +27,14 @@ public class VirtualMachine {
     if (cmd.verbose) {
       EnvHolder.verbose = true;
     }
-    if (cmd.trace) {
-      EnvHolder.trace = true;
+    if (cmd.verboseTrace) {
+      EnvHolder.verboseTrace = true;
+    }
+    if (cmd.verboseClass) {
+      EnvHolder.verboseClass = true;
+    }
+    if (cmd.verboseDebug) {
+      EnvHolder.verboseDebug = true;
     }
 
     Path jarPath = Paths.get(home, "jre", "lib");
@@ -223,7 +229,7 @@ public class VirtualMachine {
         v2[i] = values[i];
       }
       String val = new String(v2);
-      KClass kClass = new KClass("Ljava/lang/Class", frame.method.clazz.classLoader);
+      KClass kClass = new KClass("Ljava/lang/Class", frame.method.clazz.classLoader, null);
       KObject kObject = kClass.newObject();
       frame.pushRef(kObject);
     });

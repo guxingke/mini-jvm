@@ -33,12 +33,13 @@ public class Frame {
     this.instructionMap = method.instructionMap;
   }
 
-  public void debug(String space) {
-    System.out.println(space + "nextPc = " + nextPc);
-    localVars.debug(space);
-    System.out.println();
-    operandStack.debug(space);
-    System.out.println();
+  public String debug(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(space + "nextPc = " + nextPc)
+      .append("\n");
+    sb.append(localVars.debug(space));
+    sb.append(operandStack.debug(space));
+    return sb.toString();
   }
 
   public Instruction getInst(int pc) {

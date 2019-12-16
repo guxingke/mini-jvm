@@ -10,13 +10,17 @@ class Args {
   private static final String MINUS_VERSION = "-version";
   private static final String MINUS_HELP= "-help";
   private static final String MINUS_VERBOSE= "-verbose";
-  private static final String MINUS_TRACE= "-trace";
+  private static final String MINUS_VERBOSE_TRACE= "-verbose:trace";
+  private static final String MINUS_VERBOSE_CLASS = "-verbose:class";
+  private static final String MINUS_VERBOSE_DEBUG= "-verbose:debug";
 
   private static final String MINUS_CP = "-cp";
   boolean version;
   boolean help;
   boolean verbose;
-  boolean trace;
+  boolean verboseTrace;
+  boolean verboseClass;
+  boolean verboseDebug;
 
   String classpath = ".";
   String clazz;
@@ -36,16 +40,33 @@ class Args {
     }
 
     int idx = 0;
+    int tries = 0;
     while (!Objects.equals(MINUS_CP, cliArgs[idx]) && cliArgs[idx].startsWith("-")) {
+      if (tries > 200) {
+        System.out.println("parse args in loop. check input args.");
+        System.exit(-1);
+      }
       if (Objects.equals(MINUS_VERBOSE, cliArgs[idx])) {
         idx++;
         args.verbose = true;
       }
 
-      if (Objects.equals(MINUS_TRACE, cliArgs[idx])) {
+      if (Objects.equals(MINUS_VERBOSE_TRACE, cliArgs[idx])) {
         idx++;
-        args.trace = true;
+        args.verboseTrace = true;
       }
+
+      if (Objects.equals(MINUS_VERBOSE_CLASS, cliArgs[idx])) {
+        idx++;
+        args.verboseClass = true;
+      }
+
+      if (Objects.equals(MINUS_VERBOSE_DEBUG, cliArgs[idx])) {
+        idx++;
+        args.verboseDebug = true;
+      }
+
+      tries++;
     }
 
     if (MINUS_CP.equals(cliArgs[idx])) {

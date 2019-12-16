@@ -26,6 +26,10 @@ public class ClassFile {
   public final int attributesCount;
   public final Attributes attributes;
 
+
+  // ext info
+  private String source;
+
   public ClassFile(int magic, int minorVersion, int majorVersion, int constantPoolSize,
       ConstantPool cpInfo, int accessFlags, int thisClass, int superClass, int interfacesCount,
       Interfaces interfaces, int fieldCount, Fields fields, int methodsCount, Methods methods, int attributesCount,
@@ -46,6 +50,14 @@ public class ClassFile {
     this.methods = methods;
     this.attributesCount = attributesCount;
     this.attributes = attributes;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
+  public String getSource() {
+    return source;
   }
 
   public BootstrapMethods getBootstrapMethods() {

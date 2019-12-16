@@ -73,19 +73,21 @@ public class LocalVars {
     return slots[index].ref;
   }
 
-  public void debug(String space) {
-    System.out.println(space + "LocalVars: ");
+  public String debug(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(space + "LocalVars: ").append("\n");
     for (int i = 0; i < this.slots.length; i++) {
       Slot slot = this.slots[i];
       if (slot == null) {
-        System.out.println(space + String.format("%d | null | null", i));
+        sb.append(space + String.format("%d | null | null", i)).append("\n");
         continue;
       }
       if (slot.ref != null) {
-        System.out.println(space + String.format("%d | null | %s", i, slot.ref));
+        sb.append(space + String.format("%d | null | %s", i, slot.ref)).append("\n");
         continue;
       }
-      System.out.println(space + String.format("%d | %s | null", i, slot.num));
+      sb.append(space + String.format("%d | %s | null", i, slot.num)).append("\n");
     }
+    return sb.toString();
   }
 }

@@ -1,5 +1,8 @@
 package com.gxk.jvm.rtda.heap;
 
+import com.gxk.jvm.util.EnvHolder;
+import com.gxk.jvm.util.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +34,13 @@ public abstract class Heap {
   }
 
   public static void registerClass(String name, KClass clazz) {
+    if (EnvHolder.verboseClass) {
+      String source = clazz.classLoader.getName();
+      if (clazz.classFile != null && clazz.classFile.getSource() != null) {
+        source = clazz.classFile.getSource();
+      }
+      Logger.clazz("[Loaded {} from {}]", name, source);
+    }
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }
 

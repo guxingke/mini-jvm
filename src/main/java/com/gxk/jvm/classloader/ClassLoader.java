@@ -64,7 +64,6 @@ public class ClassLoader {
       kClass.setSuperClass(this.loadClass(kClass.superClassName));
     }
 
-
     return kClass;
   }
 
@@ -108,7 +107,7 @@ public class ClassLoader {
 
     BootstrapMethods bootstrapMethods = classFile.getBootstrapMethods();
 
-    return new KClass(name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this);
+    return new KClass(name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this, classFile);
   }
 
   public KMethod map(Method cfMethod) {
@@ -121,5 +120,9 @@ public class ClassLoader {
 
   public KField map(Field field) {
     return new KField(field.accessFlags, field.name, field.descriptor.descriptor);
+  }
+
+  public String getName() {
+    return name;
   }
 }

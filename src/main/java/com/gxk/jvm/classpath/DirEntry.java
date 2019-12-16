@@ -24,7 +24,10 @@ public class DirEntry implements Entry {
         .findFirst()
         .map(it -> {
           try {
-            return ClassReader.read(Paths.get(it.getAbsolutePath()));
+            Path path = Paths.get(it.getAbsolutePath());
+            ClassFile cf = ClassReader.read(path);
+            cf.setSource(path.toString());
+            return cf;
           } catch (IOException e) {
             return null;
           }

@@ -13,6 +13,10 @@ public abstract class Logger {
     log("!T ", tpl, args);
   }
 
+  public static void clazz(String tpl, Object... args) {
+    log("!C ", tpl, args);
+  }
+
   public static void debug(String tpl, Object... args) {
     log("!D ", tpl, args);
   }

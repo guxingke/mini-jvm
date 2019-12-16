@@ -75,19 +75,21 @@ public class OperandStack {
     return this.slots;
   }
 
-  public void debug(String space) {
-    System.out.println(space + "OperandStack: ");
+  public String debug(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(space + "OperandStack: ").append("\n");
     for (int i = 0; i < this.slots.size(); i++) {
       Slot slot = this.slots.get(i);
       if (slot == null) {
-        System.out.println(space + String.format("%d | null | null", i));
+        sb.append(space + String.format("%d | null | null", i)).append("\n");
         continue;
       }
       if (slot.ref != null) {
-        System.out.println(space + String.format("%d | null | %s", i, slot.ref));
+        sb.append(space + String.format("%d | null | %s", i, slot.ref)).append("\n");
         continue;
       }
-      System.out.println(space + String.format("%d | %s | null", i, slot.num));
+      sb.append(space + String.format("%d | %s | null", i, slot.num)).append("\n");
     }
+    return sb.toString();
   }
 }

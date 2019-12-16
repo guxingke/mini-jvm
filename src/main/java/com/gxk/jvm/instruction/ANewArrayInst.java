@@ -44,7 +44,7 @@ public class ANewArrayInst implements Instruction {
 
     KClass clazz = Heap.findClass(name);
     if (clazz == null) {
-      clazz = new KClass(name, kClass.classLoader);
+      clazz = new KClass(name, kClass.classLoader, null);
       clazz.setSuperClass(Heap.findClass("java/lang/Object"));
       clazz.setStaticInit(2);
       Heap.registerClass(name, clazz);
