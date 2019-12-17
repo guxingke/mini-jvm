@@ -323,7 +323,7 @@ public class VirtualMachine {
     });
 
     // Exception
-    Heap.registerMethod("java/lang/Exception_<interfaceInit>_(Ljava/lang/String;)V", frame -> {
+    Heap.registerMethod("java/lang/Exception_<init>_(Ljava/lang/String;)V", frame -> {
       KObject str = (KObject) frame.popRef();
       KObject thisObj = (KObject) frame.popRef();
       KField msgField = thisObj.getField("detailMessage", "Ljava/lang/String;");
@@ -333,7 +333,7 @@ public class VirtualMachine {
     // Throwable
     Heap.registerMethod("java/lang/Throwable_<clinit>_()V", frame -> {
     });
-    Heap.registerMethod("java/lang/Throwable_<interfaceInit>_(Ljava/lang/String)Ljava/lang/Throwable;", frame -> {
+    Heap.registerMethod("java/lang/Throwable_<init>_(Ljava/lang/String)Ljava/lang/Throwable;", frame -> {
     });
     Heap.registerMethod("java/lang/Throwable_fillInStackTrace_(I)Ljava/lang/Throwable;", frame -> {
     });
