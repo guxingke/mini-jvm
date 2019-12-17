@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 native-image -cp target/mini-jvm.jar \
-  -H:Name=mini-jvm \
+  -H:Name=jvm \
   -H:IncludeResources='help.txt' \
   -H:+ReportUnsupportedElementsAtRuntime \
   --no-server \

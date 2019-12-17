@@ -71,7 +71,7 @@ public class ClassLoader {
     List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(this::map).collect(Collectors.toList());
     List<KField> fields = Arrays.stream(classFile.fields.fields).map(this::map).collect(Collectors.toList());
 
-    // field init
+    // field interfaceInit
     fields.forEach(it -> {
       switch (it.descriptor) {
         case "Z":

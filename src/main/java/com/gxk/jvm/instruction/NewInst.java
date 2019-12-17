@@ -35,7 +35,7 @@ public class NewInst implements Instruction {
     }
 
     if (!kClass.isStaticInit()) {
-      // init
+      // interfaceInit
       KMethod cinit = kClass.getClinitMethod();
       if (cinit == null) {
         kClass.setStaticInit(2);

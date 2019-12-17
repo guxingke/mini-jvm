@@ -72,6 +72,26 @@ public class InvokeInterfaceInst implements Instruction {
     KMethod method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
+      // try find interfaces
+      if (clazz.interfaceNames.isEmpty()) {
+        throw new IllegalStateException();
+      }
+
+      // already load interface
+      if (!clazz.getInterfaces().isEmpty()) {
+        for (KClass intClass : clazz.getInterfaces()) {
+          method= intClass.getMethod(methodName, methodDescriptor);
+          if (method != null) {
+            break;
+          }
+        }
+      } else {
+        clazz.interfaceInit(frame);
+        return;
+      }
+    }
+
+    if (method == null) {
       throw new IllegalStateException();
     }
 

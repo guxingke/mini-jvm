@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
+import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 
 import java.util.ArrayList;
@@ -192,5 +193,48 @@ public class KClass {
       ", superClass=" + (superClass == null ? "null" : superClass.name) +
       ", staticInit=" + staticInit +
       '}';
+  }
+
+  public void interfaceInit(Frame frame) {
+    List<KClass> interfaces = new ArrayList<>();
+    for (String interfaceName : this.interfaceNames) {
+      KClass tmp = Heap.findClass(interfaceName);
+      if (tmp == null) {
+        tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
+      }
+
+      tmp.interfaceInit(frame);
+
+      interfaces.add(tmp);
+      if (!tmp.isStaticInit()) {
+        KMethod cinit = tmp.getClinitMethod();
+        if (cinit == null) {
+          throw new IllegalStateException();
+        }
+
+        Frame newFrame = new Frame(cinit, frame.thread);
+        tmp.setStaticInit(1);
+        KClass finalKClass = tmp;
+        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        frame.thread.pushFrame(newFrame);
+        frame.nextPc = frame.thread.getPc();
+      }
+    }
+    this.setInterfaces(interfaces);
+  }
+
+  public boolean is(String clazz) {
+    if (this.name.equalsIgnoreCase(clazz)) {
+      return true;
+    }
+    for (String interfaceName : this.interfaceNames) {
+      if (Objects.equals(interfaceName, clazz)) {
+        return true;
+      }
+    }
+    if (this.superClass != null) {
+      return this.superClass.is(clazz);
+    }
+    return false;
   }
 }

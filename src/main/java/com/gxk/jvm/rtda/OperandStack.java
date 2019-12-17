@@ -77,19 +77,19 @@ public class OperandStack {
 
   public String debug(String space) {
     StringBuilder sb = new StringBuilder();
-    sb.append(space + "OperandStack: ").append("\n");
+    sb.append(space).append(String.format("OperandStack: %d", this.slots.maxSize)).append("\n");
     for (int i = 0; i < this.slots.size(); i++) {
       Slot slot = this.slots.get(i);
       if (slot == null) {
-        sb.append(space + String.format("%d | null | null", i)).append("\n");
+        sb.append(space).append(String.format("%d | null      | null", i)).append("\n");
         continue;
       }
       if (slot.ref != null) {
-        sb.append(space + String.format("%d | null | %s", i, slot.ref)).append("\n");
+        sb.append(space).append(String.format("%d | ref       | %s", i, slot.ref)).append("\n");
         continue;
       }
-      sb.append(space + String.format("%d | %s | null", i, slot.num)).append("\n");
+      sb.append(space).append(String.format("%d | primitive | %s ", i, slot.num)).append("\n");
     }
-    return sb.toString();
+    return sb.append("\n").toString();
   }
 }

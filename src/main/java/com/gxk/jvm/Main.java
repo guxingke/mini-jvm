@@ -10,7 +10,7 @@ public class Main {
 
   public static void main(String[] args)  {
     if (args.length == 0) {
-      System.out.println("usage: java [options] class [args]\n");
+      printHelp();
       return;
     }
 
@@ -28,17 +28,7 @@ public class Main {
     }
 
     if (cmd.help) {
-      InputStream is = Main.class.getClassLoader().getResourceAsStream("help.txt");
-      try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-        StringBuilder out = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-          out.append(line).append("\n");
-        }
-        System.out.println(out);
-      } catch (Exception e) {
-        System.out.println("something bad");
-      }
+      printHelp();
       return;
     }
 
@@ -80,6 +70,20 @@ public class Main {
         ByteCodeGenerator.gen(clazzPath, methodName);
         break;
 
+    }
+  }
+
+  private static void printHelp() {
+    InputStream is = Main.class.getClassLoader().getResourceAsStream("help.txt");
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+      StringBuilder out = new StringBuilder();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        out.append(line).append("\n");
+      }
+      System.out.println(out);
+    } catch (Exception e) {
+      System.out.println("something bad");
     }
   }
 }

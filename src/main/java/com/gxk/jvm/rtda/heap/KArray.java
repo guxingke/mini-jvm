@@ -10,8 +10,6 @@ public class KArray extends KObject{
 
   @Override
   public String toString() {
-    return "KArray{" +
-        "items=" + items.length +
-        '}';
+    return "KArray{items=" + items.length + "}@" + this.hashCode();
   }
 }

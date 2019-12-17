@@ -11,6 +11,7 @@ import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
+import sun.rmi.runtime.Log;
 
 public class Interpreter {
 
@@ -45,11 +46,11 @@ public class Interpreter {
 
     KClass clazz = frame.method.clazz;
     if (clazz != null) {
-      // super clazz static init
+      // super clazz static interfaceInit
       KClass superClazz = clazz.getUnStaticInitSuperClass();
       while (superClazz!=null) {
         if (!superClazz.isStaticInit()) {
-          // init
+          // interfaceInit
           KMethod cinit = superClazz.getMethod("<clinit>", "()V");
           if (cinit == null) {
             superClazz.setStaticInit(2);
@@ -87,9 +88,6 @@ public class Interpreter {
         trace(inst, frame);
       }
       inst.execute(frame);
-      if (EnvHolder.verboseDebug) {
-        debugAfter(inst, frame);
-      }
 
       if (thread.empty()) {
         break;
@@ -104,17 +102,13 @@ public class Interpreter {
 
   void debugBefore(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
-    Logger.debug(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ============================== begin");
-    Logger.debug(inst.debug(space));
-    Logger.debug(frame.debug(space));
+    Logger.debug(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ==============================" + "\n");
+    Logger.debug(inst.debug(space + frame.getPc() + " "));
+    Logger.debug(frame.debugNextPc(space));
+    Logger.debug(frame.debugLocalVars(space));
+    Logger.debug(frame.debugOperandStack(space));
     Logger.debug(space + "---------------------");
-  }
-
-  void debugAfter(Instruction inst, Frame frame) {
-    String space = genSpace(frame.thread.size() * 2);
-    Logger.debug(space + "---------------------");
-    Logger.debug(inst.debug(space));
-    Logger.debug(frame.debug(space));
+    Logger.debug(space + "\n");
   }
 
   public String genSpace(int size) {

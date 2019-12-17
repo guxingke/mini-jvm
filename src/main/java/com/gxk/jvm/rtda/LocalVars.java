@@ -75,19 +75,19 @@ public class LocalVars {
 
   public String debug(String space) {
     StringBuilder sb = new StringBuilder();
-    sb.append(space + "LocalVars: ").append("\n");
+    sb.append(space).append(String.format("LocalVars: %d", this.slots.length)).append("\n");
     for (int i = 0; i < this.slots.length; i++) {
       Slot slot = this.slots[i];
       if (slot == null) {
-        sb.append(space + String.format("%d | null | null", i)).append("\n");
+        sb.append(space).append(String.format("%d | null | null", i)).append("\n");
         continue;
       }
       if (slot.ref != null) {
-        sb.append(space + String.format("%d | null | %s", i, slot.ref)).append("\n");
+        sb.append(space).append(String.format("%d | ref       | %s", i, slot.ref)).append("\n");
         continue;
       }
-      sb.append(space + String.format("%d | %s | null", i, slot.num)).append("\n");
+      sb.append(space).append(String.format("%d | primitive | %s", i, slot.num)).append("\n");
     }
-    return sb.toString();
+    return sb.append("\n").toString();
   }
 }

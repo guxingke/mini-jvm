@@ -10,8 +10,8 @@ public interface Instruction {
 
   void execute(Frame frame);
 
-  default String debug(String space){
-    return space + this.toString();
+  default String debug(String prefix){
+    return prefix + this.format();
   }
 
   default String format() {

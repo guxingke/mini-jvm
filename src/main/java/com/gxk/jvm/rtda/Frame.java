@@ -33,15 +33,6 @@ public class Frame {
     this.instructionMap = method.instructionMap;
   }
 
-  public String debug(String space) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(space + "nextPc = " + nextPc)
-      .append("\n");
-    sb.append(localVars.debug(space));
-    sb.append(operandStack.debug(space));
-    return sb.toString();
-  }
-
   public Instruction getInst(int pc) {
     this.pc = pc;
     return this.instructionMap.get(pc);
@@ -56,10 +47,10 @@ public class Frame {
   }
 
   // operand stack operation
+
   public void pushInt(Integer val) {
     this.operandStack.pushInt(val);
   }
-
   public Integer popInt() {
     return this.operandStack.popInt();
   }
@@ -105,10 +96,10 @@ public class Frame {
   }
 
   // local vars operation
+
   public void setInt(Integer index, Integer val) {
     this.localVars.setInt(index, val);
   }
-
   public Integer getInt(Integer index) {
     return this.localVars.getInt(index);
   }
@@ -155,5 +146,23 @@ public class Frame {
 
   public int getPc() {
     return pc;
+  }
+
+  public String debugNextPc(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(space + "nextPc = " + nextPc).append("\n");
+    return sb.toString();
+  }
+
+  public String debugLocalVars(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(localVars.debug(space));
+    return sb.append("\n").toString();
+  }
+
+  public String debugOperandStack(String space) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(operandStack.debug(space));
+    return sb.append("\n").toString();
   }
 }

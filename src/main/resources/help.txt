@@ -1,23 +1,31 @@
 用法:
-  ./myjava [-options] class [args...] // e.g ./myjava -verbose -cp example Hello
+  ./java [-options] class [args...] // e.g ./java -verbose:trace -cp example Hello
            (执行类)
 
    或
 
-   ./myjava [-options] -jar jarfile [args...]
+   ./java [-options] -jar jarfile [args...]
            (执行 jar 文件) // TODO 待实现
 
 
 其中选项包括:
     -cp <目录和 zip/jar 文件的类搜索路径>
 
-    -version      输出产品版本并退出
+    -version            输出产品版本并退出
 
-    -help   输出此帮助消息
+    -help               输出此帮助消息
 
-    -verbose      输出详细信息  // TODO 待实现
+    -verbose            输出详细信息  // TODO 待实现
+    -verbose:debug      输出 DEBUG 详细信息
+    -verbose:trace      输出 TRACE 信息
+    -verbose:class      输出 ClASS 加载信息
 
-    -v            同上, 支持 -v, -vv, -vvv , 输出信息递增 // TODO 待实现
+------
+出于实现简单的考虑, 其他选项需要在 -cp 之前
+e.g
+./java -cp example -verbose Hello => 错误
+./java -verbose -cp example Hello => 正确
+./java -verbose Hello => 正确
 
 有关详细信息, 请参阅 https://github.com/guxingke/mini-jvm
 

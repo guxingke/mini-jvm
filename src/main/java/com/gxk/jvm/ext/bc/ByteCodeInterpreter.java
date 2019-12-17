@@ -53,7 +53,7 @@ public class ByteCodeInterpreter {
     int locals = Integer.parseInt(split[2]);
     int argsCnt = Integer.parseInt(split[3]);
 
-    // init method args
+    // interfaceInit method args
     Map<Integer, Integer> methodArgs = new HashMap<>(argsCnt);
     for (int i = 0; i < argsCnt; i++) {
       methodArgs.put(i, 0);
