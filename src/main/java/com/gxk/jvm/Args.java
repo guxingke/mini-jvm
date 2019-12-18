@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * java -cp target/mini.jar com.gxk.Main xxxxxx
  */
-class Args {
+public class Args {
 
   private static final String MINUS_VERSION = "-version";
   private static final String MINUS_HELP= "-help";
@@ -22,11 +22,11 @@ class Args {
   boolean verboseClass;
   boolean verboseDebug;
 
-  String classpath = ".";
-  String clazz;
-  String[] args;
+  public String classpath = ".";
+  public String clazz;
+  public String[] args;
 
-  static Args parseArgs(String... cliArgs) {
+  public static Args parseArgs(String... cliArgs) {
     Args args = new Args();
 
     if (Objects.equals(MINUS_VERSION, cliArgs[0])) {

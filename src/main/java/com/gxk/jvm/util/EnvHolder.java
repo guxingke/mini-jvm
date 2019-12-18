@@ -8,6 +8,7 @@ public abstract class EnvHolder {
   public static boolean verboseTrace;
   public static boolean verboseClass;
   public static boolean verboseDebug;
+  public static boolean debug;
 
   static {
     init();
