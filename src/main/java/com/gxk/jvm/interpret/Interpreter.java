@@ -12,10 +12,9 @@ import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.DebugContextHolder;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
-import jline.console.ConsoleReader;
 
-import java.io.IOException;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Interpreter {
 
@@ -79,9 +78,8 @@ public class Interpreter {
     if (EnvHolder.debug) {
       try {
         System.out.println("正在初始化jdb...");
-        ConsoleReader reader = new ConsoleReader();
-        DebugContextHolder.reader = reader;
-      } catch (IOException e) {
+        DebugContextHolder.scanner = new Scanner(System.in);
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -117,14 +115,16 @@ public class Interpreter {
       DebugContextHolder.next = false;
     }
 
-    ConsoleReader reader = DebugContextHolder.reader;
-    if (reader == null) {
+    Scanner scanner = DebugContextHolder.scanner;
+    if (scanner == null) {
       Logger.error("reader init err in debug mode, debug mode closed");
       EnvHolder.debug = false;
       return false;
     }
     try {
-      String line = reader.readLine(frame.thread.size() + " > ");
+      String promot = frame.thread.size() + " > ";
+      System.out.print(promot);
+      String line = scanner.nextLine();
       if (line == null || line.trim().isEmpty()) {
         return false;
       }
@@ -171,7 +171,7 @@ public class Interpreter {
       if (!DebugContextHolder.isContinue()) {
         return false;
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return true;

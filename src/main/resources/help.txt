@@ -1,10 +1,10 @@
 用法:
-  ./java [-options] class [args...] // e.g ./java -verbose:trace -cp example Hello
+  ./bin/java [-options] class [args...] // e.g ./java -verbose:trace -cp example Hello
            (执行类)
 
    或
 
-   ./java [-options] -jar jarfile [args...]
+   ./bin/java [-options] -jar jarfile [args...]
            (执行 jar 文件) // TODO 待实现
 
 
@@ -23,9 +23,9 @@
 ------
 出于实现简单的考虑, 其他选项需要在 -cp 之前
 e.g
-./java -cp example -verbose Hello => 错误
-./java -verbose -cp example Hello => 正确
-./java -verbose Hello => 正确
+./bin/java -cp example -verbose Hello => 错误
+./bin/java -verbose -cp example Hello => 正确
+./bin/java -verbose Hello => 正确
 
 有关详细信息, 请参阅 https://github.com/guxingke/mini-jvm
 

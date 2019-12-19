@@ -87,17 +87,22 @@ mini-jvm -- sum10.bc
 - 类加载 90%
 - 方法调用 90%
 - 实例化 90%
-- native 方法 70%
-- 异常处理 0%
-- 多线程 0%
+- Native 方法 70%
+- 异常处理 60%
 - self-booting 10%
 
 ## 局限
 1. 不实现 GC
+2. 不实现多线程
 
 ## 变更记录
+- 增加简单的调试器 bin/jdb.
 - 支持 Lambda 调用, closure, currying 可用.
 - Hello World 级别可用
+
+## 个人记录
+- [如何构建一个你自己的 JVM (0) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-1.html)
+- [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/posts/mini-jvm-intro.html)
 
 ## 参考
 - [The Java® Virtual Machine Specification](https://docs.oracle.com/javase/specs/jvms/se8/html/)

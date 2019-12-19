@@ -19,13 +19,12 @@ mvn clean package
 
 ## 简单测试
 ```bash
-./myjava -cp example Hello
+./bin/java -cp example Hello
 ```
 输出 hello 即为正常
 
 ## 导入 IDE
 仅推荐 Idea. 
-需要安装 Lombok 插件. 
 
 idea -> File -> open 打开即可. 
 
