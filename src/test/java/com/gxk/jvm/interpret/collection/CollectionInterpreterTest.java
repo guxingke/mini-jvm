@@ -16,6 +16,11 @@ public class CollectionInterpreterTest extends BaseInterpreterTest {
   }
 
   @Test
+  public void test_array_list() {
+    testMain("TestArrayList");
+  }
+
+  @Test
   public void test_map() {
     testMain("TestMap");
   }
