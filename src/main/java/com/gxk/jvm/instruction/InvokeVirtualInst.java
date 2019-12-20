@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class InvokeVirtualInst implements Instruction {
@@ -34,10 +35,13 @@ public class InvokeVirtualInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
-    if (nm != null) {
-      nm.invoke(frame);
-      return;
+    // special for println
+    if (Objects.equals("java/io/PrintStream", clazz) || Objects.equals("java/lang/Class", clazz)) {
+      NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+      if (nativeMethod != null) {
+        nativeMethod.invoke(frame);
+        return;
+      }
     }
 
     KClass clazz = Heap.findClass(this.clazz);
@@ -67,17 +71,6 @@ public class InvokeVirtualInst implements Instruction {
       throw new IllegalStateException();
     }
 
-    // native method
-    nm = Heap.findMethod(Utils.genNativeMethodKey(method));
-    if (nm != null) {
-      nm.invoke(frame);
-      return;
-    }
-
-    if (method.isNative()) {
-      throw new IllegalStateException("un impl native method call, " + method);
-    }
-
     // super method
     // fill args
     List<String> args = method.getArgs();
@@ -87,10 +80,28 @@ public class InvokeVirtualInst implements Instruction {
       argObjs.add(Utils.pop(frame, arg));
     }
 
-    Collections.reverse(argObjs);
-
     KObject ref = (KObject) frame.popRef();
     KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod));
+    if (nm != null) {
+      // restore frame
+      ArrayList<String> tmpArgs = new ArrayList<>(args);
+      Collections.reverse(tmpArgs);
+
+      frame.pushRef(ref);
+      for (int i = 0; i < tmpArgs.size(); i++) {
+        String arg = tmpArgs.get(i);
+        Object obj = argObjs.get(argObjs.size() - 1 - i);
+        Utils.push(frame, arg, obj);
+      }
+
+      nm.invoke(frame);
+      return;
+    }
+
+    Collections.reverse(argObjs);
+
     Frame newFrame = new Frame(implMethod, frame.thread);
 
     int slotIdx = 1;

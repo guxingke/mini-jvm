@@ -127,8 +127,9 @@ public class VirtualMachine {
     Heap.registerMethod("java/io/PrintStream_println_(Ljava/lang/Object;)V", frame -> {
       Object val = frame.popRef();
       if (val instanceof KObject) {
-        if (((KObject) val).clazz.name.equals("java/lang/Integer")) {
-          val = ((KObject) val).getField("value", "I").val[0].num;
+        KObject valObj = (KObject) val;
+        if (valObj.clazz.name.equals("java/lang/Integer")) {
+          val = valObj.getField("value", "I").val[0].num;
         }
       }
       frame.popRef();
@@ -354,9 +355,20 @@ public class VirtualMachine {
     Heap.registerMethod("java/util/Random_<init>_()V", frame -> {
       frame.popRef();
     });
+    Heap.registerMethod("java/util/Random_<init>_(J)V", frame -> {
+      frame.popLong();
+      frame.popRef();
+    });
     Heap.registerMethod("java/util/Random_nextInt_()I", frame -> {
       int tmp = new Random().nextInt();
       frame.popRef();
+      frame.pushInt(tmp);
+    });
+
+    Heap.registerMethod("java/util/Random_nextInt_(I)I", frame -> {
+      Integer rg = frame.popInt();
+      frame.popRef();
+      int tmp = new Random().nextInt(rg);
       frame.pushInt(tmp);
     });
 

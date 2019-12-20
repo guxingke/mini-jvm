@@ -26,6 +26,11 @@ public class CollectionInterpreterTest extends BaseInterpreterTest {
   }
 
   @Test
+  public void test_map2() {
+    testMain("TestMap2");
+  }
+
+  @Test
   public void test_deque() {
     testMain("TestStack");
   }

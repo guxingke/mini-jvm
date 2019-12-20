@@ -114,8 +114,7 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     // hack for lambda
-    String key = String.format("%s_%s_%s", implMethod.clazz.name, implMethod.name, implMethod.descriptor);
-    nm = Heap.findMethod(key);
+    nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
     if (nm != null) {
       // restore frame
       ArrayList<String> tmpArgs = new ArrayList<>(args);
