@@ -14,6 +14,7 @@ import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 
 public class VirtualMachine {
 
@@ -284,6 +285,9 @@ public class VirtualMachine {
 
     // Unsafe
     Heap.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {});
+    Heap.registerMethod("sun/misc/Unsafe_getUnsafe_()Lsun/misc/Unsafe;", frame -> {
+      frame.pushRef(null);
+    });
 
     // string
     Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame ->  {
@@ -342,6 +346,25 @@ public class VirtualMachine {
     Heap.registerMethod("java/lang/Throwable_getStackTraceDepth_()I", frame -> {
     });
     Heap.registerMethod("java/lang/Throwable_getStackTraceElement_(I)Ljava/lang/StackTraceElement;", frame -> {
+    });
+
+    // random
+    Heap.registerMethod("java/util/Random_<clinit>_()V", frame -> {
+    });
+    Heap.registerMethod("java/util/Random_<init>_()V", frame -> {
+      frame.popRef();
+    });
+    Heap.registerMethod("java/util/Random_nextInt_()I", frame -> {
+      int tmp = new Random().nextInt();
+      frame.popRef();
+      frame.pushInt(tmp);
+    });
+
+    // atomic
+    Heap.registerMethod("java/util/concurrent/atomic/AtomicLong_VMSupportsCS8_()Z", frame -> {
+      frame.pushInt(0);
+    });
+    Heap.registerMethod("java/util/concurrent/atomic/AtomicLong_<clinit>_()V", frame -> {
     });
   }
 

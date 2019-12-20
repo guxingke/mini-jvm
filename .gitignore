@@ -2,7 +2,6 @@ target/
 .idea
 *.iml
 
-jvm
 bin/jvm
 
 dependency-reduced-pom.xml
