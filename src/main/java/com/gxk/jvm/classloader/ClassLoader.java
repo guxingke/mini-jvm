@@ -12,6 +12,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
@@ -28,6 +29,19 @@ public class ClassLoader {
   public ClassLoader(String name, Entry entry) {
     this.name = name;
     this.entry = entry;
+  }
+
+  public void loadPrimitiveClass(String clazz) {
+    KClass cache = Heap.findClass(name);
+    if (cache != null) {
+      return;
+    }
+    KClass cls = new KClass(clazz, this);
+    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    cls.setRuntimeClass(metaCls);
+    metaCls.setMetaClass(cls);
+
+    doRegister(cls);
   }
 
   public KClass loadClass(String name) {
@@ -62,6 +76,12 @@ public class ClassLoader {
     // superclass
     if (kClass.superClassName != null) {
       kClass.setSuperClass(this.loadClass(kClass.superClassName));
+    }
+
+    if (Heap.findClass("java/lang/Class") != null) {
+      KObject rcs = Heap.findClass("java/lang/Class").newObject();
+      kClass.setRuntimeClass(rcs);
+      rcs.setMetaClass(kClass);
     }
 
     return kClass;

@@ -3,7 +3,9 @@ package com.gxk.jvm.rtda.heap;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +44,10 @@ public abstract class Heap {
       Logger.clazz("[Loaded {} from {}]", name, source);
     }
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
+  }
+
+  public static List<KClass> getClasses() {
+    return new ArrayList<>(STRING_K_CLASS_MAP.values());
   }
 
   // for test

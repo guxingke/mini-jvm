@@ -12,6 +12,7 @@ import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
@@ -202,7 +203,8 @@ public class VirtualMachine {
       int val = frame.popRef().hashCode();
       frame.pushInt(val);
     });
-    Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {});
+    Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {
+    });
     Heap.registerMethod("java/lang/Object_clone_()Ljava/lang/Object;", (frame) -> {
       KObject obj = (KObject) frame.popRef();
       Object newObj = null;
@@ -215,15 +217,106 @@ public class VirtualMachine {
     });
     Heap.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (frame) -> {
       KObject val = (KObject) frame.popRef();
-      frame.pushRef(val.clazz);
+      frame.pushRef(val.clazz.getRuntimeClass());
     });
 
-    Heap.registerMethod("java/lang/Object_wait_(J)V", (frame) -> {});
-    Heap.registerMethod("java/lang/Object_notify_()V", (frame) -> {});
-    Heap.registerMethod("java/lang/Object_notifyAll_()V", (frame) -> {});
+    Heap.registerMethod("java/lang/Object_wait_(J)V", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/Object_notify_()V", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/Object_notifyAll_()V", (frame) -> {
+    });
 
     // class
-    Heap.registerMethod("java/lang/Class_registerNatives_()V", (frame) -> {});
+    Heap.registerMethod("java/lang/Class_getName0_()Ljava/lang/String;", frame -> {
+      KObject obj = (KObject) frame.popRef();
+      String name = obj.getMetaClass().name;
+      KClass strClazz = Heap.findClass("java/lang/String");
+      KObject nameObj = strClazz.newObject();
+      char[] chars = name.replaceAll("/", ".").toCharArray();
+      Character[] characters = new Character[chars.length];
+      for (int i = 0; i < chars.length; i++) {
+        characters[i] = chars[i];
+      }
+      KArray kArray = new KArray(Heap.findClass("java/lang/Character"), characters);
+      nameObj.setField("value", "[C", new Slot[] {new Slot(kArray)});
+      frame.pushRef(nameObj);
+    });
+    Heap.registerMethod("java/lang/Class_forName0_(Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_isInstance_(Ljava/lang/Object;)Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_isAssignableFrom_(Ljava/lang/Class;)Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_isInterface_()Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_isArray_()Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_isPrimitive_()Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getSuperclass_()Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getInterfaces0_()[Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getComponentType_()Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getModifiers_()I", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getSigners_()[Ljava/lang/Object;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_setSigners_([Ljava/lang/Object;)V", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getEnclosingMethod0_()[Ljava/lang/Object;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getDeclaringClass0_()Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getProtectionDomain0_()Ljava/security/ProtectionDomain;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getGenericSignature0_()Ljava/lang/String;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getRawAnnotations_()[B", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getRawTypeAnnotations_()[B", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getConstantPool_()Lsun/reflect/ConstantPool;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getDeclaredFields0_(Z)[Ljava/lang/reflect/Field;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getDeclaredMethods0_(Z)[Ljava/lang/reflect/Method;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getDeclaredConstructors0_(Z)[Ljava/lang/reflect/Constructor;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_getDeclaredClasses0_()[Ljava/lang/Class;", frame -> {
+      throw new UnsupportedOperationException();
+    });
+    Heap.registerMethod("java/lang/Class_desiredAssertionStatus0_(Ljava/lang/Class;)Z", frame -> {
+      throw new UnsupportedOperationException();
+    });
+
+    Heap.registerMethod("java/lang/Class_registerNatives_()V", (frame) -> {
+    });
     Heap.registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;", (frame) -> {
       Character[] values = (Character[]) ((KArray) ((KObject) frame.popRef()).getField("value", "[C").val[0].ref).items;
       char[] v2 = new char[values.length];
@@ -231,9 +324,8 @@ public class VirtualMachine {
         v2[i] = values[i];
       }
       String val = new String(v2);
-      KClass kClass = new KClass("Ljava/lang/Class", frame.method.clazz.classLoader, null);
-      KObject kObject = kClass.newObject();
-      frame.pushRef(kObject);
+      KClass cls = Heap.findClass(val);
+      frame.pushRef(cls.getRuntimeClass());
     });
     // hack for class
     Heap.registerMethod("java/lang/Class_desiredAssertionStatus_()Z", frame -> {
@@ -263,14 +355,18 @@ public class VirtualMachine {
     });
 
     // system
-    Heap.registerMethod("java/lang/System_registerNatives_()V", (frame) -> {});
-    Heap.registerMethod("java/lang/System_setIn0_(Ljava/io/InputStream;)V", (frame) -> {});
-    Heap.registerMethod("java/lang/System_setOut0_(Ljava/io/PrintStream;)V", (frame) -> {});
-    Heap.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (frame) -> {});
+    Heap.registerMethod("java/lang/System_registerNatives_()V", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/System_setIn0_(Ljava/io/InputStream;)V", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/System_setOut0_(Ljava/io/PrintStream;)V", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (frame) -> {
+    });
     Heap.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.pushLong(System.currentTimeMillis()));
     Heap.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.pushLong(System.nanoTime()));
     Heap.registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (frame) -> {
-      Integer len= frame.popInt();
+      Integer len = frame.popInt();
       Integer dsp = frame.popInt();
       KArray dest = (KArray) frame.popRef();
       Integer ssp = frame.popInt();
@@ -281,17 +377,20 @@ public class VirtualMachine {
       }
     });
     Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
-    Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {});
-    Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {});
+    Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {
+    });
+    Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {
+    });
 
     // Unsafe
-    Heap.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {});
+    Heap.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {
+    });
     Heap.registerMethod("sun/misc/Unsafe_getUnsafe_()Lsun/misc/Unsafe;", frame -> {
       frame.pushRef(null);
     });
 
     // string
-    Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame ->  {
+    Heap.registerMethod("java/lang/String_intern_()Ljava/lang/String;", frame -> {
       System.out.println();
     });
 
@@ -381,10 +480,30 @@ public class VirtualMachine {
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {
+    // class
+    KClass metaClass = classLoader.loadClass("java/lang/Class");
+    for (KClass cls : Heap.getClasses()) {
+      if (cls.getRuntimeClass() == null) {
+        KObject obj = metaClass.newObject();
+        cls.setRuntimeClass(obj);
+        obj.setMetaClass(cls);
+      }
+    }
+
+    // primitive
+    classLoader.loadPrimitiveClass("char");
+    classLoader.loadPrimitiveClass("boolean");
+    classLoader.loadPrimitiveClass("byte");
+    classLoader.loadPrimitiveClass("short");
+    classLoader.loadPrimitiveClass("int");
+    classLoader.loadPrimitiveClass("long");
+    classLoader.loadPrimitiveClass("float");
+    classLoader.loadPrimitiveClass("double");
+
     // string
     classLoader.loadClass("java/lang/String");
 
-    // primitive
+    // primitive wrapper
     classLoader.loadClass("java/lang/Character");
     classLoader.loadClass("java/lang/Boolean");
     classLoader.loadClass("java/lang/Byte");

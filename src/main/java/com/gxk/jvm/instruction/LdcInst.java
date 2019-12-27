@@ -64,17 +64,7 @@ public class LdcInst implements Instruction {
         if (klass2 == null) {
           klass2 = frame.method.clazz.classLoader.loadClass(val.toString());
         }
-        if (!klass2.isStaticInit()) {
-          Frame newFrame = new Frame(klass2.getMethod("<clinit>", "()V"), frame.thread);
-          klass2.setStaticInit(1);
-          KClass finalKlass = klass2;
-          newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
-          frame.thread.pushFrame(newFrame);
-
-          frame.nextPc = frame.thread.getPc();
-          return;
-        }
-        frame.pushRef(klass2);
+        frame.pushRef(klass2.getRuntimeClass());
         break;
       default:
         frame.pushRef(val);

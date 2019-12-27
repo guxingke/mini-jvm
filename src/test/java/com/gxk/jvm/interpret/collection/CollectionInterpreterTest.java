@@ -1,6 +1,7 @@
 package com.gxk.jvm.interpret.collection;
 
 import com.gxk.jvm.interpret.BaseInterpreterTest;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.Test;
 
 public class CollectionInterpreterTest extends BaseInterpreterTest {

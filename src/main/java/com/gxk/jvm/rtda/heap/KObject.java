@@ -11,6 +11,9 @@ public class KObject implements Cloneable {
   public final KClass clazz;
   private KObject superObject;
 
+  // for class obj
+  private KClass metaClass;
+
   public KObject(KClass clazz) {
     fields = new ArrayList<>();
     this.clazz = clazz;
@@ -54,5 +57,13 @@ public class KObject implements Cloneable {
   @Override
   public String toString() {
     return clazz.name + "@" + this.hashCode();
+  }
+
+  public KClass getMetaClass() {
+    return metaClass;
+  }
+
+  public void setMetaClass(KClass metaClass) {
+    this.metaClass = metaClass;
   }
 }

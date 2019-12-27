@@ -36,7 +36,7 @@ public class InvokeVirtualInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     // special for println
-    if (Objects.equals("java/io/PrintStream", clazz) || Objects.equals("java/lang/Class", clazz)) {
+    if (Objects.equals("java/io/PrintStream", clazz)) {
       NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
       if (nativeMethod != null) {
         nativeMethod.invoke(frame);

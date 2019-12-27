@@ -29,10 +29,26 @@ public class KClass {
   private List<KClass> interfaces;
   private int staticInit = 0;
 
+  private Object runtimeClass;
+
   public KClass(String name, ClassLoader classLoader, ClassFile classFile) {
     this.name = name;
     this.classFile = classFile;
     this.superClassName = "java/lang/Object";
+    this.interfaceNames = new ArrayList<>();
+    this.interfaces = new ArrayList<>();
+    this.bootstrapMethods = null;
+    this.constantPool = null;
+    this.classLoader = classLoader;
+    this.methods = new ArrayList<>();
+    this.fields = new ArrayList<>();
+    this.staticInit = 2;
+  }
+
+  public KClass(String name, ClassLoader classLoader) {
+    this.name = name;
+    this.classFile = null;
+    this.superClassName = null;
     this.interfaceNames = new ArrayList<>();
     this.interfaces = new ArrayList<>();
     this.bootstrapMethods = null;
@@ -236,5 +252,13 @@ public class KClass {
       return this.superClass.is(clazz);
     }
     return false;
+  }
+
+  public Object getRuntimeClass() {
+    return runtimeClass;
+  }
+
+  public void setRuntimeClass(Object runtimeClass) {
+    this.runtimeClass = runtimeClass;
   }
 }
