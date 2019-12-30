@@ -4,6 +4,7 @@
 使用 Java 8 实现 JVM
 
 ## 动机
+
 1. 尝试了解 JVM 原理, Learning by doing
 2. 纸上得来终觉浅, 实践
 3. 用简单的代码帮助 Javaer 理解 JVM
@@ -11,6 +12,7 @@
 ## 快速体验 [Macos 用户]
 
 ### Hello world
+
 ```bash
 brew tap guxingke/repo && brew install mini-jvm
 
@@ -44,6 +46,7 @@ mini-jvm HelloWold hello mini-jvm
 ```
 
 ### 彩蛋 1 , 理解 JVM 基于栈的解释器.
+
 ```bash
 cat <<EOF > Sum10.java
 public class Sum10 {
@@ -79,6 +82,7 @@ mini-jvm -- sum10.bc
 ```
 
 ## 快速体验 [其他操作系统]
+
 需要自行下载打包. [Dev](https://jvm.guxingke.com/#/dev)
 
 ## 规划
@@ -96,12 +100,14 @@ mini-jvm -- sum10.bc
 2. 不实现多线程
 
 ## 变更记录
+- 反射特性基本可用
 - 增加简单的调试器 bin/jdb.
 - 支持 Lambda 调用, closure, currying 可用.
 - Hello World 级别可用
 
 ## 个人记录
-- [如何构建一个你自己的 JVM (0) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-1.html)
+- [如何构建你自己的 JVM (1) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-2.html)
+- [如何构建你自己的 JVM (0) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-1.html)
 - [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/posts/mini-jvm-intro.html)
 
 ## 参考
