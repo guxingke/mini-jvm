@@ -8,9 +8,16 @@ import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
 import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
+import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 
+import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.KObject;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -218,5 +225,33 @@ public abstract class Utils {
         frame.pushRef(obj);
         break;
     }
+  }
+
+  public static String obj2Str(KObject name) {
+    if (!name.clazz.name.equalsIgnoreCase("java/lang/String")) {
+      throw new IllegalStateException();
+    }
+    Object[] values = ((KArray) name.getField("value", "[C").val[0].ref).items;
+    char[] chars = new char[values.length];
+    for (int i = 0; i < values.length; i++) {
+      chars[i] = (char) values[i];
+    }
+    return new String(chars);
+  }
+
+  public static KObject str2Obj(String str, ClassLoader classLoader) {
+    KClass klass = Heap.findClass("java/lang/String");
+    KObject object = klass.newObject();
+    KField field = object.getField("value", "[C");
+    KClass arrClazz = new KClass(1, "[C", classLoader, null);
+
+    char[] chars = str.toCharArray();
+    Character[] characters = new Character[chars.length];
+    for (int i = 0; i < chars.length; i++) {
+      characters[i] = chars[i];
+    }
+    KArray arr = new KArray(arrClazz, characters);
+    field.val = new Slot[]{new Slot(arr)};
+    return object;
   }
 }

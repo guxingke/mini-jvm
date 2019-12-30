@@ -15,6 +15,7 @@ import java.util.Objects;
 
 public class KClass {
 
+  public final int accessFlags;
   public final String name;
   public final String superClassName;
   public final List<String> interfaceNames;
@@ -29,9 +30,10 @@ public class KClass {
   private List<KClass> interfaces;
   private int staticInit = 0;
 
-  private Object runtimeClass;
+  private KObject runtimeClass;
 
-  public KClass(String name, ClassLoader classLoader, ClassFile classFile) {
+  public KClass(int accessFlags, String name, ClassLoader classLoader, ClassFile classFile) {
+    this.accessFlags = accessFlags;
     this.name = name;
     this.classFile = classFile;
     this.superClassName = "java/lang/Object";
@@ -45,7 +47,8 @@ public class KClass {
     this.staticInit = 2;
   }
 
-  public KClass(String name, ClassLoader classLoader) {
+  public KClass(int accessFlags, String name, ClassLoader classLoader) {
+    this.accessFlags = accessFlags;
     this.name = name;
     this.classFile = null;
     this.superClassName = null;
@@ -59,15 +62,18 @@ public class KClass {
     this.staticInit = 2;
   }
 
-  public KClass(String name,
-                String superClassName,
-                List<String> interfaceNames,
-                List<KMethod> methods,
-                List<KField> fields,
-                BootstrapMethods bootstrapMethods,
-                ConstantPool constantPool,
-                ClassLoader classLoader,
-                ClassFile classFile) {
+  public KClass(
+      int accessFlags,
+      String name,
+      String superClassName,
+      List<String> interfaceNames,
+      List<KMethod> methods,
+      List<KField> fields,
+      BootstrapMethods bootstrapMethods,
+      ConstantPool constantPool,
+      ClassLoader classLoader,
+      ClassFile classFile) {
+    this.accessFlags = accessFlags;
     this.name = name;
     this.superClassName = superClassName;
     this.interfaceNames = interfaceNames;
@@ -137,6 +143,10 @@ public class KClass {
     this.superClass = superClass;
   }
 
+  public KClass getSuperClass() {
+    return this.superClass;
+  }
+
   public KObject newObject() {
     List<KField> newFields = fields.stream().map(this::map).collect(Collectors.toList());
     KObject object = new KObject(newFields, this);
@@ -160,15 +170,17 @@ public class KClass {
       case "B":
       case "S":
       case "I":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.INT)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0, Slot.INT)});
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.FLOAT)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0, Slot.FLOAT)});
       case "D":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
+        return new KField(source.accessFlags, source.name, source.descriptor,
+            new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
       case "J":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
+        return new KField(source.accessFlags, source.name, source.descriptor,
+            new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[] {new Slot(null)});
+        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(null)});
     }
   }
 
@@ -201,14 +213,14 @@ public class KClass {
   @Override
   public String toString() {
     return "KClass{" +
-      "name='" + name + '\'' +
-      ", superClassName='" + superClassName + '\'' +
-      ", methods=" + methods.size() +
-      ", fields=" + fields.size() +
-      ", classLoader=" + classLoader.getClass().getName() +
-      ", superClass=" + (superClass == null ? "null" : superClass.name) +
-      ", staticInit=" + staticInit +
-      '}';
+        "name='" + name + '\'' +
+        ", superClassName='" + superClassName + '\'' +
+        ", methods=" + methods.size() +
+        ", fields=" + fields.size() +
+        ", classLoader=" + classLoader.getClass().getName() +
+        ", superClass=" + (superClass == null ? "null" : superClass.name) +
+        ", staticInit=" + staticInit +
+        '}';
   }
 
   public void interfaceInit(Frame frame) {
@@ -254,11 +266,15 @@ public class KClass {
     return false;
   }
 
-  public Object getRuntimeClass() {
+  public boolean isInterface() {
+    return (accessFlags & 0x0200) != 0;
+  }
+
+  public KObject getRuntimeClass() {
     return runtimeClass;
   }
 
-  public void setRuntimeClass(Object runtimeClass) {
+  public void setRuntimeClass(KObject runtimeClass) {
     this.runtimeClass = runtimeClass;
   }
 }

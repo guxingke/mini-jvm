@@ -36,6 +36,10 @@ public class Thread {
     return this.stack.peek();
   }
 
+  public Frame callerFrame() {
+    return this.stack.get(this.stack.size() - 2);
+  }
+
   public boolean empty() {
     return this.stack.empty();
   }

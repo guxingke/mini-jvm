@@ -48,7 +48,7 @@ public class LdcInst implements Instruction {
         }
         KObject object = klass.newObject();
         KField field = object.getField("value", "[C");
-        KClass arrClazz = new KClass("[C", frame.method.clazz.classLoader, null);
+        KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
 
         char[] chars = val.toString().toCharArray();
         Character[] characters = new Character[chars.length];

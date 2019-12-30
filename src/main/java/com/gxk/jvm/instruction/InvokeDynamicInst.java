@@ -103,7 +103,7 @@ public class InvokeDynamicInst implements Instruction {
       });
     }
 
-    KClass lcClazz = new KClass(lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
+    KClass lcClazz = new KClass(1, lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
 
     int realSize = method.getArgs().size();
     int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();

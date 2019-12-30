@@ -37,7 +37,7 @@ public class Interpreter {
       obj.setField("value", "[C", new Slot[] {new Slot(args[i])});
       kargs[i] = obj;
     }
-    KClass arrClazz = new KClass("[java/lang/String", method.clazz.classLoader, null);
+    KClass arrClazz = new KClass(1, "[java/lang/String", method.clazz.classLoader, null);
     KArray array = new KArray(arrClazz, args);
     frame.setRef(0, array);
 

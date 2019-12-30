@@ -36,7 +36,7 @@ public class ClassLoader {
     if (cache != null) {
       return;
     }
-    KClass cls = new KClass(clazz, this);
+    KClass cls = new KClass(1, clazz, this);
     KObject metaCls = Heap.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
@@ -127,7 +127,7 @@ public class ClassLoader {
 
     BootstrapMethods bootstrapMethods = classFile.getBootstrapMethods();
 
-    return new KClass(name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this, classFile);
+    return new KClass(classFile.accessFlags, name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this, classFile);
   }
 
   public KMethod map(Method cfMethod) {

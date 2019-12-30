@@ -6,6 +6,7 @@ import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.nativebridge.java.io.PrintStreamBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassBridge;
+import com.gxk.jvm.nativebridge.java.lang.ClassLoaderBridge;
 import com.gxk.jvm.nativebridge.java.lang.DoubleBridge;
 import com.gxk.jvm.nativebridge.java.lang.ExceptionBridge;
 import com.gxk.jvm.nativebridge.java.lang.FloatBridge;
@@ -15,6 +16,7 @@ import com.gxk.jvm.nativebridge.java.lang.ObjectBridge;
 import com.gxk.jvm.nativebridge.java.lang.StringBridge;
 import com.gxk.jvm.nativebridge.java.lang.SystemBridge;
 import com.gxk.jvm.nativebridge.java.lang.ThrowableBridge;
+import com.gxk.jvm.nativebridge.java.sum.misc.ReflectionBridge;
 import com.gxk.jvm.nativebridge.java.util.RandomBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
@@ -88,6 +90,8 @@ public class VirtualMachine {
     ExceptionBridge.registerNatives0();
     ThrowableBridge.registerNatives0();
     AtomicLongBridge.registerNatives0();
+    ReflectionBridge.registerNatives0();
+    ClassLoaderBridge.registerNatives0();
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {
