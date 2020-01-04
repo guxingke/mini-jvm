@@ -106,7 +106,8 @@ mini-jvm -- sum10.bc
 - Hello World 级别可用
 
 ## 个人记录
-- [如何构建你自己的 JVM (1) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-2.html)
+- [如何构建你自己的 JVM (2) Hello World](https://www.guxingke.com/posts/how-to-build-your-own-jvm-3.html)
+- [如何构建你自己的 JVM (1) 解释器](https://www.guxingke.com/posts/how-to-build-your-own-jvm-2.html)
 - [如何构建你自己的 JVM (0) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-1.html)
 - [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/posts/mini-jvm-intro.html)
 
