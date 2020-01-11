@@ -70,6 +70,13 @@ public class Interpreter {
         superClazz = clazz.getUnStaticInitSuperClass();
       }
     }
+    // load system
+    KClass system = Heap.findClass("java/lang/System");
+    if (system != null) {
+      KMethod method = system.getMethod("initializeSystemClass", "()V");
+      Frame newFrame = new Frame(method, frame.thread);
+      frame.thread.pushFrame(newFrame);
+    }
 
     loop(thread);
   }

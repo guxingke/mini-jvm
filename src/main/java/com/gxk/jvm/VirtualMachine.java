@@ -5,6 +5,7 @@ import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.nativebridge.java.io.FileDescriptorBridge;
+import com.gxk.jvm.nativebridge.java.io.FileInputStreamBridge;
 import com.gxk.jvm.nativebridge.java.io.FileOutputStreamBridge;
 import com.gxk.jvm.nativebridge.java.io.PrintStreamBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassBridge;
@@ -19,9 +20,13 @@ import com.gxk.jvm.nativebridge.java.lang.StringBridge;
 import com.gxk.jvm.nativebridge.java.lang.SystemBridge;
 import com.gxk.jvm.nativebridge.java.lang.ThrowableBridge;
 import com.gxk.jvm.nativebridge.java.sum.misc.ReflectionBridge;
+import com.gxk.jvm.nativebridge.java.util.PropertiesBridge;
 import com.gxk.jvm.nativebridge.java.util.RandomBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
+import com.gxk.jvm.nativebridge.java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
+import com.gxk.jvm.nativebridge.sun.misc.VersionBridge;
+import com.gxk.jvm.nativebridge.sun.misc.VmBridge;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -84,6 +89,7 @@ public class VirtualMachine {
     PrintStreamBridge.registerNatives0();
     FileOutputStreamBridge.registerNatives0();
     FileDescriptorBridge.registerNative0();
+    FileInputStreamBridge.registerNatives0();
     MathBridge.registerNatives0();
     UnsafeBridge.registerNatives0();
     IntegerBridge.registerNatives0();
@@ -96,6 +102,10 @@ public class VirtualMachine {
     AtomicLongBridge.registerNatives0();
     ReflectionBridge.registerNatives0();
     ClassLoaderBridge.registerNatives0();
+    PropertiesBridge.registerNative0();
+    VmBridge.registerNative0();
+    VersionBridge.registerNative0();
+    AtomicReferenceFieldUpdater.registerNative0();
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {
@@ -131,5 +141,8 @@ public class VirtualMachine {
     classLoader.loadClass("java/lang/Long");
     classLoader.loadClass("java/lang/Float");
     classLoader.loadClass("java/lang/Double");
+
+    // system
+    classLoader.loadClass("java/lang/System");
   }
 }

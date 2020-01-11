@@ -61,6 +61,11 @@ public class LdcInst implements Instruction {
         break;
       case "L":
         KClass klass2 = Heap.findClass(val.toString());
+
+        if (klass2 == null && val.toString().startsWith("[")) {
+          klass2 = new KClass(1, val.toString(), frame.method.clazz.classLoader, null);
+        }
+
         if (klass2 == null) {
           klass2 = frame.method.clazz.classLoader.loadClass(val.toString());
         }

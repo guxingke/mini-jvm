@@ -1,7 +1,10 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
+import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.KObject;
 
 public abstract class SystemBridge {
 
@@ -10,10 +13,19 @@ public abstract class SystemBridge {
     });
 
     Heap.registerMethod("java/lang/System_setIn0_(Ljava/io/InputStream;)V", (frame) -> {
+      KObject st = (KObject) frame.popRef();
+      KClass cls = Heap.findClass("java/lang/System");
+      cls.getField("in", "Ljava/io/InputStream;").val = new Slot[]{new Slot(st)};
     });
     Heap.registerMethod("java/lang/System_setOut0_(Ljava/io/PrintStream;)V", (frame) -> {
+      KObject st = (KObject) frame.popRef();
+      KClass cls = Heap.findClass("java/lang/System");
+      cls.getField("out", "Ljava/io/PrintStream;").val = new Slot[]{new Slot(st)};
     });
     Heap.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (frame) -> {
+      KObject st = (KObject) frame.popRef();
+      KClass cls = Heap.findClass("java/lang/System");
+      cls.getField("err", "Ljava/io/PrintStream;").val = new Slot[]{new Slot(st)};
     });
     Heap.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
     Heap.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.pushLong(java.lang.System.nanoTime()));
