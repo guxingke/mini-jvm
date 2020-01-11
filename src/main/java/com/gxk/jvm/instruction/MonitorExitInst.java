@@ -6,6 +6,8 @@ public class MonitorExitInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    throw new UnsupportedOperationException();
+    // TODO ...
+    frame.popRef();
+//    throw new UnsupportedOperationException();
   }
 }

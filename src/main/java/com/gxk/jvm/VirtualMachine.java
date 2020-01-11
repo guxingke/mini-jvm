@@ -4,6 +4,8 @@ import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
+import com.gxk.jvm.nativebridge.java.io.FileDescriptorBridge;
+import com.gxk.jvm.nativebridge.java.io.FileOutputStreamBridge;
 import com.gxk.jvm.nativebridge.java.io.PrintStreamBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassLoaderBridge;
@@ -80,6 +82,8 @@ public class VirtualMachine {
     ClassBridge.registerNatives0();
     SystemBridge.registerNatives0();
     PrintStreamBridge.registerNatives0();
+    FileOutputStreamBridge.registerNatives0();
+    FileDescriptorBridge.registerNative0();
     MathBridge.registerNatives0();
     UnsafeBridge.registerNatives0();
     IntegerBridge.registerNatives0();

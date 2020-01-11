@@ -7,7 +7,7 @@ public class BAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popInt();
+    byte val = frame.popInt().byteValue();
     Integer index = frame.popInt();
     KArray array = (KArray) frame.popRef();
     array.items[index] = val;
