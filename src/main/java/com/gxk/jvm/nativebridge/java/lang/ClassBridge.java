@@ -204,6 +204,17 @@ public abstract class ClassBridge {
       KObject obj = cls.newObject();
       frame.pushRef(obj);
     });
+
+    Heap.registerMethod("java/lang/Class_getDeclaredField_(Ljava/lang/String;)Ljava/lang/reflect/Field;", frame -> {
+      frame.popRef();
+      frame.popRef();
+      frame.pushRef(null);
+    });
+
+    Heap.registerMethod("java/lang/ThreadLocal_<init>_()V", frame -> {
+      frame.popRef();
+      System.out.println();
+    });
   }
 }
 

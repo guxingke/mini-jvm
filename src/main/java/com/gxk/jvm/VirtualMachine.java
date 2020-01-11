@@ -19,14 +19,17 @@ import com.gxk.jvm.nativebridge.java.lang.ObjectBridge;
 import com.gxk.jvm.nativebridge.java.lang.StringBridge;
 import com.gxk.jvm.nativebridge.java.lang.SystemBridge;
 import com.gxk.jvm.nativebridge.java.lang.ThrowableBridge;
-import com.gxk.jvm.nativebridge.java.sum.misc.ReflectionBridge;
+import com.gxk.jvm.nativebridge.java.security.AccessControllerBridge;
+import com.gxk.jvm.nativebridge.sun.misc.ReflectionBridge;
 import com.gxk.jvm.nativebridge.java.util.PropertiesBridge;
 import com.gxk.jvm.nativebridge.java.util.RandomBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+import com.gxk.jvm.nativebridge.sun.misc.MiscBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.nativebridge.sun.misc.VersionBridge;
 import com.gxk.jvm.nativebridge.sun.misc.VmBridge;
+import com.gxk.jvm.nativebridge.sun.misc.cs.CharsetBridge;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -106,6 +109,9 @@ public class VirtualMachine {
     VmBridge.registerNative0();
     VersionBridge.registerNative0();
     AtomicReferenceFieldUpdater.registerNative0();
+    MiscBridge.registerNative0();
+    AccessControllerBridge.registerNatives0();
+    CharsetBridge.registerNatives0();
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {

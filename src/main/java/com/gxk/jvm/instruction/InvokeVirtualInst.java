@@ -44,6 +44,29 @@ public class InvokeVirtualInst implements Instruction {
       }
     }
 
+    if (Objects.equals("sun/misc/Unsafe", clazz)) {
+      NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+      if (nativeMethod != null) {
+        nativeMethod.invoke(frame);
+        return;
+      }
+    }
+
+    if (Objects.equals("java/nio/charset/Charset", clazz)) {
+      NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+      if (nativeMethod != null) {
+        nativeMethod.invoke(frame);
+        return;
+      }
+    }
+    if (Objects.equals("java/nio/charset/CharsetEncoder", clazz)) {
+      NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+      if (nativeMethod != null) {
+        nativeMethod.invoke(frame);
+        return;
+      }
+    }
+
     KClass clazz = Heap.findClass(this.clazz);
     KMethod method = clazz.getMethod(methodName, methodDescriptor);
 
