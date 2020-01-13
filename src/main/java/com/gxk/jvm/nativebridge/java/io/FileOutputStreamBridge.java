@@ -56,9 +56,9 @@ public abstract class FileOutputStreamBridge {
       Integer off= frame.popInt();
       KArray arg1 = (KArray) frame.popRef();
 
-      byte[] bytes = new byte[arg1.items.length];
-      for (int i = 0; i < arg1.items.length; i++) {
-        bytes[i] = (byte) arg1.items[i];
+      byte[] bytes = new byte[len];
+      for (int i = off; i < len; i++) {
+        bytes[i - off] = (byte) arg1.items[i];
       }
 
       KObject thisObj = (KObject) frame.popRef();
