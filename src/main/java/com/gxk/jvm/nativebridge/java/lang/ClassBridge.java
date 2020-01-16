@@ -5,6 +5,7 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
@@ -203,6 +204,14 @@ public abstract class ClassBridge {
       KClass cls = ((KObject) frame.popRef()).getMetaClass();
       KObject obj = cls.newObject();
       frame.pushRef(obj);
+    });
+
+    Heap.registerMethod("java/lang/Class_getDeclaredField_(Ljava/lang/String;)Ljava/lang/reflect/Field;", frame -> {
+      KObject nameObj = (KObject) frame.popRef();
+      KObject thisObj = (KObject) frame.popRef();
+      String name = Utils.obj2Str(nameObj);
+      KField field = thisObj.getMetaClass().getField(name);
+      frame.pushRef(new Slot[]{new Slot(null)});
     });
   }
 }

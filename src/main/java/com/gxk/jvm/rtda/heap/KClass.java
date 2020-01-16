@@ -139,6 +139,15 @@ public class KClass {
     return null;
   }
 
+  public KField getField(String fieldName) {
+    for (KField field : fields) {
+      if (Objects.equals(field.name, fieldName)) {
+        return field;
+      }
+    }
+    return null;
+  }
+
   public void setSuperClass(KClass superClass) {
     this.superClass = superClass;
   }
