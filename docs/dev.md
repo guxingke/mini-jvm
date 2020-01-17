@@ -19,7 +19,7 @@ mvn clean package
 
 ## 简单测试
 ```bash
-./bin/java -cp example Hello
+./bin/java -cp example/target/example.jar Hello
 ```
 输出 hello 即为正常
 
