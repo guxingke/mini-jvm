@@ -5,7 +5,7 @@
 
   <groupId>com.gxk.jvm</groupId>
   <artifactId>mini-jvm-parent</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>200117.1757</version>
   <packaging>pom</packaging>
 
   <properties>

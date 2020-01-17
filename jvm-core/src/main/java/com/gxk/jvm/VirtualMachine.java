@@ -56,10 +56,13 @@ public class VirtualMachine {
       EnvHolder.verboseDebug = true;
     }
 
+    // mini-jdk path
     Path jarPath = Paths.get(home, "jre", "lib");
-    String classpath = cmd.classpath + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*";
-    Entry entry = Classpath.parse(classpath);
+    String classpath = cmd.classpath + EnvHolder.PATH_SEPARATOR
+        + miniRtPath().toFile().getAbsolutePath() + EnvHolder.PATH_SEPARATOR
+        + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*";
 
+    Entry entry = Classpath.parse(classpath);
     ClassLoader classLoader = new ClassLoader("boot", entry);
     initVm(classLoader);
 
@@ -137,5 +140,31 @@ public class VirtualMachine {
     classLoader.loadClass("java/lang/Long");
     classLoader.loadClass("java/lang/Float");
     classLoader.loadClass("java/lang/Double");
+  }
+
+  private Path miniRtPath() {
+    // check MINI_JVM_HOME ready
+    // 1. env
+    String miniJvmHome = System.getenv("MINI_JVM_HOME");
+    if (miniJvmHome == null) {
+      // 1.2 check current dir
+      String userDir = System.getProperty("user.dir");
+      if (userDir.endsWith("jvm-core")) {
+        int idx = userDir.lastIndexOf(EnvHolder.FILE_SEPARATOR);
+        miniJvmHome = userDir.substring(0, idx);
+      } else if (userDir.endsWith("mini-jvm")) {
+        miniJvmHome = userDir;
+      }
+    }
+    if (miniJvmHome == null) {
+      throw new IllegalStateException("MINI_JVM_HOME not found");
+    }
+
+    Path rtJarPath = Paths.get(miniJvmHome, "mini-jdk", "target", "rt.jar");
+    if (!rtJarPath.toFile().exists()) {
+      throw new IllegalStateException("rt.jar not found");
+    }
+
+    return rtJarPath;
   }
 }

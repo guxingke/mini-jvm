@@ -8,5 +8,6 @@ public class PrintStreamTest {
   public static void main(String[] args) {
     PrintStream err = new PrintStream(new BufferedOutputStream(new FileOutputStream(FileDescriptor.err)), true);
     err.println(1);
+    err.println("xxxxxxxx");
   }
 }
