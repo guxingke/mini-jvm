@@ -2,7 +2,6 @@ package com.gxk.jvm.interpret;
 
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
@@ -12,6 +11,7 @@ import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.DebugContextHolder;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
+import com.gxk.jvm.util.Utils;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -31,20 +31,21 @@ public class Interpreter {
     }
 
     KObject[] kargs = new KObject[args.length];
-    KClass strClazz = Heap.findClass("java/lang/String");
-    for (int i = 0; i < kargs.length; i++) {
-      KObject obj = new KObject(strClazz.fields, strClazz);
-      obj.setField("value", "[C", new Slot[] {new Slot(args[i])});
-      kargs[i] = obj;
+    for (int i = 0; i < args.length; i++) {
+      kargs[i] = Utils.str2Obj(args[i], frame.method.clazz.classLoader);
     }
-    KClass arrClazz = new KClass(1, "[java/lang/String", method.clazz.classLoader, null);
-    KArray array = new KArray(arrClazz, args);
+    KClass arrClazz = Heap.findClass("[java/lang/String;");
+    if (arrClazz == null) {
+      arrClazz = new KClass(1, "[java/lang/String;", method.clazz.classLoader, null);
+      Heap.registerClass(arrClazz.name, arrClazz);
+    }
+    KArray array = new KArray(arrClazz, kargs);
     frame.setRef(0, array);
 
     doInterpret(thread, frame);
   }
 
-  private void doInterpret(Thread thread, Frame frame) {
+  public void doInterpret(Thread thread, Frame frame) {
     thread.pushFrame(frame);
 
     KClass clazz = frame.method.clazz;

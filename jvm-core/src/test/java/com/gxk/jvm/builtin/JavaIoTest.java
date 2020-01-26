@@ -24,4 +24,9 @@ public class JavaIoTest extends BaseInterpreterTest {
   public void test_ps() {
     testMain("PrintStreamTest");
   }
+
+  @Test
+  public void test_out_err() {
+    testMain("SystemOutTest");
+  }
 }

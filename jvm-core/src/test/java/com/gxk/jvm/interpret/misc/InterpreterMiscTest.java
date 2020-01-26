@@ -3,6 +3,7 @@ package com.gxk.jvm.interpret.misc;
 import com.gxk.jvm.interpret.BaseInterpreterTest;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.Test;
 
 public class InterpreterMiscTest extends BaseInterpreterTest {

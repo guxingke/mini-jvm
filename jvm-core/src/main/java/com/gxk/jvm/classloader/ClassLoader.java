@@ -31,12 +31,25 @@ public class ClassLoader {
     this.entry = entry;
   }
 
-  public void loadPrimitiveClass(String clazz) {
+  public void loadPrimitiveClass(String name) {
     KClass cache = Heap.findClass(name);
     if (cache != null) {
       return;
     }
-    KClass cls = new KClass(1, clazz, this);
+    KClass cls = new KClass(1, name, this);
+    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    cls.setRuntimeClass(metaCls);
+    metaCls.setMetaClass(cls);
+
+    doRegister(cls);
+  }
+
+  public void loadPrimitiveArrayClass(String name) {
+    KClass cache = Heap.findClass(name);
+    if (cache != null) {
+      return;
+    }
+    KClass cls = new KClass(1, name, this);
     KObject metaCls = Heap.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
