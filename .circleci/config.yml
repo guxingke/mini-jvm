@@ -16,20 +16,20 @@ jobs:
 
       - checkout
 
-      - restore_cache:
-          key: mini-jvm-{{ checksum "pom.xml" }}
+        #      - restore_cache:
+        #  key: mini-jvm-{{ checksum "pom.xml" }}
 
-      - run: mvn dependency:go-offline
+        #- run: mvn dependency
 
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: mini-jvm-{{ checksum "pom.xml" }}
+        #- save_cache:
+        #  paths:
+            #    - ~/.m2
+            #  key: mini-jvm-{{ checksum "pom.xml" }}
 
       - run: mvn package
 
       - store_test_results:
           path: target/surefire-reports
 
-      - store_artifacts:
-          path: target/mini-jvm.jar
+          #- store_artifacts:
+          #path: target/mini-jvm.jar
