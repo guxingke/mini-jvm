@@ -18,8 +18,11 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
+
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -129,7 +132,7 @@ public abstract class Utils {
           i++;
         }
         if (base.contains(descriptor.charAt(i))) {
-          rets.add(descriptor.substring(temp, i+1));
+          rets.add(descriptor.substring(temp, i + 1));
           continue;
         }
         int idx = descriptor.indexOf(';', i);
@@ -251,7 +254,45 @@ public abstract class Utils {
       characters[i] = chars[i];
     }
     KArray arr = new KArray(arrClazz, characters);
-    field.val = new Slot[]{new Slot(arr)};
+    field.val = new Slot[] {new Slot(arr)};
     return object;
+  }
+
+  public static String classpath(String classpath) {
+    String home = java.lang.System.getenv("JAVA_HOME");
+    if (home == null) {
+      throw new IllegalStateException("must set env JAVA_HOME");
+    }
+
+    Path jarPath = Paths.get(home, "jre", "lib");
+
+    // check MINI_JVM_HOME ready
+    // 1. env
+    String miniJvmHome = System.getenv("MINI_JVM_HOME");
+    if (miniJvmHome == null) {
+      // 1.2 check current dir
+      String userDir = System.getProperty("user.dir");
+      if (userDir.endsWith("jvm-core")) {
+        int idx = userDir.lastIndexOf(EnvHolder.FILE_SEPARATOR);
+        miniJvmHome = userDir.substring(0, idx);
+      } else if (userDir.endsWith("mini-jvm")) {
+        miniJvmHome = userDir;
+      }
+    }
+    if (miniJvmHome == null) {
+      throw new IllegalStateException("MINI_JVM_HOME not found");
+    }
+
+    Path rtJarPath = Paths.get(miniJvmHome, "mini-jdk", "target", "rt.jar");
+    if (!rtJarPath.toFile().exists()) {
+      throw new IllegalStateException("rt.jar not found");
+    }
+
+    String cp = classpath + EnvHolder.PATH_SEPARATOR
+      + rtJarPath.toFile().getAbsolutePath() + EnvHolder.PATH_SEPARATOR
+      + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*" + EnvHolder.PATH_SEPARATOR
+      + classpath;
+
+    return cp;
   }
 }

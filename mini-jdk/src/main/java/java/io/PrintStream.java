@@ -41,7 +41,7 @@ public class PrintStream extends FilterOutputStream {
 
   public void write(byte buf[], int off, int len) {
     try {
-      out.write(buf,off,len);
+      out.write(buf, off, len);
     } catch (IOException e) {
       e.printStackTrace();
     }

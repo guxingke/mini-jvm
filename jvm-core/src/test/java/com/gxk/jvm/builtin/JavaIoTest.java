@@ -19,4 +19,9 @@ public class JavaIoTest extends BaseInterpreterTest {
   public void test_err() {
     testMain("FdTest3");
   }
+
+  @Test
+  public void test_ps() {
+    testMain("PrintStreamTest");
+  }
 }

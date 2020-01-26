@@ -10,6 +10,8 @@ import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.util.EnvHolder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import com.gxk.jvm.util.Utils;
 import org.junit.After;
 
 public abstract class BaseInterpreterTest {
@@ -53,9 +55,8 @@ public abstract class BaseInterpreterTest {
       throw new IllegalStateException("example.jar not found");
     }
 
-    String home = System.getenv("JAVA_HOME");
-    Path jarPath = Paths.get(home, "jre", "lib", "rt.jar");
-    Entry entry = Classpath.parse(exampleJarPath.toFile().getAbsolutePath() + EnvHolder.PATH_SEPARATOR + jarPath.toFile().getAbsolutePath());
+    String classpath = Utils.classpath(exampleJarPath.toFile().getAbsolutePath());
+    Entry entry = Classpath.parse(classpath);
     ClassLoader loader = new ClassLoader("boot", entry);
     VirtualMachine.initVm(loader);
     KClass clazz = loader.loadClass(clazzName);
