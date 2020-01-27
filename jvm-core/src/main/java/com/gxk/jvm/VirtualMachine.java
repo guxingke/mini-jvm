@@ -6,6 +6,7 @@ import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.nativebridge.java.io.FileDescriptorBridge;
 import com.gxk.jvm.nativebridge.java.io.FileOutputStreamBridge;
+import com.gxk.jvm.nativebridge.java.io.UnixFileSystemBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassLoaderBridge;
 import com.gxk.jvm.nativebridge.java.lang.DoubleBridge;
@@ -167,6 +168,7 @@ public class VirtualMachine {
     AccessControllerBridge.registerNative0();
     PropertiesBridge.registerNative0();
     CharsetBridge.registerNative0();
+    UnixFileSystemBridge.registerNatives0();
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {

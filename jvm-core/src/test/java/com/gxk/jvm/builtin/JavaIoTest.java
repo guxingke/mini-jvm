@@ -1,6 +1,7 @@
 package com.gxk.jvm.builtin;
 
 import com.gxk.jvm.interpret.BaseInterpreterTest;
+import com.gxk.jvm.util.EnvHolder;
 import org.junit.Test;
 
 public class JavaIoTest extends BaseInterpreterTest {
@@ -28,5 +29,10 @@ public class JavaIoTest extends BaseInterpreterTest {
   @Test
   public void test_out_err() {
     testMain("SystemOutTest");
+  }
+
+  @Test
+  public void test_file_exists() {
+    testMain("FileTest");
   }
 }
