@@ -44,4 +44,11 @@ public class JavaIoTest extends BaseInterpreterTest {
   @Test
   public void test_data_input_stream() {
     testMain("FileTest3");
-  }}
+  }
+
+  @Test
+  public void test_class_file() {
+    testMain("FileTest4");
+  }
+
+}

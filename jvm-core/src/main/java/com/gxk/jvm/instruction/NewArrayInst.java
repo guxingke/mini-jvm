@@ -40,6 +40,11 @@ public class NewArrayInst implements Instruction {
   }
 
   @Override
+  public int offset() {
+    return 2;
+  }
+
+  @Override
   public void execute(Frame frame) {
     Integer count = frame.popInt();
     if (this.clazz == null) {
