@@ -18,6 +18,10 @@ public abstract class PropertiesBridge {
       frame.popRef();
 
       String val = System.getProperty(Utils.obj2Str(nameObj));
+      if (val == null) {
+        frame.pushRef(null);
+        return;
+      }
       frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
     });
   }
