@@ -6,8 +6,9 @@ public class IAndInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer a1 = frame.popInt();
-    Integer a2 = frame.popInt();
-    frame.pushInt(a2 & a1);
+    Integer v2 = frame.popInt();
+    Integer v1 = frame.popInt();
+    int val = v1 & v2;
+    frame.pushInt(val);
   }
 }

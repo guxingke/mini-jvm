@@ -1,7 +1,10 @@
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 public class FileTest4 {
 
@@ -72,7 +75,7 @@ public class FileTest4 {
           bytes[j] = dis.readByte();
         }
 
-        String umsg = "[CP " + tag + "] [UTF8] [" + ulen + "] [length] [ " + "todo" + " ] [bytes]";
+        String umsg = "[CP " + tag + "] [UTF8] [" + ulen + "] [length] [ " + getString2(bytes) + " ] [bytes]";
         System.out.println(umsg);
 
         continue;
@@ -113,5 +116,49 @@ public class FileTest4 {
 
     dis.close();
     fis.close();
+  }
+
+  public static final String getString(byte[] bytes) {
+    ByteBuffer buf = ByteBuffer.wrap(bytes);
+    StringBuilder sb = new StringBuilder();
+    while (buf.hasRemaining()) {
+      byte b = buf.get();
+      if (b > 0) {
+        sb.append((char) b);
+      } else {
+        int b2 = buf.get();
+        if ((b & 0xf0) != 0xe0) {
+          sb.append((char) ((b & 0x1F) << 6 | b2 & 0x3F));
+        } else {
+          int b3 = buf.get();
+          sb.append((char) ((b & 0x0F) << 12 | (b2 & 0x3F) << 6 | b3 & 0x3F));
+        }
+      }
+    }
+    return sb.toString();
+  }
+
+  public static final String getString2(byte[] bytes) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < bytes.length; i++) {
+      byte b = bytes[i];
+      if (b > 0) {
+        sb.append((char) b);
+      } else {
+        int b2 = bytes[++i];
+        if ((b & 0xF0) != 0xE0) {
+          sb.append((char) ((b & 0x1F) << 6 | b2 & 0x3F));
+        } else {
+          int b3 = bytes[++i];
+          sb.append((char) ((b & 0x0F) << 12 | (b2 & 0x3F) << 6 | b3 & 0x3F));
+        }
+      }
+    }
+    if (bytes[0] < 0) {
+      System.out.println(bytes[0]);
+      System.out.println(bytes[1]);
+      System.out.println(bytes[2]);
+    }
+    return sb.toString();
   }
 }

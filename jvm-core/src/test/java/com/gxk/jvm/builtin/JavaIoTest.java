@@ -51,4 +51,13 @@ public class JavaIoTest extends BaseInterpreterTest {
     testMain("FileTest4");
   }
 
+  @Test
+  public void test_utf8() {
+    testMain("FileTest5");
+  }
+
+  @Test
+  public void test_bit() {
+    testMain("BitOpTest");
+  }
 }

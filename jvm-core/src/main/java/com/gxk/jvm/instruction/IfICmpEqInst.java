@@ -18,7 +18,7 @@ public class IfICmpEqInst implements Instruction {
   public void execute(Frame frame) {
     Integer val2= frame.popInt();
     Integer val1= frame.popInt();
-    if (val1 == val2) {
+    if (val1.equals(val2)) {
       frame.nextPc = frame.thread.getPc() + offset;
     }
   }
