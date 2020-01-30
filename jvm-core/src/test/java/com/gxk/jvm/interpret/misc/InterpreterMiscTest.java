@@ -49,4 +49,9 @@ public class InterpreterMiscTest extends BaseInterpreterTest {
   public void test_switch_0() {
     testMain("SwitchTest0");
   }
+
+  @Test
+  public void test_switch_1() {
+    testMain("SwitchTest1");
+  }
 }

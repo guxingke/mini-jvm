@@ -429,15 +429,23 @@ public abstract class InstructionReader {
 
         return new TableSwitchInst(offset, tsDefault, tsLow, tsHigh, map);
       case 0xab:
-        int lsOffset = 16;
+        int lsOffset = 1;
         int lsPadding = stream.readPadding();
         lsOffset += lsPadding;
+
         int lsDef = stream.readInt();
+        lsOffset += 4;
         int lsPairsCnt = stream.readInt();
+        lsOffset += 4;
+
         int lsPairsLen = lsPairsCnt * 2 * 4;
-        byte[] lsBytes = Utils.readNBytes(stream, lsPairsLen);
-        lsOffset += lsBytes.length;
-        return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsBytes);
+        Map<Integer, Integer> lsMap= new LinkedHashMap<>();
+        for (int i = 0; i < lsPairsCnt; i++) {
+          lsMap.put(stream.readInt(), stream.readInt());
+        }
+
+        lsOffset += lsPairsLen;
+        return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsMap);
       case 0xac:
         return new IReturnInst();
       case 0xad:
