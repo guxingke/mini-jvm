@@ -1,6 +1,8 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
@@ -24,7 +26,6 @@ public abstract class UnixFileSystemBridge {
       int val = exists ? 1 : 0;
       frame.pushInt(val);
     });
-
     Heap.registerMethod("java/io/UnixFileSystem_canonicalize0_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
       throw new UnsupportedOperationException();
     });
@@ -47,7 +48,28 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/io/UnixFileSystem_list_(Ljava/io/File;)[Ljava/lang/String;", frame -> {
-      throw new UnsupportedOperationException();
+      KObject file = (KObject) frame.popRef();
+      frame.popRef();
+      KField path = file.getField("path", "Ljava/lang/String;");
+      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      String[] list = new File(pathStr).list();
+
+      KObject[] items = new KObject[list.length];
+      for (int i = 0; i < list.length; i++) {
+        items[i] = Utils.str2Obj(list[i], frame.method.clazz.classLoader);
+      }
+
+      String name = "[Ljava/lang/String;";
+      KClass clazz = Heap.findClass(name);
+      if (clazz == null) {
+        clazz = new KClass(1, name, frame.method.clazz.classLoader, null);
+        clazz.setSuperClass(Heap.findClass("java/lang/Object"));
+        clazz.setStaticInit(2);
+        Heap.registerClass(name, clazz);
+      }
+
+      KArray arr = new KArray(clazz, items);
+      frame.pushRef(arr);
     });
     Heap.registerMethod("java/io/UnixFileSystem_createDirectory_(Ljava/io/File;)Z", frame -> {
       throw new UnsupportedOperationException();
@@ -63,6 +85,11 @@ public abstract class UnixFileSystemBridge {
     });
     Heap.registerMethod("java/io/UnixFileSystem_getSpace_(Ljava/io/File;I)J", frame -> {
       throw new UnsupportedOperationException();
+    });
+    // hack
+    Heap.registerMethod("java/io/UnixFileSystem_normalize_(Ljava/lang/String;II)Ljava/lang/String;", frame -> {
+      frame.popInt();
+      frame.popInt();
     });
   }
 }

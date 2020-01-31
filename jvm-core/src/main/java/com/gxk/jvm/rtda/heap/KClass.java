@@ -286,4 +286,12 @@ public class KClass {
   public void setRuntimeClass(KObject runtimeClass) {
     this.runtimeClass = runtimeClass;
   }
+
+  public boolean isPrimitive() {
+    if (name.equalsIgnoreCase("java/lang/Character")) {
+      return true;
+    }
+    System.out.println("is primitive ? " + name);
+    return false;
+  }
 }

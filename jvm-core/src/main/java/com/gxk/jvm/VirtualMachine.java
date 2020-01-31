@@ -193,6 +193,7 @@ public class VirtualMachine {
     classLoader.loadPrimitiveClass("long");
     classLoader.loadPrimitiveClass("float");
     classLoader.loadPrimitiveClass("double");
+    classLoader.loadPrimitiveClass("void");
 
     // string
     classLoader.loadClass("java/lang/String");
@@ -206,6 +207,7 @@ public class VirtualMachine {
     classLoader.loadClass("java/lang/Long");
     classLoader.loadClass("java/lang/Float");
     classLoader.loadClass("java/lang/Double");
+    classLoader.loadClass("java/lang/Void");
 
     // primitvie Arry class
     classLoader.loadPrimitiveArrayClass("[B");
