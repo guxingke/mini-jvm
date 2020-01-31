@@ -2,6 +2,8 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.util.Utils;
 
 public abstract class SystemBridge {
 
@@ -32,6 +34,18 @@ public abstract class SystemBridge {
     Heap.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {
     });
     Heap.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {
+    });
+
+    // hack
+    Heap.registerMethod("java/lang/System_getenv_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
+      KObject nameObj = (KObject) frame.popRef();
+
+      String val = System.getenv(Utils.obj2Str(nameObj));
+      if (val == null) {
+        frame.pushRef(null);
+        return;
+      }
+      frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
     });
   }
 }
