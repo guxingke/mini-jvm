@@ -44,4 +44,14 @@ public class InterpreterMiscTest extends BaseInterpreterTest {
     KMethod method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[0]);
   }
+
+  @Test
+  public void test_switch_0() {
+    testMain("SwitchTest0");
+  }
+
+  @Test
+  public void test_switch_1() {
+    testMain("SwitchTest1");
+  }
 }

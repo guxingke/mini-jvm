@@ -2,17 +2,19 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 
+import java.util.Map;
+
 public class LookupSwitchInst implements Instruction {
   public final int offset;
   public final int def;
   public final int pairsCnt;
-  public final byte[] bytes;
+  public final Map<Integer, Integer> table;
 
-  public LookupSwitchInst(int offset, int def, int pairsCnt, byte[] bytes) {
+  public LookupSwitchInst(int offset, int def, int pairsCnt, Map<Integer, Integer> table) {
     this.offset = offset;
     this.def = def;
     this.pairsCnt = pairsCnt;
-    this.bytes = bytes;
+    this.table = table;
   }
 
   @Override
@@ -22,6 +24,8 @@ public class LookupSwitchInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    throw new UnsupportedOperationException("xxxxxxxxxxxxxx");
+    Integer tmp = frame.popInt();
+    Integer jump = table.getOrDefault(tmp, def);
+    frame.nextPc = frame.thread.getPc() + jump;
   }
 }

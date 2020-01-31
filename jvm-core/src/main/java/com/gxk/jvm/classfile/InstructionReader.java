@@ -11,6 +11,8 @@ import com.gxk.jvm.instruction.*;
 import com.gxk.jvm.util.Utils;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class InstructionReader {
 
@@ -408,7 +410,7 @@ public abstract class InstructionReader {
         // ret, 1.6 以前使用, 忽略
         throw new UnsupportedOperationException("ret");
       case 0xaa:
-        int offset = 24;
+        int offset = 1;
 
         int padding = stream.readPadding();
         offset += padding;
@@ -416,22 +418,34 @@ public abstract class InstructionReader {
         int tsDefault = stream.readInt();
         int tsLow = stream.readInt();
         int tsHigh = stream.readInt();
+        offset += 12;
+
         int tsOffsetByteLength = (tsHigh - tsLow + 1) * 4;
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+        for (int i = tsLow; i <= tsHigh; i++) {
+          map.put(i, stream.readInt());
+        }
+        offset += tsOffsetByteLength;
 
-        byte[] tsBytes = Utils.readNBytes(stream, tsOffsetByteLength);
-        offset += tsBytes.length;
-
-        return new TableSwitchInst(offset, tsDefault, tsLow, tsHigh, tsBytes);
+        return new TableSwitchInst(offset, tsDefault, tsLow, tsHigh, map);
       case 0xab:
-        int lsOffset = 16;
+        int lsOffset = 1;
         int lsPadding = stream.readPadding();
         lsOffset += lsPadding;
+
         int lsDef = stream.readInt();
+        lsOffset += 4;
         int lsPairsCnt = stream.readInt();
+        lsOffset += 4;
+
         int lsPairsLen = lsPairsCnt * 2 * 4;
-        byte[] lsBytes = Utils.readNBytes(stream, lsPairsLen);
-        lsOffset += lsBytes.length;
-        return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsBytes);
+        Map<Integer, Integer> lsMap= new LinkedHashMap<>();
+        for (int i = 0; i < lsPairsCnt; i++) {
+          lsMap.put(stream.readInt(), stream.readInt());
+        }
+
+        lsOffset += lsPairsLen;
+        return new LookupSwitchInst(lsOffset, lsDef, lsPairsCnt, lsMap);
       case 0xac:
         return new IReturnInst();
       case 0xad:
@@ -448,60 +462,60 @@ public abstract class InstructionReader {
       case 0xb2:
         int gsIndex = stream.readUnsignedShort();
         return new GetStaticInst(
-            Utils.getClassNameByFieldDefIdx(constantPool, gsIndex),
-            Utils.getMethodNameByFieldDefIdx(constantPool, gsIndex),
-            Utils.getMethodTypeByFieldDefIdx(constantPool, gsIndex)
+          Utils.getClassNameByFieldDefIdx(constantPool, gsIndex),
+          Utils.getMethodNameByFieldDefIdx(constantPool, gsIndex),
+          Utils.getMethodTypeByFieldDefIdx(constantPool, gsIndex)
         );
       case 0xb3:
         int psIndex = stream.readUnsignedShort();
         return new PutStaticInst(
-            Utils.getClassNameByFieldDefIdx(constantPool, psIndex),
-            Utils.getMethodNameByFieldDefIdx(constantPool, psIndex),
-            Utils.getMethodTypeByFieldDefIdx(constantPool, psIndex)
+          Utils.getClassNameByFieldDefIdx(constantPool, psIndex),
+          Utils.getMethodNameByFieldDefIdx(constantPool, psIndex),
+          Utils.getMethodTypeByFieldDefIdx(constantPool, psIndex)
         );
       case 0xb4:
         int gfIndex = stream.readUnsignedShort();
         return new GetFieldInst(
-            Utils.getClassNameByFieldDefIdx(constantPool, gfIndex),
-            Utils.getMethodNameByFieldDefIdx(constantPool, gfIndex),
-            Utils.getMethodTypeByFieldDefIdx(constantPool, gfIndex)
+          Utils.getClassNameByFieldDefIdx(constantPool, gfIndex),
+          Utils.getMethodNameByFieldDefIdx(constantPool, gfIndex),
+          Utils.getMethodTypeByFieldDefIdx(constantPool, gfIndex)
         );
       case 0xb5:
         int pfIndex = stream.readUnsignedShort();
         return new PutFieldInst(
-            Utils.getClassNameByFieldDefIdx(constantPool, pfIndex),
-            Utils.getMethodNameByFieldDefIdx(constantPool, pfIndex),
-            Utils.getMethodTypeByFieldDefIdx(constantPool, pfIndex)
+          Utils.getClassNameByFieldDefIdx(constantPool, pfIndex),
+          Utils.getMethodNameByFieldDefIdx(constantPool, pfIndex),
+          Utils.getMethodTypeByFieldDefIdx(constantPool, pfIndex)
         );
       case 0xb6:
         int ivIndex = stream.readUnsignedShort();
         return new InvokeVirtualInst(
-            Utils.getClassNameByMethodDefIdx(constantPool, ivIndex),
-            Utils.getMethodNameByMethodDefIdx(constantPool, ivIndex),
-            Utils.getMethodTypeByMethodDefIdx(constantPool, ivIndex)
+          Utils.getClassNameByMethodDefIdx(constantPool, ivIndex),
+          Utils.getMethodNameByMethodDefIdx(constantPool, ivIndex),
+          Utils.getMethodTypeByMethodDefIdx(constantPool, ivIndex)
         );
       case 0xb7:
         int isIndex = stream.readUnsignedShort();
         return new InvokeSpecialInst(
-            Utils.getClassNameByMethodDefIdx(constantPool, isIndex),
-            Utils.getMethodNameByMethodDefIdx(constantPool, isIndex),
-            Utils.getMethodTypeByMethodDefIdx(constantPool, isIndex)
+          Utils.getClassNameByMethodDefIdx(constantPool, isIndex),
+          Utils.getMethodNameByMethodDefIdx(constantPool, isIndex),
+          Utils.getMethodTypeByMethodDefIdx(constantPool, isIndex)
         );
       case 0xb8:
         int mdIdx = stream.readUnsignedShort();
         return new InvokeStaticInst(
-            Utils.getClassNameByMethodDefIdx(constantPool, mdIdx),
-            Utils.getMethodNameByMethodDefIdx(constantPool, mdIdx),
-            Utils.getMethodTypeByMethodDefIdx(constantPool, mdIdx)
+          Utils.getClassNameByMethodDefIdx(constantPool, mdIdx),
+          Utils.getMethodNameByMethodDefIdx(constantPool, mdIdx),
+          Utils.getMethodTypeByMethodDefIdx(constantPool, mdIdx)
         );
       case 0xb9:
         int iiIdx = stream.readUnsignedShort();
         return new InvokeInterfaceInst(
-            Utils.getClassNameByIMethodDefIdx(constantPool, iiIdx),
-            Utils.getMethodNameByIMethodDefIdx(constantPool, iiIdx),
-            Utils.getMethodTypeByIMethodDefIdx(constantPool, iiIdx),
-            stream.readUnsignedByte(),
-            stream.readUnsignedByte()
+          Utils.getClassNameByIMethodDefIdx(constantPool, iiIdx),
+          Utils.getMethodNameByIMethodDefIdx(constantPool, iiIdx),
+          Utils.getMethodTypeByIMethodDefIdx(constantPool, iiIdx),
+          stream.readUnsignedByte(),
+          stream.readUnsignedByte()
         );
       case 0xba:
         int idsrIdx = stream.readUnsignedShort();
@@ -509,7 +523,7 @@ public abstract class InstructionReader {
         InvokeDynamic invokeDynamic = (InvokeDynamic) idInfo;
         int bmaIdx = invokeDynamic.bootstrapMethodAttrIndex;
         String idName = Utils.getNameByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
-        String idType= Utils.getTypeByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
+        String idType = Utils.getTypeByNameAndTypeIdx(constantPool, invokeDynamic.nameAndTypeIndex);
 
         stream.readUnsignedByte();
         stream.readUnsignedByte();
