@@ -1,6 +1,12 @@
 package com.gxk.jvm;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * java -cp target/mini.jar com.gxk.Main xxxxxx
@@ -15,6 +21,8 @@ public class Args {
   private static final String MINUS_VERBOSE_DEBUG= "-verbose:debug";
 
   private static final String MINUS_CP = "-cp";
+  private static final String MINUS_JAR = "-jar";
+
   boolean version;
   boolean help;
   boolean verbose;
@@ -41,10 +49,17 @@ public class Args {
 
     int idx = 0;
     int tries = 0;
-    while (!Objects.equals(MINUS_CP, cliArgs[idx]) && cliArgs[idx].startsWith("-")) {
+    while (true) {
+      String tmp = cliArgs[idx];
+      if (Objects.equals(MINUS_CP, tmp)) {
+        break;
+      }
+      if (Objects.equals(MINUS_JAR, tmp)) {
+        break;
+      }
       if (tries > 200) {
         System.out.println("parse args in loop. check input args.");
-        System.exit(-1);
+        throw new IllegalArgumentException();
       }
       if (Objects.equals(MINUS_VERBOSE, cliArgs[idx])) {
         idx++;
@@ -72,19 +87,17 @@ public class Args {
     if (MINUS_CP.equals(cliArgs[idx])) {
       idx++;
       args.classpath = cliArgs[idx++];
-      args.clazz = cliArgs[idx++];
-
-      args.args = new String[0];
-      if (cliArgs.length > idx) {
-        String[] programArgs = new String[cliArgs.length - idx];
-        System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
-
-        args.args = programArgs;
-      }
-      return args;
     }
 
-    args.clazz = cliArgs[idx++];
+    if (MINUS_JAR.equals(cliArgs[idx])) {
+      idx++;
+      String mainJar = cliArgs[idx++];
+      args.classpath = args.classpath + ":" + mainJar;
+      args.clazz = parseMainClass(mainJar);
+    } else {
+      args.clazz = cliArgs[idx++];
+    }
+
     if (cliArgs.length > idx) {
       String[] programArgs = new String[cliArgs.length - idx];
       System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
@@ -92,5 +105,44 @@ public class Args {
     }
 
     return args;
+  }
+
+  private static String parseMainClass(String mainJar) {
+    Path path = Paths.get(mainJar);
+    try {
+      ZipFile file = new ZipFile(path.toFile());
+      ZipEntry entry = file.getEntry("META-INF/MANIFEST.MF");
+
+      InputStream is = file.getInputStream(entry);
+      String line;
+      while ((line = readLine(is)) != null) {
+        if (line.startsWith("Main-Class: ")) {
+          return line.substring(12);
+        }
+      }
+    } catch (IOException e) {
+      throw new IllegalArgumentException();
+    }
+    throw new IllegalArgumentException("Not found main class");
+  }
+
+  private static String readLine(InputStream is) throws IOException {
+    StringBuilder line = new StringBuilder();
+    int b = is.read();
+    if (b < 0) {
+      return null;
+    }
+    while (b > 0) {
+      char c = (char) b;
+      if (c == '\r' | c == '\n') {
+        break;
+      }
+      if (c == '.') {
+        c = '/';
+      }
+      line.append(c);
+      b = is.read();
+    }
+    return line.toString();
   }
 }

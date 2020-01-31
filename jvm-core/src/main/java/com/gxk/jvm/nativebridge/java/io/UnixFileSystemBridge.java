@@ -33,7 +33,12 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/io/UnixFileSystem_getLastModifiedTime_(Ljava/io/File;)J", frame -> {
-      throw new UnsupportedOperationException();
+      KObject file = (KObject) frame.popRef();
+      frame.popRef();
+      KField path = file.getField("path", "Ljava/lang/String;");
+      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      long lm = new File(pathStr).lastModified();
+      frame.pushLong(lm);
     });
     Heap.registerMethod("java/io/UnixFileSystem_getLength_(Ljava/io/File;)J", frame -> {
       throw new UnsupportedOperationException();

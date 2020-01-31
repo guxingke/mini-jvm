@@ -59,7 +59,7 @@ public class Interpreter {
           if (cinit == null) {
             superClazz.setStaticInit(2);
             frame.nextPc = frame.thread.getPc();
-            return;
+            break;
           }
 
           Frame newFrame = new Frame(cinit, frame.thread);
