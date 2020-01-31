@@ -14,7 +14,7 @@ public class LdcWInst implements Instruction {
 
   @Override
   public int offset() {
-    return 2;
+    return 3;
   }
 
   public LdcWInst(String descriptor, Object val) {
