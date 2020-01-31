@@ -60,4 +60,9 @@ public class JavaIoTest extends BaseInterpreterTest {
   public void test_bit() {
     testMain("BitOpTest");
   }
+
+  @Test
+  public void test_jar() {
+    testMain("JarTest");
+  }
 }

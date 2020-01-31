@@ -7,6 +7,7 @@ import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.nativebridge.java.io.FileDescriptorBridge;
 import com.gxk.jvm.nativebridge.java.io.FileInputStreamBridge;
 import com.gxk.jvm.nativebridge.java.io.FileOutputStreamBridge;
+import com.gxk.jvm.nativebridge.java.io.NativeInputStreamBridge;
 import com.gxk.jvm.nativebridge.java.io.UnixFileSystemBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassBridge;
 import com.gxk.jvm.nativebridge.java.lang.ClassLoaderBridge;
@@ -24,6 +25,7 @@ import com.gxk.jvm.nativebridge.java.security.AccessControllerBridge;
 import com.gxk.jvm.nativebridge.java.sum.misc.ReflectionBridge;
 import com.gxk.jvm.nativebridge.java.util.PropertiesBridge;
 import com.gxk.jvm.nativebridge.java.util.RandomBridge;
+import com.gxk.jvm.nativebridge.java.util.ZipFileBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
@@ -171,6 +173,8 @@ public class VirtualMachine {
     CharsetBridge.registerNative0();
     UnixFileSystemBridge.registerNatives0();
     FileInputStreamBridge.registerNatives0();
+    ZipFileBridge.registerNatives0();
+    NativeInputStreamBridge.registerNatives0();
   }
 
   private static void loadFoundationClass(ClassLoader classLoader) {

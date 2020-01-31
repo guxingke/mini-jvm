@@ -28,21 +28,13 @@ public class ArgsTest {
     assertEquals("target/test.jar", args.classpath);
     assertEquals("Main", args.clazz);
 
-    assertEquals(0, args.args.length);
+    assertNull(args.args);
   }
 
   @Test
   public void test_help() {
     Args args = Args.parseArgs("-help");
     assertTrue(args.help);
-  }
-
-  @Test
-  public void test_verbose() {
-    Args args = Args.parseArgs("-verbose", "Main");
-
-    assertTrue(args.verbose);
-    assertEquals("Main", args.clazz);
   }
 
   @Test

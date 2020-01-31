@@ -36,7 +36,7 @@ public class InvokeVirtualInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     if (Objects.equals("sun/misc/Unsafe", clazz)
-    || Objects.equals("java/util/Properties", clazz)) {
+      || Objects.equals("java/util/Properties", clazz)) {
       NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
       if (nativeMethod != null) {
         nativeMethod.invoke(frame);
@@ -56,7 +56,7 @@ public class InvokeVirtualInst implements Instruction {
       // already load interface
       if (!clazz.getInterfaces().isEmpty()) {
         for (KClass intClass : clazz.getInterfaces()) {
-          method= intClass.getMethod(methodName, methodDescriptor);
+          method = intClass.getMethod(methodName, methodDescriptor);
           if (method != null) {
             break;
           }
@@ -100,6 +100,10 @@ public class InvokeVirtualInst implements Instruction {
       return;
     }
 
+    if (implMethod.isNative()) {
+      throw new IllegalStateException();
+    }
+
     Collections.reverse(argObjs);
 
     Frame newFrame = new Frame(implMethod, frame.thread);
@@ -122,9 +126,9 @@ public class InvokeVirtualInst implements Instruction {
   @Override
   public String toString() {
     return "InvokeVirtualInst{" +
-        "clazz='" + clazz + '\'' +
-        ", methodName='" + methodName + '\'' +
-        ", methodDescriptor='" + methodDescriptor + '\'' +
-        '}';
+      "clazz='" + clazz + '\'' +
+      ", methodName='" + methodName + '\'' +
+      ", methodDescriptor='" + methodDescriptor + '\'' +
+      '}';
   }
 }
