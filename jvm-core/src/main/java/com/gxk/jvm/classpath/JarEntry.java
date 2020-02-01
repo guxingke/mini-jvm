@@ -7,9 +7,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.jar.JarFile;
 
 import com.gxk.jvm.classfile.ClassReader;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class JarEntry implements Entry {
 
@@ -21,20 +22,19 @@ public class JarEntry implements Entry {
 
   @Override
   public ClassFile findClass(String name) {
-    JarFile file;
+    ZipFile file;
     try {
-      file = new JarFile(path.toFile());
+      file = new ZipFile(path.toFile());
     } catch (IOException e) {
       throw new IllegalStateException();
     }
 
-    java.util.jar.JarEntry jarEntry = file.getJarEntry(name + ".class");
-
-    if (jarEntry == null) {
+    ZipEntry entry = file.getEntry(name + ".class");
+    if (entry == null) {
       return null;
     }
 
-    try (InputStream is = file.getInputStream(jarEntry)) {
+    try (InputStream is = file.getInputStream(entry)) {
       ClassFile cf = ClassReader.read(new DataInputStream(new BufferedInputStream(is)));
       cf.setSource(path.toString());
 

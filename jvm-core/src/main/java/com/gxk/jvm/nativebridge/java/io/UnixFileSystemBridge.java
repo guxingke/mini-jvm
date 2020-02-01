@@ -21,10 +21,18 @@ public abstract class UnixFileSystemBridge {
 
       KObject pathObj = (KObject) fileObj.getField("path", "Ljava/lang/String;").val[0].ref;
       String path = Utils.obj2Str(pathObj);
-      boolean exists = new File(path).exists();
+      File file = new File(path);
+      boolean exists = file.exists();
+      boolean directory = file.isDirectory();
 
-      int val = exists ? 1 : 0;
-      frame.pushInt(val);
+      int ret = 0;
+      if (exists) {
+        ret |= 0x01;
+      }
+      if (directory) {
+        ret |= 0x04;
+      }
+      frame.pushInt(ret);
     });
     Heap.registerMethod("java/io/UnixFileSystem_canonicalize0_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
       throw new UnsupportedOperationException();

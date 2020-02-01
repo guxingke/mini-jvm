@@ -5,6 +5,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.util.Utils;
 import java.util.List;
 
 public class InvokeSpecialInst implements Instruction {
@@ -39,6 +40,7 @@ public class InvokeSpecialInst implements Instruction {
 
     KMethod method = kClass.getMethod(methodName, methodDescriptor);
     if (method == null) {
+      System.out.println(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
       throw new IllegalStateException();
     }
 
