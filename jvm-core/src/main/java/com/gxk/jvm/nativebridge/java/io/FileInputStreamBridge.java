@@ -2,9 +2,11 @@ package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,6 +27,22 @@ public abstract class FileInputStreamBridge {
       }
     });
 
+    Heap.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
+      KObject fd = (KObject) frame.popRef();
+      KObject thisObj = (KObject) frame.popRef();
+      Integer fdInt = fd.getField("fd", "I").val[0].num;
+      try {
+        if (fdInt == 0) {
+          FileInputStream fis = new FileInputStream(FileDescriptor.in);
+          thisObj.setExtra(fis);
+          return;
+        }
+        throw new UnsupportedOperationException();
+      } catch (Exception e) {
+        throw new UnsupportedOperationException();
+      }
+    });
+
     Heap.registerMethod("java/io/FileInputStream_available0_()I", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
@@ -36,7 +54,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_close0_()V",frame -> {
+    Heap.registerMethod("java/io/FileInputStream_close0_()V", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
