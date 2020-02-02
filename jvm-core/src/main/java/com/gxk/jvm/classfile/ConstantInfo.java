@@ -2,9 +2,9 @@ package com.gxk.jvm.classfile;
 
 public class ConstantInfo {
 
-  public final ConstantPoolInfoEnum infoEnum;
+  public final int infoEnum;
 
-  public ConstantInfo(ConstantPoolInfoEnum infoEnum) {
+  public ConstantInfo(int infoEnum) {
     this.infoEnum = infoEnum;
   }
 }

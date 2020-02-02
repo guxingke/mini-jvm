@@ -62,7 +62,7 @@ public class InvokeDynamicInst implements Instruction {
     KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null);
     lcMehods.add(lm);
 
-    String format = String.format("%s_%s_%s", lcname, lm.name, lm.descriptor);
+    String format =Utils.genNativeMethodKey( lcname, lm.name, lm.descriptor);
     if (Heap.findMethod(format) == null) {
       Heap.registerMethod(format, (f) -> {
         KClass bsc= Heap.findClass(bsTargetClass);

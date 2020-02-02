@@ -1,17 +1,13 @@
 package com.gxk.jvm.classfile.cp;
 
 import com.gxk.jvm.classfile.ConstantInfo;
-import com.gxk.jvm.classfile.ConstantPoolInfoEnum;
 import com.gxk.jvm.classfile.MyByteArrayInputStream;
-
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 public class Utf8 extends ConstantInfo {
 
   public final byte[] bytes;
 
-  public Utf8(ConstantPoolInfoEnum infoEnum, byte[] bytes) {
+  public Utf8(int infoEnum, byte[] bytes) {
     super(infoEnum);
     this.bytes = bytes;
   }

@@ -1,8 +1,9 @@
 package com.gxk.jvm.util;
 
 public abstract class EnvHolder {
-  public static String PATH_SEPARATOR;
-  public static String FILE_SEPARATOR;
+
+  public static String PATH_SEPARATOR = ":";
+  public static String FILE_SEPARATOR = "/";
 
   public static boolean verbose;
   public static boolean verboseTrace;
@@ -11,7 +12,7 @@ public abstract class EnvHolder {
   public static boolean debug;
 
   static {
-    init();
+//    init();
   }
 
   public static void init() {

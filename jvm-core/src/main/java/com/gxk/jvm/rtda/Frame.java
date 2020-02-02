@@ -51,6 +51,7 @@ public class Frame {
   public void pushInt(Integer val) {
     this.operandStack.pushInt(val);
   }
+
   public Integer popInt() {
     return this.operandStack.popInt();
   }
@@ -100,6 +101,7 @@ public class Frame {
   public void setInt(Integer index, Integer val) {
     this.localVars.setInt(index, val);
   }
+
   public Integer getInt(Integer index) {
     return this.localVars.getInt(index);
   }

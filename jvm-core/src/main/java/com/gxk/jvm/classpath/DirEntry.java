@@ -2,43 +2,47 @@ package com.gxk.jvm.classpath;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
+import com.gxk.jvm.util.EnvHolder;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class DirEntry implements Entry {
 
-  public final Path dirPath;
+  public final String dirPath;
 
-  public DirEntry(Path dirPath) {
+  public DirEntry(String dirPath) {
     this.dirPath = dirPath;
   }
 
   @Override
   public ClassFile findClass(String clazzName) {
     if (!clazzName.contains("/")) {
-      return Arrays.stream(
-        Objects.requireNonNull(dirPath.toFile().listFiles((dir, name) -> Objects.equals(name, clazzName + ".class"))))
-        .findFirst()
-        .map(it -> {
+      String[] list = new File(dirPath).list();
+      if (list == null) {
+        throw new IllegalArgumentException();
+      }
+      for (String name : list) {
+        if (Objects.equals(name, clazzName + ".class")) {
+          String path = dirPath + EnvHolder.FILE_SEPARATOR + clazzName + ".class";
+          ClassFile cf = null;
           try {
-            Path path = Paths.get(it.getAbsolutePath());
-            ClassFile cf = ClassReader.read(path);
-            cf.setSource(path.toString());
-            return cf;
+            cf = ClassReader.read(path);
           } catch (IOException e) {
-            return null;
+            throw new IllegalArgumentException();
           }
-        })
-        .orElse(null);
+          cf.setSource(path);
+          return cf;
+        }
+      }
+      return null;
     }
 
     int idx = clazzName.indexOf("/");
     String subDir = clazzName.substring(0, idx);
-    Path subPath = dirPath.resolve(subDir);
-    if (!subPath.toFile().exists()) {
+    String subPath = dirPath + EnvHolder.FILE_SEPARATOR + subDir;
+    if (!new File(subPath).exists()) {
       return null;
     }
     return new DirEntry(subPath).findClass(clazzName.substring(idx + 1));

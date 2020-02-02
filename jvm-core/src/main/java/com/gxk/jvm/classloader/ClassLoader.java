@@ -17,9 +17,7 @@ import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClassLoader {
 
@@ -73,7 +71,7 @@ public class ClassLoader {
     Heap.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.methods) {
       if (method.isNative()) {
-        String key = String.format("%s_%s_%s", method.clazz.name, method.name, method.descriptor);
+        String key =Utils.genNativeMethodKey( method.clazz.name, method.name, method.descriptor);
         NativeMethod nm = Heap.findMethod(key);
         if (nm == null) {
           System.err.println("not found native method " + key + " " + method);
@@ -101,31 +99,36 @@ public class ClassLoader {
   }
 
   public KClass doLoadClass(String name, ClassFile classFile) {
-    List<KMethod> methods = Arrays.stream(classFile.methods.methods).map(this::map).collect(Collectors.toList());
-    List<KField> fields = Arrays.stream(classFile.fields.fields).map(this::map).collect(Collectors.toList());
+    List<KMethod> methods = new ArrayList<>();
+    for (Method method : classFile.methods.methods) {
+      methods.add(this.map(method));
+    }
+    List<KField> fields = new ArrayList<>();
+    for (Field field : classFile.fields.fields) {
+      fields.add(this.map(field));
+    }
 
     // field interfaceInit
-    fields.forEach(it -> {
+    for (KField it : fields) {
       switch (it.descriptor) {
         case "Z":
         case "C":
         case "B":
         case "S":
         case "I":
-          it.val = new Slot[] {new Slot(0, Slot.INT)};
+          it.val = new Slot[]{new Slot(0, Slot.INT)};
         case "F":
-          it.val = new Slot[] {new Slot(0, Slot.FLOAT)};
+          it.val = new Slot[]{new Slot(0, Slot.FLOAT)};
           break;
         case "D":
-          it.val = new Slot[] {new Slot(0,Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)};
+          it.val = new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)};
         case "J":
-          it.val = new Slot[] {new Slot(0,Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)};
+          it.val = new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)};
           break;
         default:
-          it.val = new Slot[] {new Slot(null)};
+          it.val = new Slot[]{new Slot(null)};
       }
-    });
-
+    }
 
     int scIdx = classFile.superClass;
     String superClassName = null;
@@ -135,20 +138,25 @@ public class ClassLoader {
 
     List<String> interfaceNames = new ArrayList<>();
     if (classFile.interfaces.interfaces.length != 0) {
-      interfaceNames = Arrays.stream(classFile.interfaces.interfaces).map(Interface::getName).collect(Collectors.toList());
+      for (Interface anInterface : classFile.interfaces.interfaces) {
+        interfaceNames.add(anInterface.getName());
+      }
     }
 
     BootstrapMethods bootstrapMethods = classFile.getBootstrapMethods();
 
-    return new KClass(classFile.accessFlags, name, superClassName, interfaceNames, methods, fields, bootstrapMethods, classFile.cpInfo, this, classFile);
+    return new KClass(classFile.accessFlags, name, superClassName, interfaceNames, methods, fields,
+        bootstrapMethods, classFile.cpInfo, this, classFile);
   }
 
   public KMethod map(Method cfMethod) {
     Code code = cfMethod.getCode();
     if (code == null) {
-      return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0, null, null);
+      return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0,
+          null, null);
     }
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable);
+    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor,
+        code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable);
   }
 
   public KField map(Field field) {

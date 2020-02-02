@@ -41,7 +41,7 @@ public abstract class Heap {
       if (clazz.classFile != null && clazz.classFile.getSource() != null) {
         source = clazz.classFile.getSource();
       }
-      Logger.clazz("[Loaded {} from {}]", name, source);
+      Logger.clazz("[Loaded " + name + " from " + source + "]");
     }
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }

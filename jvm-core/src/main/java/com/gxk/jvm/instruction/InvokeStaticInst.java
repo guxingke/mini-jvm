@@ -6,6 +6,7 @@ import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 
+import com.gxk.jvm.util.Utils;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class InvokeStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(String.format("%s_%s_%s", clazzName, methodName, descriptor));
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey( clazzName, methodName, descriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;

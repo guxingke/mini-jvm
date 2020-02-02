@@ -42,7 +42,6 @@ import com.gxk.jvm.util.Utils;
 public class VirtualMachine {
 
   public void run(Args cmd) {
-    EnvHolder.init();
     if (cmd.verbose) {
       EnvHolder.verbose = true;
     }
@@ -112,7 +111,7 @@ public class VirtualMachine {
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("err", "Ljava/io/PrintStream;");
-    outField.val = new Slot[] {new Slot(psObj)};
+    outField.val = new Slot[]{new Slot(psObj)};
 
   }
 
@@ -147,7 +146,7 @@ public class VirtualMachine {
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("out", "Ljava/io/PrintStream;");
-    outField.val = new Slot[] {new Slot(psObj)};
+    outField.val = new Slot[]{new Slot(psObj)};
   }
 
   public static void loadLibrary() {
@@ -210,7 +209,7 @@ public class VirtualMachine {
     classLoader.loadClass("java/lang/Integer");
     classLoader.loadClass("java/lang/Long");
     classLoader.loadClass("java/lang/Float");
-    classLoader.loadClass("java/lang/Double");
+//    classLoader.loadClass("java/lang/Double");
     classLoader.loadClass("java/lang/Void");
 
     // primitvie Arry class

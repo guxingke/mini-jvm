@@ -20,19 +20,18 @@ import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class Utils {
 
-  public static byte[] readNBytes(DataInputStream stream, int n) throws IOException {
+  public static byte[] readNBytes(DataInputStream stm, int n) throws IOException {
     byte[] bytes = new byte[n];
     for (int i = 0; i < n; i++) {
-      bytes[i] = stream.readByte();
+      bytes[i] = stm.readByte();
     }
     return bytes;
   }
@@ -156,7 +155,7 @@ public abstract class Utils {
   }
 
   public static String genNativeMethodKey(String clazz, String name, String descriptor) {
-    return String.format("%s_%s_%s", clazz, name, descriptor);
+    return clazz + "_" + name + "_" + descriptor;
   }
 
   public static Object pop(Frame frame, String descriptor) {
@@ -231,7 +230,7 @@ public abstract class Utils {
   }
 
   public static String obj2Str(KObject name) {
-    if (!name.clazz.name.equalsIgnoreCase("java/lang/String")) {
+    if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
     Object[] values = ((KArray) name.getField("value", "[C").val[0].ref).items;
@@ -254,7 +253,7 @@ public abstract class Utils {
       characters[i] = chars[i];
     }
     KArray arr = new KArray(arrClazz, characters);
-    field.val = new Slot[] {new Slot(arr)};
+    field.val = new Slot[]{new Slot(arr)};
     return object;
   }
 
@@ -264,7 +263,7 @@ public abstract class Utils {
       throw new IllegalStateException("must set env JAVA_HOME");
     }
 
-    Path jarPath = Paths.get(home, "jre", "lib");
+    String jarPath = home + EnvHolder.FILE_SEPARATOR + "jre" + EnvHolder.FILE_SEPARATOR + "lib";
 
     // check MINI_JVM_HOME ready
     // 1. env
@@ -283,15 +282,17 @@ public abstract class Utils {
       throw new IllegalStateException("MINI_JVM_HOME not found");
     }
 
-    Path rtJarPath = Paths.get(miniJvmHome, "mini-jdk", "target", "rt.jar");
-    if (!rtJarPath.toFile().exists()) {
+    String rtJarPath =
+        miniJvmHome + EnvHolder.FILE_SEPARATOR + "mini-jdk" + EnvHolder.FILE_SEPARATOR + "target"
+            + EnvHolder.FILE_SEPARATOR + "rt.jar";
+
+    if (!new File(rtJarPath).exists()) {
       throw new IllegalStateException("rt.jar not found");
     }
 
     String cp = classpath + EnvHolder.PATH_SEPARATOR
-      + rtJarPath.toFile().getAbsolutePath() + EnvHolder.PATH_SEPARATOR
-      + jarPath.toFile().getAbsolutePath() + EnvHolder.FILE_SEPARATOR + "*" + EnvHolder.PATH_SEPARATOR
-      + classpath;
+        + rtJarPath + EnvHolder.PATH_SEPARATOR
+        + jarPath + EnvHolder.FILE_SEPARATOR + "*";
 
     return cp;
   }

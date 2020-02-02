@@ -35,7 +35,7 @@ public class InvokeInterfaceInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(String.format("%s_%s_%s", clazzName, methodName, methodDescriptor));
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey( clazzName, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
@@ -53,7 +53,7 @@ public class InvokeInterfaceInst implements Instruction {
       }
 
       // hack by native method
-      String key = String.format("%s_%s_%s", cinit.clazz.name, cinit.name, cinit.descriptor);
+      String key =Utils.genNativeMethodKey( cinit.clazz.name, cinit.name, cinit.descriptor);
       NativeMethod ciNm = Heap.findMethod(key);
       if (ciNm != null) {
         ciNm.invoke(frame);

@@ -1,9 +1,8 @@
 package com.gxk.jvm;
 
+import com.gxk.jvm.util.EnvHolder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -14,11 +13,11 @@ import java.util.zip.ZipFile;
 public class Args {
 
   private static final String MINUS_VERSION = "-version";
-  private static final String MINUS_HELP= "-help";
-  private static final String MINUS_VERBOSE= "-verbose";
-  private static final String MINUS_VERBOSE_TRACE= "-verbose:trace";
+  private static final String MINUS_HELP = "-help";
+  private static final String MINUS_VERBOSE = "-verbose";
+  private static final String MINUS_VERBOSE_TRACE = "-verbose:trace";
   private static final String MINUS_VERBOSE_CLASS = "-verbose:class";
-  private static final String MINUS_VERBOSE_DEBUG= "-verbose:debug";
+  private static final String MINUS_VERBOSE_DEBUG = "-verbose:debug";
 
   private static final String MINUS_CP = "-cp";
   private static final String MINUS_JAR = "-jar";
@@ -108,9 +107,10 @@ public class Args {
   }
 
   private static String parseMainClass(String mainJar) {
-    Path path = Paths.get(mainJar);
+    String userDir = System.getProperty("user.dir");
+    String path = userDir + EnvHolder.FILE_SEPARATOR + mainJar;
     try {
-      ZipFile file = new ZipFile(path.toFile());
+      ZipFile file = new ZipFile(path);
       ZipEntry entry = file.getEntry("META-INF/MANIFEST.MF");
 
       InputStream is = file.getInputStream(entry);

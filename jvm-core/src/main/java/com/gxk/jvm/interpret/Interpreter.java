@@ -131,7 +131,8 @@ public class Interpreter {
       }
 
       String cmd = line.trim().toLowerCase();
-      if (!DebugContextHolder.running && !(Objects.equals("run", cmd) || Objects.equals("help", cmd))) {
+      if (!DebugContextHolder.running && !(Objects.equals("run", cmd) || Objects
+          .equals("help", cmd))) {
         System.out.println(String.format("在使用 'run' 命令启动 VM 前, 命令 '%s' 是无效的", line));
         return false;
       }
@@ -190,12 +191,14 @@ public class Interpreter {
 
   private void trace(Instruction inst, Frame frame) {
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace("{}{}", space, frame.thread.getPc() + " " + inst.format());
+    Logger.trace(space + frame.thread.getPc() + " " + inst.format());
   }
 
   void debugBefore(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
-    Logger.debug(space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor + " ==============================" + "\n");
+    Logger.debug(
+        space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor
+            + " ==============================" + "\n");
     Logger.debug(inst.debug(space + frame.getPc() + " "));
     Logger.debug(frame.debugNextPc(space));
     Logger.debug(frame.debugLocalVars(space));

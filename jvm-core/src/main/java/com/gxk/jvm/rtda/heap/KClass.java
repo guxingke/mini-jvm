@@ -8,7 +8,6 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import java.util.List;
 import java.util.Objects;
@@ -132,7 +131,8 @@ public class KClass {
 
   public KField getField(String fieldName, String fieldDescriptor) {
     for (KField field : fields) {
-      if (Objects.equals(field.name, fieldName) && Objects.equals(field.descriptor, fieldDescriptor)) {
+      if (Objects.equals(field.name, fieldName) && Objects
+          .equals(field.descriptor, fieldDescriptor)) {
         return field;
       }
     }
@@ -157,7 +157,10 @@ public class KClass {
   }
 
   public KObject newObject() {
-    List<KField> newFields = fields.stream().map(this::map).collect(Collectors.toList());
+    List<KField> newFields = new ArrayList<>();
+    for (KField field : fields) {
+      newFields.add(this.map(field));
+    }
     KObject object = new KObject(newFields, this);
     if (this.superClass != null) {
       object.setSuperObject(this.superClass.newObject());
@@ -179,9 +182,11 @@ public class KClass {
       case "B":
       case "S":
       case "I":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0, Slot.INT)});
+        return new KField(source.accessFlags, source.name, source.descriptor,
+            new Slot[]{new Slot(0, Slot.INT)});
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(0, Slot.FLOAT)});
+        return new KField(source.accessFlags, source.name, source.descriptor,
+            new Slot[]{new Slot(0, Slot.FLOAT)});
       case "D":
         return new KField(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
@@ -189,7 +194,8 @@ public class KClass {
         return new KField(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor, new Slot[]{new Slot(null)});
+        return new KField(source.accessFlags, source.name, source.descriptor,
+            new Slot[]{new Slot(null)});
     }
   }
 
@@ -261,7 +267,7 @@ public class KClass {
   }
 
   public boolean is(String clazz) {
-    if (this.name.equalsIgnoreCase(clazz)) {
+    if (this.name.equals(clazz)) {
       return true;
     }
     for (String interfaceName : this.interfaceNames) {
@@ -288,7 +294,7 @@ public class KClass {
   }
 
   public boolean isPrimitive() {
-    if (name.equalsIgnoreCase("java/lang/Character")) {
+    if (name.equals("java/lang/Character")) {
       return true;
     }
     System.out.println("is primitive ? " + name);

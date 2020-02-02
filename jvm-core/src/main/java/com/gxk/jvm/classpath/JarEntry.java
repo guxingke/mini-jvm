@@ -1,22 +1,18 @@
 package com.gxk.jvm.classpath;
 
 import com.gxk.jvm.classfile.ClassFile;
-
-import java.io.BufferedInputStream;
+import com.gxk.jvm.classfile.ClassReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-
-import com.gxk.jvm.classfile.ClassReader;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class JarEntry implements Entry {
 
-  public final Path path;
+  public final String path;
 
-  public JarEntry(Path path) {
+  public JarEntry(String path) {
     this.path = path;
   }
 
@@ -24,7 +20,7 @@ public class JarEntry implements Entry {
   public ClassFile findClass(String name) {
     ZipFile file;
     try {
-      file = new ZipFile(path.toFile());
+      file = new ZipFile(path);
     } catch (IOException e) {
       throw new IllegalStateException();
     }
@@ -35,7 +31,7 @@ public class JarEntry implements Entry {
     }
 
     try (InputStream is = file.getInputStream(entry)) {
-      ClassFile cf = ClassReader.read(new DataInputStream(new BufferedInputStream(is)));
+      ClassFile cf = ClassReader.read(new DataInputStream(is));
       cf.setSource(path.toString());
 
       return cf;

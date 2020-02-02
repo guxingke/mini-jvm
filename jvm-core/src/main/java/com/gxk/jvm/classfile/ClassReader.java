@@ -20,24 +20,22 @@ import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
-
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ClassReader {
 
-  public static ClassFile read(Path path) throws IOException {
+  public static ClassFile read(String path) throws IOException {
 
-    try (InputStream is = Files.newInputStream(path);
-        BufferedInputStream bis = new BufferedInputStream(is);
-        DataInputStream stream = new DataInputStream(bis)) {
-      return read(stream);
+    try (InputStream is = new FileInputStream(path);
+//        BufferedInputStream bis = new BufferedInputStream(is);
+        DataInputStream stm = new DataInputStream(is) {
+        }) {
+      return read(stm);
     }
   }
 
@@ -54,7 +52,7 @@ public abstract class ClassReader {
     int superClass = is.readUnsignedShort();
 
     int interfaceCount = is.readUnsignedShort();
-    Interfaces interfaces = readInterfaces(is, interfaceCount,constantPool);
+    Interfaces interfaces = readInterfaces(is, interfaceCount, constantPool);
 
     int fieldCount = is.readUnsignedShort();
     Fields fields = readFields(is, fieldCount, constantPool);
@@ -85,7 +83,8 @@ public abstract class ClassReader {
     );
   }
 
-  private static Fields readFields(DataInputStream is, int fieldCount, ConstantPool constantPool) throws IOException {
+  private static Fields readFields(DataInputStream is, int fieldCount, ConstantPool constantPool)
+      throws IOException {
     Field[] fields = new Field[fieldCount];
     for (int i = 0; i < fieldCount; i++) {
       int accessFlag = is.readUnsignedShort();
@@ -106,7 +105,8 @@ public abstract class ClassReader {
     return new Fields(fields);
   }
 
-  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount, ConstantPool cp) throws IOException {
+  private static Interfaces readInterfaces(DataInputStream is, int interfaceCount, ConstantPool cp)
+      throws IOException {
     Interface[] interfaces = new Interface[interfaceCount];
     for (int i = 0; i < interfaceCount; i++) {
       int idx = is.readUnsignedShort();
@@ -150,55 +150,52 @@ public abstract class ClassReader {
     for (int i = 0; i < cpSize; i++) {
       int tag = is.readUnsignedByte();
 
-      ConstantPoolInfoEnum infoEnum = ConstantPoolInfoEnum.of(tag);
-      if (infoEnum == null) {
-        throw new IllegalStateException("readConstantPool");
-      }
+      int infoEnum = tag;
 
       ConstantInfo info = null;
       switch (infoEnum) {
-        case CONSTANT_Fieldref:
+        case ConstantPoolInfoEnum.CONSTANT_Fieldref:
           info = new FieldDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
-        case CONSTANT_Methodref:
+        case ConstantPoolInfoEnum.CONSTANT_Methodref:
           info = new MethodDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
-        case CONSTANT_InterfaceMethodref:
+        case ConstantPoolInfoEnum.CONSTANT_InterfaceMethodref:
           info = new InterfaceMethodDef(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
-        case CONSTANT_String:
+        case ConstantPoolInfoEnum.CONSTANT_String:
           info = new StringCp(infoEnum, is.readUnsignedShort());
           break;
-        case CONSTANT_Class:
+        case ConstantPoolInfoEnum.CONSTANT_Class:
           info = new ClassCp(infoEnum, is.readUnsignedShort());
           break;
-        case CONSTANT_NameAndType:
+        case ConstantPoolInfoEnum.CONSTANT_NameAndType:
           info = new NameAndType(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
-        case CONSTANT_Utf8:
+        case ConstantPoolInfoEnum.CONSTANT_Utf8:
           int length = is.readUnsignedShort();
           byte[] bytes = Utils.readNBytes(is, length);
           info = new Utf8(infoEnum, bytes);
           break;
-        case CONSTANT_MethodHandle:
+        case ConstantPoolInfoEnum.CONSTANT_MethodHandle:
           info = new MethodHandle(infoEnum, is.readUnsignedByte(), is.readUnsignedShort());
           break;
-        case CONSTANT_MethodType:
+        case ConstantPoolInfoEnum.CONSTANT_MethodType:
           info = new MethodType(infoEnum, is.readUnsignedShort());
           break;
-        case CONSTANT_InvokeDynamic:
+        case ConstantPoolInfoEnum.CONSTANT_InvokeDynamic:
           info = new InvokeDynamic(infoEnum, is.readUnsignedShort(), is.readUnsignedShort());
           break;
-        case CONSTANT_Integer:
+        case ConstantPoolInfoEnum.CONSTANT_Integer:
           info = new IntegerCp(infoEnum, is.readInt());
           break;
-        case CONSTANT_Long:
+        case ConstantPoolInfoEnum.CONSTANT_Long:
           info = new LongCp(infoEnum, is.readLong());
           break;
-        case CONSTANT_Float:
+        case ConstantPoolInfoEnum.CONSTANT_Float:
           info = new FloatCp(infoEnum, is.readFloat());
           break;
-        case CONSTANT_Double:
+        case ConstantPoolInfoEnum.CONSTANT_Double:
           info = new DoubleCp(infoEnum, is.readDouble());
           break;
       }
@@ -206,28 +203,29 @@ public abstract class ClassReader {
         throw new UnsupportedOperationException("un parse cp " + infoEnum);
       }
       constantPool.infos[i] = info;
-      if (info.infoEnum.equals(ConstantPoolInfoEnum.CONSTANT_Double) || info.infoEnum
-          .equals(ConstantPoolInfoEnum.CONSTANT_Long)) {
+      if (info.infoEnum == ConstantPoolInfoEnum.CONSTANT_Double
+          || info.infoEnum == ConstantPoolInfoEnum.CONSTANT_Long) {
         i++;
       }
     }
     return constantPool;
   }
 
-  public static String byteArrayToHex(byte[] a) {
-    StringBuilder sb = new StringBuilder(a.length * 2);
-    for (byte b : a) {
-      sb.append(String.format("%02x", b));
-    }
-    return sb.toString();
-  }
+//  public static String byteArrayToHex(byte[] a) {
+//    StringBuilder sb = new StringBuilder(a.length * 2);
+//    for (byte b : a) {
+//      sb.append(String.format("%02x", b));
+//    }
+//    return sb.toString();
+//  }
 
   //  attribute_info {
 //    u2 attribute_name_index;
 //    u4 attribute_length;
 //    u1 info[attribute_length];
 //  }
-  private static Attributes readAttributes(DataInputStream is, int attributeCount, ConstantPool constantPool)
+  private static Attributes readAttributes(DataInputStream is, int attributeCount,
+      ConstantPool constantPool)
       throws IOException {
     Attributes attributes = new Attributes(attributeCount);
 
@@ -236,15 +234,14 @@ public abstract class ClassReader {
       int attributeNameIndex = is.readUnsignedShort();
       String attributeName = Utils.getString(constantPool, attributeNameIndex);
 
-      AttributeEnum attributeEnum = AttributeEnum.valueOf(attributeName);
       int attributeLength = is.readInt();
-      switch (attributeEnum) {
-        case SourceFile:
+      switch (attributeName) {
+        case AttributeEnum.SourceFile:
           int sourceFileIndex = is.readUnsignedShort();
           String file = Utils.getString(constantPool, sourceFileIndex);
           attribute = new SourceFile(file);
           break;
-        case Code:
+        case AttributeEnum.Code:
           int maxStack = is.readUnsignedShort();
           int maxLocals = is.readUnsignedShort();
 
@@ -276,7 +273,7 @@ public abstract class ClassReader {
 
           attribute = new Code(maxStack, maxLocals, instructions, exceptionTable, codeAttributes);
           break;
-        case LineNumberTable:
+        case AttributeEnum.LineNumberTable:
           int length = is.readUnsignedShort();
           LineNumberTable.Line[] lines = new LineNumberTable.Line[length];
           for (int i1 = 0; i1 < length; i1++) {
@@ -284,7 +281,7 @@ public abstract class ClassReader {
           }
           attribute = new LineNumberTable(lines);
           break;
-        case BootstrapMethods:
+        case AttributeEnum.BootstrapMethods:
           int bsmLen = is.readUnsignedShort();
           BootstrapMethods.BootstrapMethod[] bootstrapMethods = new BootstrapMethods.BootstrapMethod[bsmLen];
           for (int i1 = 0; i1 < bsmLen; i1++) {
@@ -311,13 +308,14 @@ public abstract class ClassReader {
     return attributes;
   }
 
-  public static Instruction[] readByteCode(byte[] byteCode, ConstantPool constantPool) throws IOException {
+  public static Instruction[] readByteCode(byte[] byteCode, ConstantPool constantPool)
+      throws IOException {
     List<Instruction> instructions = new ArrayList<>();
-    try (MyDataInputStream stream = new MyDataInputStream(new MyByteArrayInputStream(byteCode))) {
-      while (stream.available() > 0) {
-        int opCode = stream.readUnsignedByte();
+    try (MyDataInputStream stm = new MyDataInputStream(new MyByteArrayInputStream(byteCode))) {
+      while (stm.available() > 0) {
+        int opCode = stm.readUnsignedByte();
         try {
-          Instruction inst = InstructionReader.read(opCode, stream, constantPool);
+          Instruction inst = InstructionReader.read(opCode, stm, constantPool);
           if (inst == null) {
             System.out.println(Integer.toHexString(opCode));
             break;

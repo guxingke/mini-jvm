@@ -3,6 +3,15 @@
 ------
 使用 Java 8 实现 JVM
 
+## 特性
+
+### 元循环(Metacircular)
+mini-jvm on mini-jvm on hotspot. 可以在 mini-jvm 里运行 mini-jvm . 
+```
+$ java -jar jvm-core/target/mini-jvm.jar -jar jvm-core/target/mini-jvm.jar -jar test.jar
+# Hello World!
+```
+
 ## 动机
 
 1. 尝试了解 JVM 原理, Learning by doing
@@ -91,15 +100,16 @@ mini-jvm -- sum10.bc
 - 类加载 90%
 - 方法调用 90%
 - 实例化 90%
-- Native 方法 70%
+- Native 方法 90%
 - 异常处理 60%
-- self-booting 10%
+- self-booting 70%
 
 ## 局限
 1. 不实现 GC
 2. 不实现多线程
 
 ## 变更记录
+- 实现了元循环(Metacircular)
 - 反射特性基本可用
 - 增加简单的调试器 bin/jdb.
 - 支持 Lambda 调用, closure, currying 可用.

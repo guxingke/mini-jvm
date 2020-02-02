@@ -42,19 +42,19 @@ public class KMethod {
   }
 
   public int getArgSlotSize() {
-    int count = Utils.parseMethodDescriptor(this.descriptor).stream()
-        .map(it -> {
-          if (Objects.equals("J", it)) {
-            return 2;
-          }
-          if (Objects.equals("D", it)) {
-            return 2;
-          }
-          return 1;
-        })
-        .reduce(0, (pre, next) -> pre + next);
-
-    return count;
+    int cnt = 0;
+    for (String it : Utils.parseMethodDescriptor(this.descriptor)) {
+      if (Objects.equals("J", it)) {
+        cnt += 2;
+        continue;
+      }
+      if (Objects.equals("D", it)) {
+        cnt += 2;
+        continue;
+      }
+      cnt++;
+    }
+    return cnt;
   }
 
   @Override
@@ -79,7 +79,7 @@ public class KMethod {
   }
 
   public String nativeMethodKey() {
-    return String.format("%s_%s_%s", this.clazz.name, name, descriptor);
+    return Utils.genNativeMethodKey(this);
   }
 
   public Integer getHandlerPc(Integer pc, String name) {

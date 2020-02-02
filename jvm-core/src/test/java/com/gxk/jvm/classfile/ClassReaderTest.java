@@ -1,12 +1,9 @@
 package com.gxk.jvm.classfile;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import com.gxk.jvm.instruction.Instruction;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.Test;
 
 public class ClassReaderTest {
@@ -36,12 +33,12 @@ public class ClassReaderTest {
 //  }
 
 
-  public void test(String p) throws IOException {
-    Path path = Paths.get(p);
-    ClassFile cf = ClassReader.read(path);
-
-    assertNotNull(cf);
-  }
+//  public void test(String p) throws IOException {
+//    Path path = Paths.get(p);
+//    ClassFile cf = ClassReader.read(path);
+//
+//    assertNotNull(cf);
+//  }
 
   @Test
   public void testReadInst_main() throws IOException {
