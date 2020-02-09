@@ -564,7 +564,7 @@ public abstract class InstructionReader {
             return new WideInst(4, new ALoadInst(stm.readUnsignedShort()));
           case 0x16:
             return new WideInst(4, new LloadInst(stm.readUnsignedShort()));
-          case 0x24:
+          case 0x18:
             return new WideInst(4, new DLoadInst(stm.readUnsignedShort()));
           case 0x36:
             return new WideInst(4, new IStoreNInst(stm.readUnsignedShort()));
