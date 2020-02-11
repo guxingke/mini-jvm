@@ -1,6 +1,7 @@
 package com.gxk.jvm.classfile;
 
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
+import com.gxk.jvm.classfile.attribute.SourceFile;
 
 /**
  * <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.1">
@@ -58,6 +59,15 @@ public class ClassFile {
 
   public String getSource() {
     return source;
+  }
+
+  public String getSourceFile() {
+    for (Attribute attribute : this.attributes.attributes) {
+      if (attribute instanceof SourceFile) {
+        return ((SourceFile) attribute).name;
+      }
+    }
+    return "unknown";
   }
 
   public BootstrapMethods getBootstrapMethods() {

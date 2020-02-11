@@ -300,4 +300,8 @@ public class KClass {
     System.out.println("is primitive ? " + name);
     return false;
   }
+
+  public String getSource() {
+    return classFile.getSourceFile();
+  }
 }

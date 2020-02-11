@@ -2,6 +2,8 @@ package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.classfile.Exception;
 import com.gxk.jvm.classfile.ExceptionTable;
+import com.gxk.jvm.classfile.attribute.LineNumberTable;
+import com.gxk.jvm.classfile.attribute.LineNumberTable.Line;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
@@ -19,11 +21,13 @@ public class KMethod {
   public final int maxLocals;
   public final Map<Integer, Instruction> instructionMap;
   public final ExceptionTable exceptionTable;
+  public final LineNumberTable lineNumberTable;
 
   public KClass clazz;
 
   public KMethod(int accessFlags, String name, String descriptor, int maxStacks, int maxLocals,
-      Map<Integer, Instruction> instructionMap, ExceptionTable exceptionTable) {
+      Map<Integer, Instruction> instructionMap, ExceptionTable exceptionTable,
+      LineNumberTable lineNumberTable) {
     this.accessFlags = accessFlags;
     this.name = name;
     this.descriptor = descriptor;
@@ -31,6 +35,7 @@ public class KMethod {
     this.maxLocals = maxLocals;
     this.instructionMap = instructionMap;
     this.exceptionTable = exceptionTable;
+    this.lineNumberTable = lineNumberTable;
   }
 
   public String getReturnType() {
@@ -91,5 +96,17 @@ public class KMethod {
       }
     }
     return null;
+  }
+
+  public int getLine(int pc) {
+    int ret = 0;
+    for (Line line : this.lineNumberTable.lines) {
+      if (line.startPc <= pc) {
+        ret = line.lineNumber;
+      } else {
+        break;
+      }
+    }
+    return ret;
   }
 }

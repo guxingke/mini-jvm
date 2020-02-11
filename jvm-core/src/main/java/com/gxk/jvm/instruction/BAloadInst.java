@@ -9,6 +9,10 @@ public class BAloadInst implements Instruction {
   public void execute(Frame frame) {
     Integer index = frame.popInt();
     KArray array = (KArray) frame.popRef();
+    if (array.items instanceof Boolean[]) {
+      frame.pushInt(((Boolean) array.items[index]) ? 1 : 0);
+      return;
+    }
     byte item = (byte) array.items[index];
     frame.pushInt((int) item);
   }

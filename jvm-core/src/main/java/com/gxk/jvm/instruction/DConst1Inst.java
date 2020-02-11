@@ -6,6 +6,6 @@ public class DConst1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.pushDouble(0.0d);
+    frame.pushDouble(1.0d);
   }
 }

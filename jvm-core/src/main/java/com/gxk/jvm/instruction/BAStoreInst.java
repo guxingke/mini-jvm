@@ -10,6 +10,10 @@ public class BAStoreInst implements Instruction {
     byte val = frame.popInt().byteValue();
     Integer index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    if (array.items instanceof Boolean[]) {
+      array.items[index] = val != 0;
+    } else {
+      array.items[index] = val;
+    }
   }
 }

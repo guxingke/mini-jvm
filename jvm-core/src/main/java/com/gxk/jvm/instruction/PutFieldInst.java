@@ -22,7 +22,7 @@ public class PutFieldInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    if (fieldDescriptor.equals("J")) {
+    if (fieldDescriptor.equals("J") || fieldDescriptor.equals("D")) {
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();
       KObject obj = (KObject) frame.popRef();

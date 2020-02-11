@@ -167,4 +167,16 @@ public class Frame {
     sb.append(operandStack.debug(space));
     return sb.append("\n").toString();
   }
+
+  public String getCurrentMethodFullName() {
+    return this.method.clazz.name + "." + this.method.name;
+  }
+
+  public int getCurrentLine() {
+    return this.method.getLine(this.pc);
+  }
+
+  public String getCurrentSource() {
+    return this.method.clazz.getSource();
+  }
 }
