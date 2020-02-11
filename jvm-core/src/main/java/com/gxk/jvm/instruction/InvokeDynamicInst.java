@@ -59,7 +59,8 @@ public class InvokeDynamicInst implements Instruction {
 
     String lcname = frame.method.clazz.name + "$" + frame.method.name + "$" + bsTargetClass + "$" + bsTargetMethod;
     List<KMethod> lcMehods = new ArrayList<>();
-    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null);
+    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null,
+        null);
     lcMehods.add(lm);
 
     String format =Utils.genNativeMethodKey( lcname, lm.name, lm.descriptor);

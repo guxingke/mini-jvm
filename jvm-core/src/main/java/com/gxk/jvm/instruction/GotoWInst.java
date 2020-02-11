@@ -12,7 +12,7 @@ public class GotoWInst implements Instruction {
 
   @Override
   public int offset() {
-    return 3;
+    return 5;
   }
 
   @Override

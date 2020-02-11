@@ -10,7 +10,7 @@ public class Stack<E> extends java.util.Stack<E> {
   @Override
   public E push(E item) {
     if (this.size() >= maxSize) {
-      throw new StackOverflowError();
+      throw new IllegalStateException("stack overflow");
     }
     return super.push(item);
   }

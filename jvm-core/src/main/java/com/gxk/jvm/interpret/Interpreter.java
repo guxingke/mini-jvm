@@ -91,6 +91,15 @@ public class Interpreter {
       thread.setPc(pc);
 
       Instruction inst = frame.getInst(pc);
+      if (inst == null) {
+        StringBuilder sb = new StringBuilder();
+        frame.method.instructionMap.forEach((key, val) -> {
+          sb.append(key).append(" ").append(val.format()).append("\n");
+        });
+        String str = sb.toString();
+        System.err.println(str);
+        throw new IllegalStateException();
+      }
       traceBefore(inst, frame);
 
       frame.nextPc += inst.offset();
@@ -102,8 +111,16 @@ public class Interpreter {
           continue;
         }
       }
+      try {
+        inst.execute(frame);
+      } catch (Exception e) {
+        e.printStackTrace();
 
-      inst.execute(frame);
+        String name = frame.getCurrentMethodFullName();
+        String msg = name + "(" + frame.getCurrentSource() + ":" + frame.getCurrentLine() + ")";
+        System.out.println(msg);
+        throw new IllegalStateException();
+      }
 
     } while (!thread.empty());
   }

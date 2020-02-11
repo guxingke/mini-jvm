@@ -58,9 +58,9 @@ public class ByteCodeGenerator {
     Code code = cfMethod.getCode();
     if (code == null) {
       return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0,
-          null, null);
+          null, null, null);
     }
     return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor,
-        code.maxStacks, code.maxLocals, code.getInstructions(), null);
+        code.maxStacks, code.maxLocals, code.getInstructions(), null, null);
   }
 }

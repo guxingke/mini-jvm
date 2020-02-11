@@ -1,8 +1,12 @@
 package com.gxk.jvm.classfile;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.gxk.jvm.instruction.Instruction;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -28,17 +32,15 @@ public class ClassReaderTest {
 //
 //  @Test
 //  public void test_exception() throws IOException {
-//    String clazz = "example/TestException.class";
+//    String clazz = "/Users/gxk/toy/java/mini-jvm/example/target/classes/Hello.class";
 //    test(clazz);
 //  }
 
 
-//  public void test(String p) throws IOException {
-//    Path path = Paths.get(p);
-//    ClassFile cf = ClassReader.read(path);
-//
-//    assertNotNull(cf);
-//  }
+  public void test(String p) throws IOException {
+    ClassFile cf = ClassReader.read(new DataInputStream(new FileInputStream(p)));
+    assertNotNull(cf);
+  }
 
   @Test
   public void testReadInst_main() throws IOException {

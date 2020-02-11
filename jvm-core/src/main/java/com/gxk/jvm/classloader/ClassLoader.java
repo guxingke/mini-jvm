@@ -71,7 +71,7 @@ public class ClassLoader {
     Heap.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.methods) {
       if (method.isNative()) {
-        String key =Utils.genNativeMethodKey( method.clazz.name, method.name, method.descriptor);
+        String key = Utils.genNativeMethodKey(method.clazz.name, method.name, method.descriptor);
         NativeMethod nm = Heap.findMethod(key);
         if (nm == null) {
           System.err.println("not found native method " + key + " " + method);
@@ -153,10 +153,11 @@ public class ClassLoader {
     Code code = cfMethod.getCode();
     if (code == null) {
       return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0,
-          null, null);
+          null, null, cfMethod.getLineNumber());
     }
     return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor,
-        code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable);
+        code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable,
+        cfMethod.getLineNumber());
   }
 
   public KField map(Field field) {

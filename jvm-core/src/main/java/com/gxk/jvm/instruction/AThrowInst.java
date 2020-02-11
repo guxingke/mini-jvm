@@ -14,7 +14,9 @@ public class AThrowInst implements Instruction {
 
     Integer handlerPc = thread.currentFrame().method.getHandlerPc(thread.getPc(), name);
     while (handlerPc == null && !thread.empty()) {
-      thread.popFrame();
+      Frame ef = thread.popFrame();
+      String msg = ef.getCurrentMethodFullName() + "(" + ef.getCurrentSource() + ":" + ef.getCurrentLine() + ")";
+      System.err.println(msg);
       if (thread.empty()) {
         break;
       }
@@ -23,7 +25,7 @@ public class AThrowInst implements Instruction {
 
     // no exception handler ...
     if (handlerPc == null) {
-      System.out.println(exc);
+      System.err.println(exc);
       throw new RuntimeException("no exception handler");
     }
 
