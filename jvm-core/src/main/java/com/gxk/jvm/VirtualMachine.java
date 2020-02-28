@@ -58,8 +58,7 @@ public class VirtualMachine {
     Entry entry = Classpath.parse(Utils.classpath(cmd.classpath));
     ClassLoader classLoader = new ClassLoader("boot", entry);
     initVm(classLoader);
-
-    String mainClass = cmd.clazz.replace(".", EnvHolder.FILE_SEPARATOR);
+    String mainClass = Utils.replace(cmd.clazz, '.', EnvHolder.FILE_SEPARATOR.toCharArray()[0]);
     classLoader.loadClass(mainClass);
 
     KClass clazz = Heap.findClass(mainClass);

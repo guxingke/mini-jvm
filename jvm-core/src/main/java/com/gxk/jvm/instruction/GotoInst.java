@@ -22,6 +22,6 @@ public class GotoInst implements Instruction {
 
   @Override
   public String format() {
-    return String.format("%s %d", "goto", offset);
+    return "goto " + offset;
   }
 }

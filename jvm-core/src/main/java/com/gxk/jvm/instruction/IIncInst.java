@@ -3,6 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 
 public class IIncInst implements Instruction {
+
   public final int index;
   public final int val;
 
@@ -25,6 +26,6 @@ public class IIncInst implements Instruction {
 
   @Override
   public String format() {
-    return String.format("%s %d %d", "iinc", index, val);
+    return "iinc " + index + " " + val;
   }
 }

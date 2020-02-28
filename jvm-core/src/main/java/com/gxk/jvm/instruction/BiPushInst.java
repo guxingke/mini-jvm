@@ -22,6 +22,6 @@ public class BiPushInst implements Instruction {
 
   @Override
   public String format() {
-    return String.format("%s %d", "bipush", val);
+    return "bipush " + val;
   }
 }

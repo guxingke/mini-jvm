@@ -296,4 +296,14 @@ public abstract class Utils {
 
     return cp;
   }
+
+  public static String replace(String src, char target, char replacement) {
+    char[] sources= src.toCharArray();
+    for (int i = 0; i < sources.length; i++) {
+      if (sources[i] == target) {
+        sources[i] = replacement;
+      }
+    }
+    return new String(sources);
+  }
 }
