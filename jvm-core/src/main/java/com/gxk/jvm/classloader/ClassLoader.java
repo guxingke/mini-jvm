@@ -117,16 +117,19 @@ public class ClassLoader {
         case "S":
         case "I":
           it.val = new Slot[]{new Slot(0, Slot.INT)};
+          break;
         case "F":
           it.val = new Slot[]{new Slot(0, Slot.FLOAT)};
           break;
         case "D":
           it.val = new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)};
+          break;
         case "J":
           it.val = new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)};
           break;
         default:
           it.val = new Slot[]{new Slot(null)};
+          break;
       }
     }
 

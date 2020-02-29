@@ -1,6 +1,7 @@
 package com.gxk.jvm;
 
 import com.gxk.jvm.util.EnvHolder;
+import com.gxk.jvm.util.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -16,8 +17,13 @@ public class Args {
   private static final String MINUS_HELP = "-help";
   private static final String MINUS_VERBOSE = "-verbose";
   private static final String MINUS_VERBOSE_TRACE = "-verbose:trace";
+  private static final String MINUS_VERBOSE_CALL = "-verbose:call";
   private static final String MINUS_VERBOSE_CLASS = "-verbose:class";
   private static final String MINUS_VERBOSE_DEBUG = "-verbose:debug";
+
+  private static final String MINUS_COLOR_RED = "-Xcolor:red";
+  private static final String MINUS_COLOR_GREEN = "-Xcolor:green";
+  private static final String MINUS_COLOR_YELLOW = "-Xcolor:yellow";
 
   private static final String MINUS_CP = "-cp";
   private static final String MINUS_JAR = "-jar";
@@ -26,6 +32,7 @@ public class Args {
   boolean help;
   boolean verbose;
   boolean verboseTrace;
+  boolean verboseCall;
   boolean verboseClass;
   boolean verboseDebug;
 
@@ -70,6 +77,11 @@ public class Args {
         args.verboseTrace = true;
       }
 
+      if (Objects.equals(MINUS_VERBOSE_CALL, cliArgs[idx])) {
+        idx++;
+        args.verboseCall = true;
+      }
+
       if (Objects.equals(MINUS_VERBOSE_CLASS, cliArgs[idx])) {
         idx++;
         args.verboseClass = true;
@@ -78,6 +90,21 @@ public class Args {
       if (Objects.equals(MINUS_VERBOSE_DEBUG, cliArgs[idx])) {
         idx++;
         args.verboseDebug = true;
+      }
+
+      if (Objects.equals(MINUS_COLOR_RED, cliArgs[idx])) {
+        idx++;
+        Logger.fg = Logger.ANSI_RED;
+      }
+
+      if (Objects.equals(MINUS_COLOR_GREEN, cliArgs[idx])) {
+        idx++;
+        Logger.fg = Logger.ANSI_GREEN;
+      }
+
+      if (Objects.equals(MINUS_COLOR_YELLOW, cliArgs[idx])) {
+        idx++;
+        Logger.fg = Logger.ANSI_YELLOW;
       }
 
       tries++;
@@ -109,15 +136,15 @@ public class Args {
   private static String parseMainClass(String mainJar) {
     String userDir = System.getProperty("user.dir");
     String path = userDir + EnvHolder.FILE_SEPARATOR + mainJar;
-    try {
-      ZipFile file = new ZipFile(path);
+    try (ZipFile file = new ZipFile(path)) {
       ZipEntry entry = file.getEntry("META-INF/MANIFEST.MF");
 
-      InputStream is = file.getInputStream(entry);
-      String line;
-      while ((line = readLine(is)) != null) {
-        if (line.startsWith("Main-Class: ")) {
-          return line.substring(12);
+      try (InputStream is = file.getInputStream(entry)) {
+        String line;
+        while ((line = readLine(is)) != null) {
+          if (line.startsWith("Main-Class: ")) {
+            return line.substring(12);
+          }
         }
       }
     } catch (IOException e) {
@@ -134,7 +161,7 @@ public class Args {
     }
     while (b > 0) {
       char c = (char) b;
-      if (c == '\r' | c == '\n') {
+      if (c == '\r' || c == '\n') {
         break;
       }
       if (c == '.') {

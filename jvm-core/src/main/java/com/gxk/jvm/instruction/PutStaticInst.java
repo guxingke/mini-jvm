@@ -5,8 +5,10 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.util.Logger;
 
 public class PutStaticInst implements Instruction {
+
   public final String clazz;
   public final String fieldName;
   public final String fieldDescriptor;
@@ -22,16 +24,18 @@ public class PutStaticInst implements Instruction {
     this.fieldDescriptor = fieldDescriptor;
   }
 
-
   @Override
   public void execute(Frame frame) {
     KClass kClass = Heap.findClass(clazz);
+    if (kClass == null) {
+      kClass = frame.method.clazz.classLoader.loadClass(clazz);
+    }
     KField field = kClass.getField(fieldName, fieldDescriptor);
 
     if (fieldDescriptor.equals("J")) {
       Slot low = frame.popSlot();
       Slot high = frame.popSlot();
-      field.val = new Slot[] {high, low};
+      field.val = new Slot[]{high, low};
       return;
     }
     field.val = new Slot[]{frame.popSlot()};

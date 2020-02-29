@@ -93,6 +93,10 @@ public class Interpreter {
       Instruction inst = frame.getInst(pc);
       if (inst == null) {
         StringBuilder sb = new StringBuilder();
+        sb.append(pc).append("\n");
+        sb.append("class: ").append(frame.method.clazz.name).append("\n");
+        sb.append("method: ").append(frame.method.name).append("\n");
+        sb.append("methodDescriptor: ").append(frame.method.descriptor).append("\n");
         frame.method.instructionMap.forEach((key, val) -> {
           sb.append(key).append(" ").append(val.format()).append("\n");
         });
@@ -204,6 +208,18 @@ public class Interpreter {
     if (EnvHolder.verboseTrace) {
       trace(inst, frame);
     }
+    // verboseCall
+    if (EnvHolder.verboseCall) {
+      call(inst, frame);
+    }
+  }
+
+  private void call(Instruction inst, Frame frame) {
+    if (!inst.format().startsWith("invoke")) {
+      return;
+    }
+    String space = genSpace((frame.thread.size() - 1) * 2);
+    Logger.trace(space + frame.thread.getPc() + " " + inst.format());
   }
 
   private void trace(Instruction inst, Frame frame) {

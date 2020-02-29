@@ -2,7 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 
-public class I2sInst implements Instruction{
+public class I2sInst implements Instruction {
 
   @Override
   public int offset() {
@@ -11,6 +11,8 @@ public class I2sInst implements Instruction{
 
   @Override
   public void execute(Frame frame) {
-    // do nothings
+    Integer integer = frame.popInt();
+    short val = integer.shortValue();
+    frame.pushInt(((int) val));
   }
 }

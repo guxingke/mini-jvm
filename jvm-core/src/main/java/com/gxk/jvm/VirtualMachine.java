@@ -48,6 +48,10 @@ public class VirtualMachine {
     if (cmd.verboseTrace) {
       EnvHolder.verboseTrace = true;
     }
+
+    if (cmd.verboseCall) {
+      EnvHolder.verboseCall = true;
+    }
     if (cmd.verboseClass) {
       EnvHolder.verboseClass = true;
     }
@@ -76,7 +80,6 @@ public class VirtualMachine {
 
     initSystemOut(classLoader);
     initSystemErr(classLoader);
-
   }
 
   private static void initSystemErr(ClassLoader classLoader) {
