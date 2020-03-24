@@ -64,5 +64,15 @@ public abstract class ZipFileBridge {
         throw new UnsupportedOperationException("ioe");
       }
     });
+
+    Heap.registerMethod("java/util/zip/ZipFile_close_()V", frame -> {
+      ZipFile file = (ZipFile) ((KObject) frame.popRef()).getExtra();
+      try {
+        file.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new UnsupportedOperationException("zip file close");
+      }
+    });
   }
 }

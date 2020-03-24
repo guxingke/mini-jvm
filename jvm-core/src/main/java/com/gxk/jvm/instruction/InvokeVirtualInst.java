@@ -36,8 +36,11 @@ public class InvokeVirtualInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     if (Objects.equals("sun/misc/Unsafe", clazz)
-      || Objects.equals("java/util/Properties", clazz)) {
-      NativeMethod nativeMethod = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+        || Objects.equals("java/util/Properties", clazz)
+        || Objects.equals("java/util/zip/ZipFile", clazz)
+    ) {
+      NativeMethod nativeMethod = Heap
+          .findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
       if (nativeMethod != null) {
         nativeMethod.invoke(frame);
         return;
@@ -50,6 +53,7 @@ public class InvokeVirtualInst implements Instruction {
     if (method == null) {
       // try find interfaces
       if (clazz.interfaceNames.isEmpty()) {
+        System.out.println(this.clazz + " " + this.methodName + " " + this.methodDescriptor);
         throw new IllegalStateException();
       }
 
@@ -126,9 +130,9 @@ public class InvokeVirtualInst implements Instruction {
   @Override
   public String toString() {
     return "InvokeVirtualInst{" +
-      "clazz='" + clazz + '\'' +
-      ", methodName='" + methodName + '\'' +
-      ", methodDescriptor='" + methodDescriptor + '\'' +
-      '}';
+        "clazz='" + clazz + '\'' +
+        ", methodName='" + methodName + '\'' +
+        ", methodDescriptor='" + methodDescriptor + '\'' +
+        '}';
   }
 }
