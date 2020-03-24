@@ -121,6 +121,9 @@ mini-jvm -- sum10.bc
 - [如何构建你自己的 JVM (0) 概述](https://www.guxingke.com/posts/how-to-build-your-own-jvm-1.html)
 - [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/posts/mini-jvm-intro.html)
 
+## 建议
+- 在JDK1.8.0_121环境下发现编译不过的情况，详情见[#25](https://github.com/guxingke/mini-jvm/issues/25)，本项目的目的是学习JVM，为了项目足够小，清晰和易于理解，并不打算做各种适配工作，建议大家在MacOSX，Maven 3.3+,JDK 1.8.0_192+下学习；
+
 ## 参考
 - [The Java® Virtual Machine Specification](https://docs.oracle.com/javase/specs/jvms/se8/html/)
 - [JVM 字节码从入门到精通](https://juejin.im/book/5c25811a6fb9a049ec6b23ee/)
