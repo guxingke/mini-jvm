@@ -38,7 +38,7 @@ public class Args {
 
   public String classpath = ".";
   public String clazz;
-  public String[] args;
+  public String[] args = new String[0];
 
   public static Args parseArgs(String... cliArgs) {
     Args args = new Args();
