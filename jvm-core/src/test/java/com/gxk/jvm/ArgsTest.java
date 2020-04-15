@@ -28,7 +28,7 @@ public class ArgsTest {
     assertEquals("target/test.jar", args.classpath);
     assertEquals("Main", args.clazz);
 
-    assertNull(args.args);
+    assertEquals(0, args.args.length);
   }
 
   @Test
