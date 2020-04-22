@@ -91,8 +91,9 @@ mini-jvm HelloWold hello mini-jvm
 ## 联系作者
 <details>
 <summary>微信群</summary>
-加个人微信 `guxingke_`，备注 mini-jvm 拉你进群。  
-<img src='docs/assets/imgs/wechat.jpeg'></img>
+<p>加个人微信 `guxingke_`，备注 mini-jvm 拉你进群。</p>
+
+<img style="margin:0 auto;display:block;" src='docs/assets/imgs/wechat.jpeg'></img>
 </details>
 
 ## 参考
