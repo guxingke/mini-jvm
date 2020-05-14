@@ -17,7 +17,7 @@ public class AStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.popRef();
+    Long tmp = frame.popRef();
     frame.setRef(index, tmp);
   }
 

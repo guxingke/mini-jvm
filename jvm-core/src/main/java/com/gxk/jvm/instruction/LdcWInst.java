@@ -2,11 +2,11 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KArray;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KField;
 
 public class LdcWInst implements Instruction {
   public final String descriptor;
@@ -32,7 +32,7 @@ public class LdcWInst implements Instruction {
         frame.pushFloat(((float) val));
         break;
       case "Ljava/lang/String":
-        KClass klass = Heap.findClass("java/lang/String");
+        KClass klass = MethodArea.findClass("java/lang/String");
         if (klass == null) {
           klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
@@ -46,8 +46,8 @@ public class LdcWInst implements Instruction {
           frame.nextPc = frame.thread.getPc();
           return;
         }
-        KObject object = klass.newObject();
-        KField field = object.getField("value", "[C");
+        Long object = klass.newObject();
+        KField field = Heap.load(object).getField("value", "[C");
         KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
 
         char[] chars = val.toString().toCharArray();
@@ -55,8 +55,8 @@ public class LdcWInst implements Instruction {
         for (int i = 0; i < chars.length; i++) {
           characters[i] = chars[i];
         }
-        KArray arr = new KArray(arrClazz, characters);
-        field.val = new Slot[] {new Slot(arr)};
+        Long arrOff = KArray.newArray(arrClazz, characters);
+        field.val = new Slot[] {new Slot(arrOff)};
         frame.pushRef(object);
         break;
       default:

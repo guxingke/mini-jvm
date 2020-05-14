@@ -55,12 +55,12 @@ public class OperandStack {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void pushRef(Object val) {
+  public void pushRef(Long val) {
     this.slots.push(new Slot(val));
   }
 
-  public Object popRef() {
-    return this.slots.pop().ref;
+  public Long popRef() {
+    return this.slots.pop().refOffset;
   }
 
   public Slot popSlot() {
@@ -84,8 +84,8 @@ public class OperandStack {
         sb.append(space).append(String.format("%d | null      | null", i)).append("\n");
         continue;
       }
-      if (slot.ref != null) {
-        sb.append(space).append(String.format("%d | ref       | %s", i, slot.ref)).append("\n");
+      if (slot.refOffset != null) {
+        sb.append(space).append(String.format("%d | ref       | %s", i, slot.refOffset)).append("\n");
         continue;
       }
       sb.append(space).append(String.format("%d | primitive | %s ", i, slot.num)).append("\n");

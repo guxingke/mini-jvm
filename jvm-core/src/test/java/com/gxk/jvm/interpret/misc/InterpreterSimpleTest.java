@@ -14,7 +14,7 @@ import com.gxk.jvm.instruction.IStore2Inst;
 import com.gxk.jvm.instruction.IfICmpGtInst;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.KMethod;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;

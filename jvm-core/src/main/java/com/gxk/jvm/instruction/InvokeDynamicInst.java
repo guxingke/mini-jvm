@@ -4,10 +4,10 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.cp.MethodHandle;
 import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KLambdaObject;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KLambdaObject;
+import com.gxk.jvm.rtda.memory.KMethod;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class InvokeDynamicInst implements Instruction {
     MethodType methodType= (MethodType) frame.method.clazz.constantPool.infos[descRef - 1];
     String bstMethodDesc = Utils.getString(frame.method.clazz.constantPool, methodType.descriptorIndex);
 
-    KClass clazz = Heap.findClass(bsTargetClass);
+    KClass clazz = MethodArea.findClass(bsTargetClass);
     KMethod method = clazz.getLambdaMethod(bsTargetMethod);
     int maxLocals = method.maxLocals;
 
@@ -64,9 +64,9 @@ public class InvokeDynamicInst implements Instruction {
     lcMehods.add(lm);
 
     String format =Utils.genNativeMethodKey( lcname, lm.name, lm.descriptor);
-    if (Heap.findMethod(format) == null) {
-      Heap.registerMethod(format, (f) -> {
-        KClass bsc= Heap.findClass(bsTargetClass);
+    if (MethodArea.findMethod(format) == null) {
+      MethodArea.registerMethod(format, (f) -> {
+        KClass bsc= MethodArea.findClass(bsTargetClass);
         KMethod bsm = bsc.getLambdaMethod(bsTargetMethod);
 
         List<String> args = bsm.getArgs();

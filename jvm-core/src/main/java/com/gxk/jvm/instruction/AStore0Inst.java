@@ -6,7 +6,7 @@ public class AStore0Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.popRef();
+    Long tmp = frame.popRef();
     frame.setRef(0, tmp);
   }
 

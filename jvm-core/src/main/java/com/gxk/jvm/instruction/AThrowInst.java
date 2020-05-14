@@ -2,14 +2,16 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.KObject;
 
 public class AThrowInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
     Thread thread = frame.thread;
-    KObject exc = (KObject) frame.popRef();
+    Long offset = frame.popRef();
+    KObject exc = Heap.load(offset);
     String name = exc.clazz.name;
 
     Integer handlerPc = thread.currentFrame().method.getHandlerPc(thread.getPc(), name);
@@ -29,7 +31,7 @@ public class AThrowInst implements Instruction {
       throw new RuntimeException("no exception handler");
     }
 
-    thread.currentFrame().pushRef(exc);
+    thread.currentFrame().pushRef(offset);
     thread.currentFrame().nextPc = handlerPc;
   }
 

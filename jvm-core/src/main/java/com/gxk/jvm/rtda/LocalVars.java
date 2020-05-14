@@ -1,6 +1,7 @@
 package com.gxk.jvm.rtda;
 
 public class LocalVars {
+
   private final Slot[] slots;
 
   public LocalVars(int size) {
@@ -65,12 +66,12 @@ public class LocalVars {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void setRef(Integer index, Object ref) {
+  public void setRef(Integer index, Long ref) {
     slots[index] = new Slot(ref);
   }
 
-  public Object getRef(Integer index) {
-    return slots[index].ref;
+  public Long getRef(Integer index) {
+    return slots[index].refOffset;
   }
 
   public String debug(String space) {
@@ -82,8 +83,9 @@ public class LocalVars {
         sb.append(space).append(String.format("%d | null | null", i)).append("\n");
         continue;
       }
-      if (slot.ref != null) {
-        sb.append(space).append(String.format("%d | ref       | %s", i, slot.ref)).append("\n");
+      if (slot.refOffset != null) {
+        sb.append(space).append(String.format("%d | ref       | %s", i, slot.refOffset))
+            .append("\n");
         continue;
       }
       sb.append(space).append(String.format("%d | primitive | %s", i, slot.num)).append("\n");

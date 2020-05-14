@@ -1,11 +1,11 @@
 package com.gxk.jvm.nativebridge.java.io;
 
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public abstract class FileDescriptorBridge {
 
   public static void registerNative0() {
-    Heap.registerMethod("java/io/FileDescriptor_initIDs_()V", frame -> {
+    MethodArea.registerMethod("java/io/FileDescriptor_initIDs_()V", frame -> {
     });
   }
 }

@@ -17,7 +17,7 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.KMethod;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

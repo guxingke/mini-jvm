@@ -1,4 +1,4 @@
-package com.gxk.jvm.rtda.heap;
+package com.gxk.jvm.rtda.memory;
 
 import com.gxk.jvm.rtda.Frame;
 

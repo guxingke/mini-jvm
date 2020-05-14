@@ -2,8 +2,9 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.KField;
+import com.gxk.jvm.rtda.memory.KObject;
 import com.gxk.jvm.util.Utils;
 
 public class GetFieldInst implements Instruction {
@@ -28,7 +29,7 @@ public class GetFieldInst implements Instruction {
   public void execute(Frame frame) {
     // hack for java/nio/charset/Charset name Ljava/lang/String;
     if (clazz.equals("java/nio/charset/Charset") && fieldName.equals("name")) {
-      KObject obj = ((KObject) frame.popRef());
+      KObject obj = Heap.load(frame.popRef());
       KField field = obj.getField(fieldName, fieldDescriptor);
       field.val = new Slot[]{new Slot(Utils.str2Obj("UTF-8", obj.clazz.classLoader))};
       Slot[] val = field.val;
@@ -39,7 +40,7 @@ public class GetFieldInst implements Instruction {
       return;
     }
 
-    KObject obj = ((KObject) frame.popRef());
+    KObject obj = Heap.load(frame.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
     Slot[] val = field.val;
 

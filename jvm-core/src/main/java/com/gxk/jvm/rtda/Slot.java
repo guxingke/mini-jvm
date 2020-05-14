@@ -1,11 +1,13 @@
 package com.gxk.jvm.rtda;
 
 public class Slot {
+
   // who you are?
   public static final int BYTE = 0;
   public static final int SHORT = 1;
   public static final int INT = 2;
   public static final int FLOAT = 3;
+  public static final int CHAR= 9;
 
   public static final int REF = 4;
 
@@ -15,19 +17,19 @@ public class Slot {
   public static final int DOUBLE_HIGH = 8;
 
   public final Integer num;
-  public final Object ref;
+  public final Long refOffset;
 
   public final int type;
 
   public Slot(Integer num, int type) {
     this.num = num;
-    this.ref = null;
+    this.refOffset = null;
     this.type = type;
   }
 
-  public Slot(Object ref) {
+  public Slot(Long refOffset) {
     this.num = null;
-    this.ref = ref;
+    this.refOffset = refOffset;
     this.type = REF;
   }
 
@@ -35,7 +37,7 @@ public class Slot {
   public String toString() {
     final StringBuilder sb = new StringBuilder("Slot{");
     sb.append("num=").append(num);
-    sb.append(", ref=").append(ref);
+    sb.append(", ref=").append(refOffset);
     sb.append('}');
     return sb.toString();
   }

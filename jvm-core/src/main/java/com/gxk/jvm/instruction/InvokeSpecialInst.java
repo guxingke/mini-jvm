@@ -1,10 +1,10 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.NativeMethod;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
 
@@ -27,14 +27,14 @@ public class InvokeSpecialInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap
+    NativeMethod nm = MethodArea
         .findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
     }
 
-    KClass kClass = Heap.findClass(clazz);
+    KClass kClass = MethodArea.findClass(clazz);
     if (kClass == null) {
       throw new IllegalStateException();
     }

@@ -1,4 +1,4 @@
-package com.gxk.jvm.rtda.heap;
+package com.gxk.jvm.rtda.memory;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ConstantPool;
@@ -29,7 +29,7 @@ public class KClass {
   private List<KClass> interfaces;
   private int staticInit = 0;
 
-  private KObject runtimeClass;
+  private Long runtimeClass;
 
   public KClass(int accessFlags, String name, ClassLoader classLoader, ClassFile classFile) {
     this.accessFlags = accessFlags;
@@ -156,7 +156,7 @@ public class KClass {
     return this.superClass;
   }
 
-  public KObject newObject() {
+  public Long newObject() {
     List<KField> newFields = new ArrayList<>();
     for (KField field : fields) {
       newFields.add(this.map(field));
@@ -165,7 +165,8 @@ public class KClass {
     if (this.superClass != null) {
       object.setSuperObject(this.superClass.newObject());
     }
-    return object;
+    Long offset = Heap.allocate(object);
+    return offset;
   }
 
   public KLambdaObject newLambdaObject(List<Object> args) {
@@ -241,7 +242,7 @@ public class KClass {
   public void interfaceInit(Frame frame) {
     List<KClass> interfaces = new ArrayList<>();
     for (String interfaceName : this.interfaceNames) {
-      KClass tmp = Heap.findClass(interfaceName);
+      KClass tmp = MethodArea.findClass(interfaceName);
       if (tmp == null) {
         tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
       }
@@ -285,11 +286,11 @@ public class KClass {
     return (accessFlags & 0x0200) != 0;
   }
 
-  public KObject getRuntimeClass() {
+  public Long getRuntimeClass() {
     return runtimeClass;
   }
 
-  public void setRuntimeClass(KObject runtimeClass) {
+  public void setRuntimeClass(Long runtimeClass) {
     this.runtimeClass = runtimeClass;
   }
 

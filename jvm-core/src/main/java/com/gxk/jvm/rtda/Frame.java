@@ -1,7 +1,7 @@
 package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.KMethod;
 
 import java.util.Map;
 
@@ -80,11 +80,11 @@ public class Frame {
     return this.operandStack.popDouble();
   }
 
-  public void pushRef(Object val) {
+  public void pushRef(Long val) {
     this.operandStack.pushRef(val);
   }
 
-  public Object popRef() {
+  public Long popRef() {
     return this.operandStack.popRef();
   }
 
@@ -130,11 +130,11 @@ public class Frame {
     return this.localVars.getDouble(index);
   }
 
-  public void setRef(Integer index, Object ref) {
+  public void setRef(Integer index, Long ref) {
     this.localVars.setRef(index, ref);
   }
 
-  public Object getRef(Integer index) {
+  public Long getRef(Integer index) {
     return this.localVars.getRef(index);
   }
 

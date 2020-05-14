@@ -1,4 +1,4 @@
-package com.gxk.jvm.rtda.heap;
+package com.gxk.jvm.rtda.memory;
 
 import java.util.List;
 

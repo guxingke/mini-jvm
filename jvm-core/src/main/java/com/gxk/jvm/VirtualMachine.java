@@ -31,11 +31,11 @@ import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KField;
+import com.gxk.jvm.rtda.memory.KMethod;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Utils;
 
@@ -65,7 +65,7 @@ public class VirtualMachine {
     String mainClass = Utils.replace(cmd.clazz, '.', EnvHolder.FILE_SEPARATOR.toCharArray()[0]);
     classLoader.loadClass(mainClass);
 
-    KClass clazz = Heap.findClass(mainClass);
+    KClass clazz = MethodArea.findClass(mainClass);
     KMethod method = clazz.getMainMethod();
     if (method == null) {
       throw new IllegalStateException("not found main method");
@@ -84,7 +84,7 @@ public class VirtualMachine {
 
   private static void initSystemErr(ClassLoader classLoader) {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
-    KObject outFdObj = fdCls.newObject();
+    Long outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Thread t1 = new Thread(1024);
     Frame f1 = new Frame(fdInitMethod, t1);
@@ -93,7 +93,7 @@ public class VirtualMachine {
     new Interpreter().doInterpret(t1, f1);
 
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
-    KObject fosObj = fosCls.newObject();
+    Long fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Thread t2 = new Thread(1024);
     Frame f2 = new Frame(fosInitMethod, t2);
@@ -102,7 +102,7 @@ public class VirtualMachine {
     new Interpreter().doInterpret(t2, f2);
 
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
-    KObject psObj = psCls.newObject();
+    Long psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Thread thread = new Thread(1024);
     Frame frame = new Frame(psInitMethod, thread);
@@ -119,7 +119,7 @@ public class VirtualMachine {
 
   private static void initSystemOut(ClassLoader classLoader) {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
-    KObject outFdObj = fdCls.newObject();
+    Long outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Thread t1 = new Thread(1024);
     Frame f1 = new Frame(fdInitMethod, t1);
@@ -128,7 +128,7 @@ public class VirtualMachine {
     new Interpreter().doInterpret(t1, f1);
 
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
-    KObject fosObj = fosCls.newObject();
+    Long fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Thread t2 = new Thread(1024);
     Frame f2 = new Frame(fosInitMethod, t2);
@@ -137,7 +137,7 @@ public class VirtualMachine {
     new Interpreter().doInterpret(t2, f2);
 
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
-    KObject psObj = psCls.newObject();
+    Long psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Thread thread = new Thread(1024);
     Frame frame = new Frame(psInitMethod, thread);
@@ -181,11 +181,11 @@ public class VirtualMachine {
   private static void loadFoundationClass(ClassLoader classLoader) {
     // class
     KClass metaClass = classLoader.loadClass("java/lang/Class");
-    for (KClass cls : Heap.getClasses()) {
+    for (KClass cls : MethodArea.getClasses()) {
       if (cls.getRuntimeClass() == null) {
-        KObject obj = metaClass.newObject();
+        Long obj = metaClass.newObject();
         cls.setRuntimeClass(obj);
-        obj.setMetaClass(cls);
+        Heap.load(obj).setMetaClass(cls);
       }
     }
 

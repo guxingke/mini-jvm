@@ -5,7 +5,7 @@ import com.gxk.jvm.classfile.ClassReader;
 import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.KMethod;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

@@ -2,7 +2,8 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.KObject;
 
 public class PutFieldInst implements Instruction {
   public final String clazz;
@@ -25,13 +26,13 @@ public class PutFieldInst implements Instruction {
     if (fieldDescriptor.equals("J") || fieldDescriptor.equals("D")) {
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();
-      KObject obj = (KObject) frame.popRef();
+      KObject obj = Heap.load(frame.popRef());
       obj.setField(fieldName, fieldDescriptor, new Slot[]{v1, v2});
       return;
     }
 
     Slot v = frame.popSlot();
-    ((KObject) frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
+    Heap.load(frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
   }
 
   @Override

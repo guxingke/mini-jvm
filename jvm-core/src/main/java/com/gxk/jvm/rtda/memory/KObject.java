@@ -1,4 +1,4 @@
-package com.gxk.jvm.rtda.heap;
+package com.gxk.jvm.rtda.memory;
 
 import com.gxk.jvm.rtda.Slot;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ public class KObject implements Cloneable {
 
   public final List<KField> fields;
   public final KClass clazz;
-  private KObject superObject;
+  private Long superObject;
 
   // for class obj
   private KClass metaClass;
@@ -40,10 +40,10 @@ public class KObject implements Cloneable {
     }
 
     // super object
-    return this.superObject.getField(fieldName, fieldDescriptor);
+    return Heap.load(this.superObject).getField(fieldName, fieldDescriptor);
   }
 
-  public void setSuperObject(KObject superObject) {
+  public void setSuperObject(Long superObject) {
     this.superObject = superObject;
   }
 
@@ -52,9 +52,10 @@ public class KObject implements Cloneable {
     field.val = val;
   }
 
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    return super.clone();
+  public Long clone() throws CloneNotSupportedException {
+    KObject obj = ((KObject) super.clone());
+    Long offset = Heap.allocate(obj);
+    return offset;
   }
 
   @Override

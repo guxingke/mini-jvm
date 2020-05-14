@@ -1,15 +1,16 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.KArray;
 
 public class AAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popRef();
+    Long val = frame.popRef();
     Integer index = frame.popInt();
-    KArray array = (KArray) frame.popRef();
+    KArray array = (KArray) Heap.load(frame.popRef());
     array.items[index] = val;
   }
 

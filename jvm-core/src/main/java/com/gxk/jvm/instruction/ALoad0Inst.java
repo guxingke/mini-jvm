@@ -6,7 +6,7 @@ public class ALoad0Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.getRef(0);
+    Long tmp = frame.getRef(0);
     frame.pushRef(tmp);
   }
 

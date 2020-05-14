@@ -1,11 +1,11 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KArray;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.KObject;
 
 public class ANewArrayInst implements Instruction {
 
@@ -22,7 +22,7 @@ public class ANewArrayInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(className);
+    KClass kClass = MethodArea.findClass(className);
     if (kClass == null) {
       kClass = frame.method.clazz.classLoader.loadClass(className);
     }
@@ -42,12 +42,12 @@ public class ANewArrayInst implements Instruction {
     Integer count = frame.popInt();
     String name = "[L" + kClass.name + ";";
 
-    KClass clazz = Heap.findClass(name);
+    KClass clazz = MethodArea.findClass(name);
     if (clazz == null) {
       clazz = new KClass(1, name, kClass.classLoader, null);
-      clazz.setSuperClass(Heap.findClass("java/lang/Object"));
+      clazz.setSuperClass(MethodArea.findClass("java/lang/Object"));
       clazz.setStaticInit(2);
-      Heap.registerClass(name, clazz);
+      MethodArea.registerClass(name, clazz);
     }
     KObject[] objs = new KObject[count];
     KArray kArray = new KArray(clazz, objs);

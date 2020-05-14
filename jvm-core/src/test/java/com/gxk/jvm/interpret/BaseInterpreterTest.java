@@ -4,9 +4,9 @@ import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
 import com.gxk.jvm.util.EnvHolder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +18,7 @@ public abstract class BaseInterpreterTest {
 
   @After
   public void tearDown() {
-    Heap.clear();
+    MethodArea.clear();
   }
 
   protected void testMain(String hello) {

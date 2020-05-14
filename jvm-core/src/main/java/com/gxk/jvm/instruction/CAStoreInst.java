@@ -1,16 +1,22 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.KArray;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public class CAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Character val = ((char) (frame.popInt().intValue()));
+    Integer val = frame.popInt();
     Integer index = frame.popInt();
-    KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    KArray array = (KArray) Heap.load(frame.popRef());
+
+    Long offset = MethodArea.findClass("java.lang.Character").newObject();
+    Heap.load(offset).setField("value", "C", new Slot[]{new Slot(val, Slot.CHAR)});
+    array.items[index] = offset;
   }
 
   @Override

@@ -1,18 +1,16 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
-import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -39,7 +37,7 @@ public class InvokeVirtualInst implements Instruction {
         || Objects.equals("java/util/Properties", clazz)
         || Objects.equals("java/util/zip/ZipFile", clazz)
     ) {
-      NativeMethod nativeMethod = Heap
+      NativeMethod nativeMethod = MethodArea
           .findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
       if (nativeMethod != null) {
         nativeMethod.invoke(frame);
@@ -47,7 +45,7 @@ public class InvokeVirtualInst implements Instruction {
       }
     }
 
-    KClass clazz = Heap.findClass(this.clazz);
+    KClass clazz = MethodArea.findClass(this.clazz);
     KMethod method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
@@ -84,10 +82,10 @@ public class InvokeVirtualInst implements Instruction {
       argObjs.add(Utils.pop(frame, arg));
     }
 
-    KObject ref = (KObject) frame.popRef();
-    KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+    Long ref = frame.popRef();
+    KMethod implMethod = Heap.load(ref).clazz.getMethod(methodName, methodDescriptor);
 
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod));
+    NativeMethod nm = MethodArea.findMethod(Utils.genNativeMethodKey(implMethod));
     if (nm != null) {
       // restore frame
       ArrayList<String> tmpArgs = new ArrayList<>(args);

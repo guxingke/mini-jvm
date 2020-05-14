@@ -1,11 +1,12 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
-import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.NativeMethod;
 import com.gxk.jvm.util.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,13 +36,14 @@ public class InvokeInterfaceInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey( clazzName, methodName, methodDescriptor));
+    NativeMethod nm = MethodArea
+        .findMethod(Utils.genNativeMethodKey( clazzName, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
     }
 
-    KClass clazz = Heap.findClass(this.clazzName);
+    KClass clazz = MethodArea.findClass(this.clazzName);
     if (clazz == null) {
       clazz = frame.method.clazz.classLoader.loadClass(clazzName);
     }
@@ -54,7 +56,7 @@ public class InvokeInterfaceInst implements Instruction {
 
       // hack by native method
       String key =Utils.genNativeMethodKey( cinit.clazz.name, cinit.name, cinit.descriptor);
-      NativeMethod ciNm = Heap.findMethod(key);
+      NativeMethod ciNm = MethodArea.findMethod(key);
       if (ciNm != null) {
         ciNm.invoke(frame);
       } else {
@@ -106,7 +108,8 @@ public class InvokeInterfaceInst implements Instruction {
       argObjs.add(Utils.pop(frame, arg));
     }
 
-    KObject ref = (KObject) frame.popRef();
+    Long offset = frame.popRef();
+    KObject ref = Heap.load(offset);
     KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
     // method is default method
     if (implMethod == null) {
@@ -114,13 +117,14 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     // hack for lambda
-    nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
+    nm = MethodArea
+        .findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
     if (nm != null) {
       // restore frame
       ArrayList<String> tmpArgs = new ArrayList<>(args);
       Collections.reverse(tmpArgs);
 
-      frame.pushRef(ref);
+      frame.pushRef(offset);
       for (int i = 0; i < tmpArgs.size(); i++) {
         String arg = tmpArgs.get(i);
         Object obj = argObjs.get(argObjs.size() - 1 - i);
@@ -141,7 +145,7 @@ public class InvokeInterfaceInst implements Instruction {
       slotIdx += Utils.setLocals(newFrame, slotIdx, arg, argObjs.get(i));
     }
 
-    newFrame.setRef(0, ref);
+    newFrame.setRef(0, offset);
     frame.thread.pushFrame(newFrame);
   }
 

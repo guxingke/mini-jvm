@@ -12,12 +12,13 @@ import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.memory.Heap;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KArray;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KField;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.KObject;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -199,7 +200,7 @@ public abstract class Utils {
         ret++;
         break;
       default:
-        frame.setRef(idx, val);
+        frame.setRef(idx, ((Long) val));
         break;
     }
     return ret;
@@ -224,7 +225,7 @@ public abstract class Utils {
         frame.pushDouble(((Double) obj));
         break;
       default:
-        frame.pushRef(obj);
+        frame.pushRef(((Long) obj));
         break;
     }
   }
@@ -233,7 +234,7 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Object[] values = ((KArray) name.getField("value", "[C").val[0].ref).items;
+    Object[] values = ((KArray) Heap.load(name.getField("value", "[C").val[0].refOffset)).items;
     char[] chars = new char[values.length];
     for (int i = 0; i < values.length; i++) {
       chars[i] = (char) values[i];
@@ -241,18 +242,20 @@ public abstract class Utils {
     return new String(chars);
   }
 
-  public static KObject str2Obj(String str, ClassLoader classLoader) {
-    KClass klass = Heap.findClass("java/lang/String");
-    KObject object = klass.newObject();
-    KField field = object.getField("value", "[C");
+  public static Long str2Obj(String str, ClassLoader classLoader) {
+    KClass klass = MethodArea.findClass("java/lang/String");
+    Long object = klass.newObject();
+    KField field = Heap.load(object).getField("value", "[C");
     KClass arrClazz = new KClass(1, "[C", classLoader, null);
 
     char[] chars = str.toCharArray();
-    Character[] characters = new Character[chars.length];
+    Long[] characters = new Long[chars.length];
     for (int i = 0; i < chars.length; i++) {
-      characters[i] = chars[i];
+      Long offset = MethodArea.findClass("C").newObject();
+      Heap.load(offset).setField("value", "C", new Slot[]{new Slot((int) chars[i], Slot.CHAR)});
+      characters[i] = offset;
     }
-    KArray arr = new KArray(arrClazz, characters);
+    Long arr = KArray.newArray(arrClazz, characters);
     field.val = new Slot[]{new Slot(arr)};
     return object;
   }
@@ -298,7 +301,7 @@ public abstract class Utils {
   }
 
   public static String replace(String src, char target, char replacement) {
-    char[] sources= src.toCharArray();
+    char[] sources = src.toCharArray();
     for (int i = 0; i < sources.length; i++) {
       if (sources[i] == target) {
         sources[i] = replacement;

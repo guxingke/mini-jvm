@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.memory.KArray;
 
 public class FALoadInst implements Instruction {
 

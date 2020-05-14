@@ -2,11 +2,11 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.*;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.rtda.heap.KObject;
-import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.KClass;
+import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.NativeMethod;
 
 public class NewInst implements Instruction {
 
@@ -23,7 +23,7 @@ public class NewInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
+    KClass kClass = MethodArea.findClass(clazz);
 
     if (kClass == null) {
       ClassLoader loader = frame.method.clazz.classLoader;
@@ -44,7 +44,7 @@ public class NewInst implements Instruction {
       }
 
       String clNm = cinit.nativeMethodKey();
-      NativeMethod clm = Heap.findMethod(clNm);
+      NativeMethod clm = MethodArea.findMethod(clNm);
       if (clm != null) {
         clm.invoke(frame);
       } else {
@@ -59,7 +59,7 @@ public class NewInst implements Instruction {
       }
     }
 
-    KObject obj = kClass.newObject();
+    Long obj = kClass.newObject();
     frame.pushRef(obj);
   }
 
