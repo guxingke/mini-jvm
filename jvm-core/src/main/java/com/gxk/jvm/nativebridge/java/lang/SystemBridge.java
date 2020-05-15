@@ -18,38 +18,50 @@ public abstract class SystemBridge {
     });
     MethodArea.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (frame) -> {
     });
-    MethodArea.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
-    MethodArea.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.pushLong(java.lang.System.nanoTime()));
+    MethodArea.registerMethod("java/lang/System_currentTimeMillis_()J",
+        (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
+    MethodArea.registerMethod("java/lang/System_nanoTime_()J",
+        (frame) -> frame.pushLong(java.lang.System.nanoTime()));
     MethodArea
-        .registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (frame) -> {
-      Integer len = frame.popInt();
-      Integer dsp = frame.popInt();
-      KArray dest = (KArray) Heap.load(frame.popRef());
-      Integer ssp = frame.popInt();
-      KArray source = (KArray) Heap.load(frame.popRef());
-
-      for (int i = 0; i < len; i++) {
-        dest.items[dsp++] = source.items[ssp++];
-      }
-    });
-    MethodArea.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
-    MethodArea.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {
-    });
+        .registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V",
+            (frame) -> {
+              Integer len = frame.popInt();
+              Integer dsp = frame.popInt();
+              KArray dest = (KArray) Heap.load(frame.popRef());
+              Integer ssp = frame.popInt();
+              KArray source = (KArray) Heap.load(frame.popRef());
+              if (dest.items != null) {
+                for (int i = 0; i < len; i++) {
+                  dest.items[dsp++] = source.items[ssp++];
+                }
+              } else {
+                for (int i = 0; i < len; i++) {
+                  dest.primitiveItems[dsp++] = source.primitiveItems[ssp++];
+                }
+              }
+            });
+    MethodArea.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I",
+        (frame) -> frame.pushInt(frame.popRef().hashCode()));
+    MethodArea.registerMethod(
+        "java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;",
+        (frame) -> {
+        });
     MethodArea
-        .registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {
-    });
+        .registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;",
+            (frame) -> {
+            });
 
     // hack
     MethodArea
         .registerMethod("java/lang/System_getenv_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
-      KObject nameObj = Heap.load(frame.popRef());
+          KObject nameObj = Heap.load(frame.popRef());
 
-      String val = System.getenv(Utils.obj2Str(nameObj));
-      if (val == null) {
-        frame.pushRef(null);
-        return;
-      }
-      frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
-    });
+          String val = System.getenv(Utils.obj2Str(nameObj));
+          if (val == null) {
+            frame.pushRef(null);
+            return;
+          }
+          frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
+        });
   }
 }

@@ -17,11 +17,9 @@ public abstract class StringBridge {
       KObject obj = (KObject) Heap.load(frame.popRef());
       String str = Utils.obj2Str(obj);
       byte[] bytes = str.getBytes();
-      Long[] byteObj = new Long[bytes.length];
+      Byte[] byteObj = new Byte[bytes.length];
       for (int i = 0; i < bytes.length; i++) {
-        Long offset = MethodArea.findClass("java.lang.Byte").newObject();
-        Heap.load(offset).setField("value", "B", new Slot[]{new Slot((int) bytes[i], Slot.BYTE)});
-        byteObj[i] = offset;
+        byteObj[i] = bytes[i];
       }
       Long arr = KArray.newArray(MethodArea.findClass("[B"), byteObj);
       frame.pushRef(arr);

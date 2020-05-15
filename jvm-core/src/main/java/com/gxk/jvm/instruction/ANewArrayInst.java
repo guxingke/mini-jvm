@@ -5,7 +5,6 @@ import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KMethod;
-import com.gxk.jvm.rtda.memory.KObject;
 
 public class ANewArrayInst implements Instruction {
 
@@ -49,8 +48,8 @@ public class ANewArrayInst implements Instruction {
       clazz.setStaticInit(2);
       MethodArea.registerClass(name, clazz);
     }
-    KObject[] objs = new KObject[count];
-    KArray kArray = new KArray(clazz, objs);
+    Long[] objs = new Long[count];
+    Long kArray = KArray.newArray(clazz, objs);
     frame.pushRef(kArray);
   }
 

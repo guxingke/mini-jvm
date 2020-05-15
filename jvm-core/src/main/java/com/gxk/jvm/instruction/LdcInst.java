@@ -2,13 +2,15 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.memory.MethodArea;
+import com.gxk.jvm.rtda.memory.Heap;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public class LdcInst implements Instruction {
+
   public final String descriptor;
   public final Object val;
 
@@ -46,7 +48,8 @@ public class LdcInst implements Instruction {
           frame.nextPc = frame.thread.getPc();
           return;
         }
-        KObject object = klass.newObject();
+        Long offset = klass.newObject();
+        KObject object = Heap.load(offset);
         KField field = object.getField("value", "[C");
         KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
 
@@ -55,9 +58,9 @@ public class LdcInst implements Instruction {
         for (int i = 0; i < chars.length; i++) {
           characters[i] = chars[i];
         }
-        KArray arr = new KArray(arrClazz, characters);
-        field.val = new Slot[]{new Slot(arr)};
-        frame.pushRef(object);
+        Long arrOffset = KArray.newArray(arrClazz, characters);
+        field.val = new Slot[]{new Slot(arrOffset)};
+        frame.pushRef(offset);
         break;
       case "L":
         KClass klass2 = MethodArea.findClass(val.toString());
@@ -67,8 +70,9 @@ public class LdcInst implements Instruction {
         frame.pushRef(klass2.getRuntimeClass());
         break;
       default:
-        frame.pushRef(val);
-        break;
+        throw new IllegalStateException();
+//        frame.pushRef(val);
+//        break;
     }
   }
 

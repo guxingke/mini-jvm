@@ -5,7 +5,6 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.memory.Heap;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.MethodArea;
-import sun.jvm.hotspot.memory.HeapBlock.Header;
 
 public class SAStoreInst implements Instruction {
 
@@ -14,7 +13,7 @@ public class SAStoreInst implements Instruction {
     short val = frame.popInt().shortValue();
     Integer index = frame.popInt();
     KArray array = (KArray) Heap.load(frame.popRef());
-    Long offset = MethodArea.findClass("java.lang.Short").newObject();
+    Long offset = MethodArea.findClass("java/lang/Short").newObject();
     Heap.load(offset).setField("value", "S", new Slot[]{new Slot((int) val, Slot.SHORT)});
 
     array.items[index] = offset;

@@ -4,6 +4,7 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.cp.MethodHandle;
 import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.memory.Heap;
 import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KLambdaObject;
@@ -42,31 +43,37 @@ public class InvokeDynamicInst implements Instruction {
     BootstrapMethods.BootstrapMethod bootstrapMethod = bootstrapMethods.methods[bsIdx];
     Integer argsRef = bootstrapMethod.argsRefs[1];
     MethodHandle info = (MethodHandle) frame.method.clazz.constantPool.infos[argsRef - 1];
-    String bsTargetClass = Utils.getClassNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
-    String bsTargetMethod = Utils.getMethodNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
+    String bsTargetClass = Utils
+        .getClassNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
+    String bsTargetMethod = Utils
+        .getMethodNameByMethodDefIdx(frame.method.clazz.constantPool, info.referenceIndex);
 
     Integer descRef0 = bootstrapMethod.argsRefs[0];
-    MethodType methodType0= (MethodType) frame.method.clazz.constantPool.infos[descRef0 - 1];
-    String bstMethodDesc0 = Utils.getString(frame.method.clazz.constantPool, methodType0.descriptorIndex);
+    MethodType methodType0 = (MethodType) frame.method.clazz.constantPool.infos[descRef0 - 1];
+    String bstMethodDesc0 = Utils
+        .getString(frame.method.clazz.constantPool, methodType0.descriptorIndex);
 
     Integer descRef = bootstrapMethod.argsRefs[2];
-    MethodType methodType= (MethodType) frame.method.clazz.constantPool.infos[descRef - 1];
-    String bstMethodDesc = Utils.getString(frame.method.clazz.constantPool, methodType.descriptorIndex);
+    MethodType methodType = (MethodType) frame.method.clazz.constantPool.infos[descRef - 1];
+    String bstMethodDesc = Utils
+        .getString(frame.method.clazz.constantPool, methodType.descriptorIndex);
 
     KClass clazz = MethodArea.findClass(bsTargetClass);
     KMethod method = clazz.getLambdaMethod(bsTargetMethod);
     int maxLocals = method.maxLocals;
 
-    String lcname = frame.method.clazz.name + "$" + frame.method.name + "$" + bsTargetClass + "$" + bsTargetMethod;
+    String lcname = frame.method.clazz.name + "$" + frame.method.name + "$" + bsTargetClass + "$"
+        + bsTargetMethod;
     List<KMethod> lcMehods = new ArrayList<>();
-    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null,
+    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks,
+        maxLocals + 1, null, null,
         null);
     lcMehods.add(lm);
 
-    String format =Utils.genNativeMethodKey( lcname, lm.name, lm.descriptor);
+    String format = Utils.genNativeMethodKey(lcname, lm.name, lm.descriptor);
     if (MethodArea.findMethod(format) == null) {
       MethodArea.registerMethod(format, (f) -> {
-        KClass bsc= MethodArea.findClass(bsTargetClass);
+        KClass bsc = MethodArea.findClass(bsTargetClass);
         KMethod bsm = bsc.getLambdaMethod(bsTargetMethod);
 
         List<String> args = bsm.getArgs();
@@ -78,7 +85,7 @@ public class InvokeDynamicInst implements Instruction {
           argObjs.add(Utils.pop(f, arg));
         }
 
-        KLambdaObject ref = (KLambdaObject) f.popRef();
+        KLambdaObject ref = (KLambdaObject) Heap.load(f.popRef());
         Collections.reverse(argObjs);
 
         Frame newFrame = new Frame(bsm, f.thread);
@@ -97,14 +104,15 @@ public class InvokeDynamicInst implements Instruction {
         }
 
         if (!bsm.isStatic()) {
-          newFrame.setRef(0, argObjs.get(0));
+          newFrame.setRef(0, ((Long) argObjs.get(0)));
         }
 
         f.thread.pushFrame(newFrame);
       });
     }
 
-    KClass lcClazz = new KClass(1, lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
+    KClass lcClazz = new KClass(1, lcname, "java/lang/Object", new ArrayList<>(), lcMehods,
+        new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
 
     int realSize = method.getArgs().size();
     int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
@@ -120,8 +128,8 @@ public class InvokeDynamicInst implements Instruction {
       args.add(frame.popRef());
     }
 
-    KLambdaObject kObject = lcClazz.newLambdaObject(args);
-    frame.pushRef(kObject);
+    Long offset = lcClazz.newLambdaObject(args);
+    frame.pushRef(offset);
   }
 
   @Override

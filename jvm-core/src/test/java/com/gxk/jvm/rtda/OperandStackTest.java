@@ -58,7 +58,7 @@ public class OperandStackTest {
   public void test_ref() {
     OperandStack stack = new OperandStack(1);
 
-    Object val = new Object();
+    Long val = 1L;
 
     stack.pushRef(val);
     Object ret = stack.popRef();

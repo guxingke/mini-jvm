@@ -52,7 +52,7 @@ public class LocalVarsTest {
   @Test
   public void test_ref() {
     LocalVars vars = new LocalVars(1);
-    Object val = new Object();
+    Long val = 1L;
 
     vars.setRef(0, val);
     Object ret = vars.getRef(0);

@@ -14,7 +14,7 @@ public class DAStoreInst implements Instruction {
     Integer index = frame.popInt();
     KArray array = ((KArray) Heap.load(frame.popRef()));
 
-    Long offset = MethodArea.findClass("java.lang.Double").newObject();
+    Long offset = MethodArea.findClass("java/lang/Double").newObject();
     Slot[] slots = new Slot[2];
     long tmp = Double.doubleToLongBits(val);
     int high = (int) (tmp >> 32); //高32位

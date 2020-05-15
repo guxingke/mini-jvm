@@ -23,11 +23,9 @@ public abstract class ClassBridge {
       KClass strClazz = MethodArea.findClass("java/lang/String");
       Long nameObj = strClazz.newObject();
       char[] chars = Utils.replace(name, '/', '.').toCharArray();
-      Long[] characters = new Long[chars.length];
+      Character[] characters = new Character[chars.length];
       for (int i = 0; i < chars.length; i++) {
-        Long offset = MethodArea.findClass("C").newObject();
-        Heap.load(offset).setField("value", "C", new Slot[]{new Slot((int) chars[i], Slot.CHAR)});
-        characters[i] = offset;
+        characters[i] = chars[i];
       }
       Long arr = KArray.newArray(MethodArea.findClass("java/lang/Character"), characters);
       Heap.load(nameObj).setField("value", "[C", new Slot[]{new Slot(arr)});
@@ -168,13 +166,11 @@ public abstract class ClassBridge {
     MethodArea
         .registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;",
             (frame) -> {
-              Long[] values = (((KArray) (Heap
-                  .load(
-                      Heap.load(frame.popRef()).getField("value", "[C").val[0].refOffset))).items);
+              Character[] values = (Character[]) ((KArray) (Heap.load(Heap.load(frame.popRef())
+                  .getField("value", "[C").val[0].refOffset))).primitiveItems;
               char[] v2 = new char[values.length];
               for (int i = 0; i < values.length; i++) {
-                v2[i] = Character
-                    .highSurrogate((Heap.load(values[i]).getField("value", "C").val[0].num));
+                v2[i] = values[i];
               }
               String val = new String(v2);
               KClass cls = MethodArea.findClass(val);

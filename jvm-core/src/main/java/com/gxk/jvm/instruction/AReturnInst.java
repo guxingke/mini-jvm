@@ -6,7 +6,7 @@ public class AReturnInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.popRef();
+    Long tmp = frame.popRef();
     frame.thread.popFrame();
     if (!frame.thread.empty()) {
       frame.thread.currentFrame().pushRef(tmp);

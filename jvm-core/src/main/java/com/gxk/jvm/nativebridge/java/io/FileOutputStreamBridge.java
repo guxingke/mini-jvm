@@ -59,7 +59,7 @@ public abstract class FileOutputStreamBridge {
 
       byte[] bytes = new byte[len];
       for (int i = off; i < len; i++) {
-        bytes[i - off] = (byte) Heap.load(arg1.items[i]).getField("value","B").val[0].num.intValue();
+        bytes[i - off] = (byte) arg1.primitiveItems[i];
       }
 
       KObject thisObj = (KObject) Heap.load(frame.popRef());

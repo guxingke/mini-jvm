@@ -60,8 +60,9 @@ public class LdcWInst implements Instruction {
         frame.pushRef(object);
         break;
       default:
-        frame.pushRef(val);
-        break;
+        throw new IllegalStateException();
+//        frame.pushRef(val);
+//        break;
     }
   }
 

@@ -98,7 +98,7 @@ public abstract class FileInputStreamBridge {
         int read = extra.read(ba, v2, v3);
 
         for (int i = v2; i < v2 + v3; i++) {
-          v1.items[i] = ba[i];
+          v1.primitiveItems[i] = ba[i];
         }
 
         frame.pushInt(read);

@@ -13,10 +13,7 @@ public class IAStoreInst implements Instruction {
     Integer val = frame.popInt();
     Integer index = frame.popInt();
     KArray array = (KArray) Heap.load(frame.popRef());
-
-    Long offset = MethodArea.findClass("java.lang.Integer").newObject();
-    Heap.load(offset).setField("value", "I", new Slot[]{new Slot(val, Slot.INT)});
-    array.items[index] = offset;
+    array.primitiveItems[index] = val;
   }
 
   @Override

@@ -19,7 +19,9 @@ primitiveArrayInfo(10, 0'I, int,     int).
 primitiveArrayInfo(11, 0'J, long,    long).
  */
 public class NewArrayInst implements Instruction {
-  private static Map<Integer, String> MAPPING = new HashMap<>(8);
+
+  public static Map<Integer, String> MAPPING = new HashMap<>(8);
+
   static {
     MAPPING.put(4, "java/lang/Boolean");
     MAPPING.put(5, "java/lang/Character");
@@ -54,28 +56,28 @@ public class NewArrayInst implements Instruction {
     KClass clazz = MethodArea.findClass(this.clazz);
     switch (type) {
       case 4:
-        frame.pushRef(new KArray(clazz, new Boolean[count]));
+        frame.pushRef(KArray.newArray(clazz, new Boolean[count]));
         return;
       case 5:
-        frame.pushRef(new KArray(clazz, new Character[count]));
+        frame.pushRef(KArray.newArray(clazz, new Character[count]));
         return;
       case 6:
-        frame.pushRef(new KArray(clazz, new Float[count]));
+        frame.pushRef(KArray.newArray(clazz, new Float[count]));
         return;
       case 7:
-        frame.pushRef(new KArray(clazz, new Double[count]));
+        frame.pushRef(KArray.newArray(clazz, new Double[count]));
         return;
       case 8:
-        frame.pushRef(new KArray(clazz, new Byte[count]));
+        frame.pushRef(KArray.newArray(clazz, new Byte[count]));
         return;
       case 9:
-        frame.pushRef(new KArray(clazz, new Short[count]));
+        frame.pushRef(KArray.newArray(clazz, new Short[count]));
         return;
       case 10:
-        frame.pushRef(new KArray(clazz, new Integer[count]));
+        frame.pushRef(KArray.newArray(clazz, new Integer[count]));
         return;
       case 11:
-        frame.pushRef(new KArray(clazz, new Long[count]));
+        frame.pushRef(KArray.newArray(clazz, new Long[count]));
         return;
       default:
         throw new IllegalStateException();

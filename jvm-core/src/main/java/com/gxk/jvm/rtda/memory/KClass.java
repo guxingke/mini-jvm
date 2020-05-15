@@ -169,8 +169,10 @@ public class KClass {
     return offset;
   }
 
-  public KLambdaObject newLambdaObject(List<Object> args) {
-    return new KLambdaObject(this, args);
+  public Long newLambdaObject(List<Object> args) {
+    KLambdaObject obj = new KLambdaObject(this, args);
+    Long offset = Heap.allocate(obj);
+    return offset;
   }
 
   private KField map(KField source) {
