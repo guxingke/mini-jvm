@@ -2,6 +2,7 @@ package com.gxk.jvm.util;
 
 import com.gxk.jvm.classfile.ConstantInfo;
 import com.gxk.jvm.classfile.ConstantPool;
+import com.gxk.jvm.classfile.Field;
 import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
 import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
@@ -234,7 +235,7 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Long offset = name.getField("value", "[C").val[0].refOffset;
+    Long offset = name.getField("value", "[C").val()[0].refOffset;
     Object[] values = ((KArray) Heap.load(offset)).primitiveItems;
     char[] chars = new char[values.length];
     for (int i = 0; i < values.length; i++) {
@@ -246,7 +247,8 @@ public abstract class Utils {
   public static Long str2Obj(String str, ClassLoader classLoader) {
     KClass klass = MethodArea.findClass("java/lang/String");
     Long object = klass.newObject();
-    KField field = Heap.load(object).getField("value", "[C");
+    KObject obj = Heap.load(object);
+    KField field = obj.getField("value", "[C");
     KClass arrClazz = new KClass(1, "[C", classLoader, null);
 
     char[] chars = str.toCharArray();
@@ -255,7 +257,7 @@ public abstract class Utils {
       characters[i] = chars[i];
     }
     Long arr = KArray.newArray(arrClazz, characters);
-    field.val = new Slot[]{new Slot(arr)};
+    obj.setField("value", "[C", new Slot[]{new Slot(arr)});
     return object;
   }
 
@@ -307,5 +309,27 @@ public abstract class Utils {
       }
     }
     return new String(sources);
+  }
+
+  public static void incRefCnt(Slot[] val) {
+//    if (val.length == 1) {
+//      Slot slot = val[0];
+//      if (slot.type == Slot.REF) {
+//        KObject obj = Heap.load(slot.refOffset);
+//        if (obj == null) {
+//          return;
+//        }
+//        obj.incRefCnt();
+//      }
+//    }
+  }
+
+  public static void decRefCnt(Slot[] val) {
+//    if (val.length == 1) {
+//      Slot slot = val[0];
+//      if (slot.type == Slot.REF) {
+//        Heap.load(slot.refOffset).decRefCnt();
+//      }
+//    }
   }
 }

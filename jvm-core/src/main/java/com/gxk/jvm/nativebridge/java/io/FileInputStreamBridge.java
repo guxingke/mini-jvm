@@ -1,11 +1,10 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.util.Utils;
-
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +29,7 @@ public abstract class FileInputStreamBridge {
     MethodArea.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
       KObject fd = Heap.load(frame.popRef());
       KObject thisObj = Heap.load(frame.popRef());
-      Integer fdInt = fd.getField("fd", "I").val[0].num;
+      Integer fdInt = fd.getField("fd", "I").val()[0].num;
       try {
         if (fdInt == 0) {
           FileInputStream fis = new FileInputStream(FileDescriptor.in);

@@ -50,7 +50,6 @@ public class LdcInst implements Instruction {
         }
         Long offset = klass.newObject();
         KObject object = Heap.load(offset);
-        KField field = object.getField("value", "[C");
         KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
 
         char[] chars = val.toString().toCharArray();
@@ -59,7 +58,7 @@ public class LdcInst implements Instruction {
           characters[i] = chars[i];
         }
         Long arrOffset = KArray.newArray(arrClazz, characters);
-        field.val = new Slot[]{new Slot(arrOffset)};
+        object.setField("value", "[C", new Slot[]{new Slot(arrOffset)});
         frame.pushRef(offset);
         break;
       case "L":

@@ -3,12 +3,13 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KField;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public class LdcWInst implements Instruction {
+
   public final String descriptor;
   public final Object val;
 
@@ -56,7 +57,7 @@ public class LdcWInst implements Instruction {
           characters[i] = chars[i];
         }
         Long arrOff = KArray.newArray(arrClazz, characters);
-        field.val = new Slot[] {new Slot(arrOff)};
+        Heap.load(object).setField("value", "[C", new Slot[]{new Slot(arrOff)});
         frame.pushRef(object);
         break;
       default:

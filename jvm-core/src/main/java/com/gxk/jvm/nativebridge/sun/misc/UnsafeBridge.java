@@ -2,9 +2,9 @@ package com.gxk.jvm.nativebridge.sun.misc;
 
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +22,10 @@ public abstract class UnsafeBridge {
     });
     MethodArea
         .registerMethod("sun/misc/Unsafe_objectFieldOffset_(Ljava/lang/reflect/Field;)J", frame -> {
-      frame.popRef();
-      frame.popRef();
-      frame.pushLong(1L);
-    });
+          frame.popRef();
+          frame.popRef();
+          frame.pushLong(1L);
+        });
     MethodArea.registerMethod("sun/misc/Unsafe_getAndAddInt_(Ljava/lang/Object;JI)I", frame -> {
       Integer delta = frame.popInt();
       Long offset = frame.popLong();
@@ -33,8 +33,8 @@ public abstract class UnsafeBridge {
       Object thisObj = frame.popRef();
 
       KField field = obj.getField("value", "I");
-      Integer val = field.val[0].num + delta;
-      field.val = new Slot[]{new Slot(val, Slot.INT)};
+      Integer val = field.val()[0].num + delta;
+      obj.setField("value", "I", new Slot[]{new Slot(val, Slot.INT)});
       frame.pushInt(val - delta);
     });
 

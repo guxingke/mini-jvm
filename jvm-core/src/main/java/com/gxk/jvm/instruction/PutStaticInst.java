@@ -2,9 +2,9 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KField;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public class PutStaticInst implements Instruction {
 
@@ -34,10 +34,10 @@ public class PutStaticInst implements Instruction {
     if (fieldDescriptor.equals("J")) {
       Slot low = frame.popSlot();
       Slot high = frame.popSlot();
-      field.val = new Slot[]{high, low};
+      field.setVal(new Slot[]{high, low});
       return;
     }
-    field.val = new Slot[]{frame.popSlot()};
+    field.setVal(new Slot[]{frame.popSlot()});
   }
 
   @Override

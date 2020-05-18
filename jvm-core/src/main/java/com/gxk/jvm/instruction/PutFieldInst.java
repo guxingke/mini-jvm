@@ -32,7 +32,8 @@ public class PutFieldInst implements Instruction {
     }
 
     Slot v = frame.popSlot();
-    Heap.load(frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
+    KObject obj = Heap.load(frame.popRef());
+    obj.setField(fieldName, fieldDescriptor, new Slot[]{v});
   }
 
   @Override

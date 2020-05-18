@@ -2,9 +2,8 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
-import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
 
 public abstract class ExceptionBridge {
 
@@ -12,8 +11,7 @@ public abstract class ExceptionBridge {
     MethodArea.registerMethod("java/lang/Exception_<init>_(Ljava/lang/String;)V", frame -> {
       Long str = frame.popRef();
       KObject thisObj = Heap.load(frame.popRef());
-      KField msgField = thisObj.getField("detailMessage", "Ljava/lang/String;");
-      msgField.val = new Slot[] {new Slot(str)};
+      thisObj.setField("detailMessage", "Ljava/lang/String;", new Slot[]{new Slot(str)});
     });
   }
 }

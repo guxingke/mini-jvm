@@ -1,6 +1,8 @@
 package com.gxk.jvm.rtda.memory;
 
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.util.Logger;
+import com.gxk.jvm.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +18,10 @@ public class KObject implements Cloneable {
 
   // extra
   private Object extra;
+
+  // reference cnt
+  private Integer refCnt = 0;
+  private Long address;
 
   public KObject(KClass clazz) {
     fields = new ArrayList<>();
@@ -49,7 +55,8 @@ public class KObject implements Cloneable {
 
   public void setField(String name, String desc, Slot[] val) {
     KField field = this.getField(name, desc);
-    field.val = val;
+    field.setVal(val);
+    Utils.incRefCnt(val);
   }
 
   public Long clone() throws CloneNotSupportedException {
@@ -77,5 +84,39 @@ public class KObject implements Cloneable {
 
   public void setExtra(Object extra) {
     this.extra = extra;
+  }
+
+  public Integer incRefCnt() {
+    this.refCnt++;
+
+    for (KField field : this.fields) {
+      field.incRefCnt();
+    }
+
+    return this.refCnt;
+  }
+
+  public Integer decRefCnt() {
+    if (refCnt == 0) {
+      throw new IllegalStateException();
+    }
+    this.refCnt--;
+
+    for (KField field : this.fields) {
+      field.decRefCnt();
+    }
+
+    if (refCnt == 0) {
+      Logger.error("this object should be release " + this.hashCode());
+    }
+    return this.refCnt;
+  }
+
+  public void setAddress(Long address) {
+    this.address = address;
+  }
+
+  public Long getAddress() {
+    return this.address;
   }
 }

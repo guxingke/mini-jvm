@@ -1,6 +1,5 @@
 package com.gxk.jvm.rtda.memory;
 
-import com.gxk.jvm.instruction.ANewArrayInst;
 import com.gxk.jvm.instruction.NewArrayInst;
 
 public class KArray extends KObject {
@@ -30,12 +29,14 @@ public class KArray extends KObject {
   public static Long newArray(KClass clz, Long[] items) {
     KArray arr = new KArray(clz, items);
     Long offset = Heap.allocate(arr);
+    arr.setAddress(offset);
     return offset;
   }
 
   public static Long newArray(KClass clz, Object[] items) {
     KArray arr = new KArray(clz, items);
     Long offset = Heap.allocate(arr);
+    arr.setAddress(offset);
     return offset;
   }
 

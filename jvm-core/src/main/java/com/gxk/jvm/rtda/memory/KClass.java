@@ -6,9 +6,7 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +22,6 @@ public class KClass {
   public final ConstantPool constantPool;
   public final ClassLoader classLoader;
   public final ClassFile classFile;
-
   private KClass superClass;
   private List<KClass> interfaces;
   private int staticInit = 0;
@@ -139,6 +136,11 @@ public class KClass {
     return null;
   }
 
+  public void setField(String fieldName, String fieldDescriptor, Slot[] val) {
+    KField kf = this.getField(fieldName, fieldDescriptor);
+    kf.setVal(val);
+  }
+
   public KField getField(String fieldName) {
     for (KField field : fields) {
       if (Objects.equals(field.name, fieldName)) {
@@ -166,12 +168,14 @@ public class KClass {
       object.setSuperObject(this.superClass.newObject());
     }
     Long offset = Heap.allocate(object);
+    object.setAddress(offset);
     return offset;
   }
 
   public Long newLambdaObject(List<Object> args) {
     KLambdaObject obj = new KLambdaObject(this, args);
     Long offset = Heap.allocate(obj);
+    obj.setAddress(offset);
     return offset;
   }
 

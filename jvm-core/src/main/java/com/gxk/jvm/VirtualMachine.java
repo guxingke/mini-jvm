@@ -32,10 +32,9 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KClass;
-import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Utils;
 
@@ -112,9 +111,8 @@ public class VirtualMachine {
     new Interpreter().doInterpret(thread, frame);
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
-    KField outField = sysCls.getField("err", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
-
+    Slot[] val = new Slot[]{new Slot(psObj)};
+    sysCls.setField("err", "Ljava/io/PrintStream;", val);
   }
 
   private static void initSystemOut(ClassLoader classLoader) {
@@ -147,8 +145,7 @@ public class VirtualMachine {
     new Interpreter().doInterpret(thread, frame);
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
-    KField outField = sysCls.getField("out", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
+    sysCls.setField("out", "Ljava/io/PrintStream;", new Slot[]{new Slot(psObj)});
   }
 
   public static void loadLibrary() {

@@ -1,10 +1,10 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KObject;
+import com.gxk.jvm.rtda.memory.MethodArea;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,8 +32,8 @@ public abstract class FileOutputStreamBridge {
       Integer val = frame.popInt();
       KObject thisObj = Heap.load(frame.popRef());
       KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) Heap.load(fd.val[0].refOffset);
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = (KObject) Heap.load(fd.val()[0].refOffset);
+      Integer realFd = fdObj.getField("fd", "I").val()[0].num;
       // out
       if (realFd == 1) {
         try {
@@ -53,8 +53,8 @@ public abstract class FileOutputStreamBridge {
 
     MethodArea.registerMethod("java/io/FileOutputStream_writeBytes_([BIIZ)V", frame -> {
       boolean append = frame.popInt() == 1;
-      Integer len= frame.popInt();
-      Integer off= frame.popInt();
+      Integer len = frame.popInt();
+      Integer off = frame.popInt();
       KArray arg1 = (KArray) Heap.load(frame.popRef());
 
       byte[] bytes = new byte[len];
@@ -64,8 +64,8 @@ public abstract class FileOutputStreamBridge {
 
       KObject thisObj = (KObject) Heap.load(frame.popRef());
       KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) Heap.load(fd.val[0].refOffset);
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = (KObject) Heap.load(fd.val()[0].refOffset);
+      Integer realFd = fdObj.getField("fd", "I").val()[0].num;
       // out
       if (realFd == 1) {
         try {

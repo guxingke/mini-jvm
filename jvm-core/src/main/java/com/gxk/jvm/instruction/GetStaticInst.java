@@ -98,11 +98,11 @@ public class GetStaticInst implements Instruction {
       throw new IllegalStateException();
     }
 
-    if (field.val == null) {
+    if (field.val() == null) {
       throw new IllegalStateException();
     }
 
-    Slot[] val = field.val;
+    Slot[] val = field.val();
     for (Slot slot : val) {
       frame.pushSlot(slot);
     }

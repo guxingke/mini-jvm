@@ -16,6 +16,9 @@ public abstract class Heap {
   }
 
   public static KObject load(Long offset) {
+    if (offset == null) {
+      return null;
+    }
     KObject obj = objs.get(offset);
     if (obj == null) {
       throw new IllegalStateException("object not found");
