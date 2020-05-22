@@ -41,7 +41,7 @@ public class GetFieldInst implements Instruction {
 
     KObject obj = Heap.load(frame.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
-    Slot[] val = field.val();
+    Slot[] val = field.getVal();
 
     for (Slot slot : val) {
       frame.pushSlot(slot);

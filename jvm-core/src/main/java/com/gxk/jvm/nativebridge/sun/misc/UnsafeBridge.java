@@ -33,7 +33,7 @@ public abstract class UnsafeBridge {
       Object thisObj = frame.popRef();
 
       KField field = obj.getField("value", "I");
-      Integer val = field.val()[0].num + delta;
+      Integer val = field.getVal()[0].num + delta;
       obj.setField("value", "I", new Slot[]{new Slot(val, Slot.INT)});
       frame.pushInt(val - delta);
     });

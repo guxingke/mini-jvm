@@ -2,7 +2,6 @@ package com.gxk.jvm.util;
 
 import com.gxk.jvm.classfile.ConstantInfo;
 import com.gxk.jvm.classfile.ConstantPool;
-import com.gxk.jvm.classfile.Field;
 import com.gxk.jvm.classfile.cp.ClassCp;
 import com.gxk.jvm.classfile.cp.FieldDef;
 import com.gxk.jvm.classfile.cp.InterfaceMethodDef;
@@ -11,16 +10,14 @@ import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
-
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.memory.Heap;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KField;
 import com.gxk.jvm.rtda.memory.KMethod;
 import com.gxk.jvm.rtda.memory.KObject;
-
+import com.gxk.jvm.rtda.memory.MethodArea;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -235,7 +232,7 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Long offset = name.getField("value", "[C").val()[0].refOffset;
+    Long offset = name.getField("value", "[C").getVal()[0].refOffset;
     Object[] values = ((KArray) Heap.load(offset)).primitiveItems;
     char[] chars = new char[values.length];
     for (int i = 0; i < values.length; i++) {
@@ -331,5 +328,43 @@ public abstract class Utils {
 //        Heap.load(slot.refOffset).decRefCnt();
 //      }
 //    }
+  }
+
+  public static boolean isReference(KField field) {
+    if (field.getVal().length == 1) {
+      Slot slot = field.getVal()[0];
+      return slot.type == Slot.REF;
+    }
+    return false;
+  }
+
+  public static void mark(KField field) {
+    Long offset = field.getVal()[0].refOffset;
+    if (offset == null) {
+      return;
+    }
+    KObject obj = Heap.load(offset);
+    if (obj == null) {
+      return;
+    }
+
+    obj.mark();
+  }
+
+  public static void mark(Slot slot) {
+    if (slot == null) {
+      return;
+    }
+    Long offset = slot.refOffset;
+    if (offset == null) {
+      return;
+    }
+    KObject obj = Heap.load(offset);
+    if (obj == null) {
+      return;
+    }
+
+    obj.mark();
+
   }
 }

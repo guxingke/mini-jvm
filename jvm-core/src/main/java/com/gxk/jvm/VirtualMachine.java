@@ -70,7 +70,7 @@ public class VirtualMachine {
       throw new IllegalStateException("not found main method");
     }
 
-    new Interpreter().interpret(method, cmd.args);
+    new Interpreter().interpret("main", method, cmd.args);
   }
 
   public static void initVm(ClassLoader classLoader) {
@@ -85,7 +85,7 @@ public class VirtualMachine {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
     Long outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
-    Thread t1 = new Thread(1024);
+    Thread t1 = new Thread("init_fd", 1024);
     Frame f1 = new Frame(fdInitMethod, t1);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 2);
@@ -94,7 +94,7 @@ public class VirtualMachine {
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
     Long fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
-    Thread t2 = new Thread(1024);
+    Thread t2 = new Thread("init_fos", 1024);
     Frame f2 = new Frame(fosInitMethod, t2);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
@@ -103,7 +103,7 @@ public class VirtualMachine {
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
     Long psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
-    Thread thread = new Thread(1024);
+    Thread thread = new Thread("init_ps", 1024);
     Frame frame = new Frame(psInitMethod, thread);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
@@ -119,7 +119,7 @@ public class VirtualMachine {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
     Long outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
-    Thread t1 = new Thread(1024);
+    Thread t1 = new Thread("so_init_fd", 1024);
     Frame f1 = new Frame(fdInitMethod, t1);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 1);
@@ -128,7 +128,7 @@ public class VirtualMachine {
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
     Long fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
-    Thread t2 = new Thread(1024);
+    Thread t2 = new Thread("so_init_fos", 1024);
     Frame f2 = new Frame(fosInitMethod, t2);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
@@ -137,7 +137,7 @@ public class VirtualMachine {
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
     Long psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
-    Thread thread = new Thread(1024);
+    Thread thread = new Thread("so_init_ps", 1024);
     Frame frame = new Frame(psInitMethod, thread);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);

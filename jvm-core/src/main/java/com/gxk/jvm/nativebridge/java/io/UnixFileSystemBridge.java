@@ -21,7 +21,7 @@ public abstract class UnixFileSystemBridge {
           Long thisObj = frame.popRef();
 
           KObject pathObj = Heap
-              .load(fileObj.getField("path", "Ljava/lang/String;").val()[0].refOffset);
+              .load(fileObj.getField("path", "Ljava/lang/String;").getVal()[0].refOffset);
           String path = Utils.obj2Str(pathObj);
           File file = new File(path);
           boolean exists = file.exists();
@@ -48,7 +48,7 @@ public abstract class UnixFileSystemBridge {
           KObject file = Heap.load(frame.popRef());
           frame.popRef();
           KField path = file.getField("path", "Ljava/lang/String;");
-          String pathStr = Utils.obj2Str((Heap.load(path.val()[0].refOffset)));
+          String pathStr = Utils.obj2Str((Heap.load(path.getVal()[0].refOffset)));
           long lm = new File(pathStr).lastModified();
           frame.pushLong(lm);
         });
@@ -73,7 +73,7 @@ public abstract class UnixFileSystemBridge {
               KObject file = Heap.load(frame.popRef());
               frame.popRef();
               KField path = file.getField("path", "Ljava/lang/String;");
-              String pathStr = Utils.obj2Str(Heap.load(path.val()[0].refOffset));
+              String pathStr = Utils.obj2Str(Heap.load(path.getVal()[0].refOffset));
               String[] list = new File(pathStr).list();
 
               Long[] items = new Long[list.length];

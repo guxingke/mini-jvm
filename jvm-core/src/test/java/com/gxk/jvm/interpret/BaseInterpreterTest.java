@@ -4,14 +4,13 @@ import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KClass;
 import com.gxk.jvm.rtda.memory.KMethod;
+import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.util.EnvHolder;
+import com.gxk.jvm.util.Utils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import com.gxk.jvm.util.Utils;
 import org.junit.After;
 
 public abstract class BaseInterpreterTest {
@@ -23,7 +22,7 @@ public abstract class BaseInterpreterTest {
 
   protected void testMain(String hello) {
     KMethod method = loadAndGetMainMethod(hello);
-    new Interpreter().interpret(method);
+    new Interpreter().interpret("test", method);
   }
 
   protected KMethod loadAndGetMainMethod(String clazzName) {
@@ -50,7 +49,7 @@ public abstract class BaseInterpreterTest {
       throw new IllegalStateException("MINI_JVM_HOME not found");
     }
 
-    Path exampleJarPath= Paths.get(miniJvmHome, "example", "target", "example.jar");
+    Path exampleJarPath = Paths.get(miniJvmHome, "example", "target", "example.jar");
     if (!exampleJarPath.toFile().exists()) {
       throw new IllegalStateException("example.jar not found");
     }

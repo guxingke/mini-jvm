@@ -10,7 +10,7 @@ public class SALoadInst implements Instruction {
   public void execute(Frame frame) {
     Integer index = frame.popInt();
     KArray array = (KArray) Heap.load(frame.popRef());
-    int val = Heap.load(array.items[index]).getField("value", "S").val()[0].num;
+    int val = Heap.load(array.items[index]).getField("value", "S").getVal()[0].num;
     frame.pushInt(val);
   }
 }

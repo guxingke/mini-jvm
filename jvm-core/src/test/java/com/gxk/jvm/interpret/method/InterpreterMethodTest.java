@@ -18,7 +18,7 @@ public class InterpreterMethodTest extends BaseInterpreterTest {
     KClass clazz = loadAndGetClazz("Loop1");
     KMethod method = clazz.methods.get(2);
 
-    Thread thread = new Thread(1024);
+    Thread thread = new Thread("test", 1024);
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
@@ -43,7 +43,7 @@ public class InterpreterMethodTest extends BaseInterpreterTest {
     KClass clazz = loadAndGetClazz("Loop3");
     KMethod method = clazz.methods.get(2);
 
-    Thread thread = new Thread(1024);
+    Thread thread = new Thread("test", 1024);
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);
@@ -83,7 +83,7 @@ public class InterpreterMethodTest extends BaseInterpreterTest {
     KClass clazz = loadAndGetClazz("AddTwoInt");
     KMethod method = clazz.methods.get(2);
 
-    Thread thread = new Thread(1024);
+    Thread thread = new Thread("test", 1024);
     Frame frame = new Frame(method, thread);
 
     thread.pushFrame(frame);

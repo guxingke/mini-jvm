@@ -3,6 +3,8 @@ package com.gxk.jvm.interpret;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.Threads;
+import com.gxk.jvm.rtda.memory.Heap;
 import com.gxk.jvm.rtda.memory.MethodArea;
 import com.gxk.jvm.rtda.memory.KArray;
 import com.gxk.jvm.rtda.memory.KClass;
@@ -17,12 +19,12 @@ import java.util.Scanner;
 
 public class Interpreter {
 
-  public void interpret(KMethod method) {
-    interpret(method, null);
+  public void interpret(String name, KMethod method) {
+    interpret(name, method, null);
   }
 
-  public void interpret(KMethod method, String[] args) {
-    Thread thread = new Thread(1024);
+  public void interpret(String name, KMethod method, String[] args) {
+    Thread thread = new Thread(name, 1024);
     Frame frame = new Frame(method, thread);
     if (args == null) {
       doInterpret(thread, frame);
@@ -72,6 +74,7 @@ public class Interpreter {
     }
 
     loop(thread);
+    Threads.remove(thread.getName());
   }
 
   public void loop(Thread thread) {
@@ -85,6 +88,8 @@ public class Interpreter {
     }
 
     do {
+      Heap.gc();
+
       Frame frame = thread.currentFrame();
       int pc = frame.nextPc;
       thread.setPc(pc);

@@ -167,7 +167,7 @@ public abstract class ClassBridge {
         .registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;",
             (frame) -> {
               Character[] values = (Character[]) ((KArray) (Heap.load(Heap.load(frame.popRef())
-                  .getField("value", "[C").val()[0].refOffset))).primitiveItems;
+                  .getField("value", "[C").getVal()[0].refOffset))).primitiveItems;
               char[] v2 = new char[values.length];
               for (int i = 0; i < values.length; i++) {
                 v2[i] = values[i];

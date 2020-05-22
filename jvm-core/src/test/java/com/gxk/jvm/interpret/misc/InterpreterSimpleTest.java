@@ -29,7 +29,7 @@ public class InterpreterSimpleTest {
 
     KMethod method = new KMethod(1, "sum10", "V()", 2, 3, instructions, null, null);
 
-    interpreter.interpret(method);
+    interpreter.interpret("test", method);
   }
 
   private Map<Integer, Instruction> sum10Instructions() {

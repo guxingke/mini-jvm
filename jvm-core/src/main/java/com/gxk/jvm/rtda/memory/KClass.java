@@ -9,6 +9,7 @@ import com.gxk.jvm.rtda.Slot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class KClass {
 
@@ -310,5 +311,9 @@ public class KClass {
 
   public String getSource() {
     return classFile.getSourceFile();
+  }
+
+  public List<KField> getStaticFields() {
+    return this.fields.stream().filter(KField::isStatic).collect(Collectors.toList());
   }
 }

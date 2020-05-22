@@ -32,13 +32,11 @@ public class KField {
     Utils.incRefCnt(this.val);
   }
 
-  public Slot[] val() {
+  public Slot[] getVal() {
     return this.val;
   }
 
   public void setVal(Slot[] val) {
-//    if (val[0].type == Slot.REF && val[0].refOffset == null) {
-//    }
     this.val = val;
   }
 
