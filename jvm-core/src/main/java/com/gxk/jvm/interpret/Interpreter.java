@@ -55,11 +55,11 @@ public class Interpreter {
       while (superClazz != null) {
         if (!superClazz.isStaticInit()) {
           // interfaceInit
-          KMethod cinit = superClazz.getMethod("<clinit>", "()V");
+          KMethod cinit = superClazz.getClinitMethod();
           if (cinit == null) {
             superClazz.setStaticInit(2);
             frame.nextPc = frame.thread.getPc();
-            break;
+            continue;
           }
 
           Frame newFrame = new Frame(cinit, frame.thread);

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
+root_path=$(cd "$(dirname "$0")"; cd ../; pwd)
+export MINI_JVM_HOME=${root_path}
 
-exec java -jar jvm-core/target/mini-jvm.jar "$@"
+exec java -jar ${root_path}/jvm-core/target/mini-jvm.jar "$@"
