@@ -97,7 +97,12 @@ public class KClass {
   }
 
   public KMethod getClinitMethod() {
-    return getMethod("<clinit>", "()V");
+    for (KMethod method : methods) {
+      if (Objects.equals(method.name, "<clinit>") && Objects.equals(method.descriptor, "()V")) {
+        return method;
+      }
+    }
+    return null;
   }
 
   public KMethod getMethod(String name, String descriptor) {
@@ -203,6 +208,10 @@ public class KClass {
     return this.staticInit > 0;
   }
 
+  public int getStaticInit() {
+    return this.staticInit;
+  }
+
   public void setStaticInit(int level) {
     this.staticInit = level;
   }
@@ -252,7 +261,8 @@ public class KClass {
       if (!tmp.isStaticInit()) {
         KMethod cinit = tmp.getClinitMethod();
         if (cinit == null) {
-          throw new IllegalStateException();
+          tmp.setStaticInit(2);
+          continue;
         }
 
         Frame newFrame = new Frame(cinit, frame.thread);
