@@ -9,6 +9,7 @@ import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class LdcWInst implements Instruction {
+
   public final String descriptor;
   public final Object val;
 
@@ -37,7 +38,7 @@ public class LdcWInst implements Instruction {
           klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
         if (!klass.isStaticInit()) {
-          Frame newFrame = new Frame(klass.getMethod("<clinit>", "()V"), frame.thread);
+          Frame newFrame = new Frame(klass.getClinitMethod(), frame.thread);
           klass.setStaticInit(1);
           KClass finalKlass = klass;
           newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
@@ -56,7 +57,7 @@ public class LdcWInst implements Instruction {
           characters[i] = chars[i];
         }
         KArray arr = new KArray(arrClazz, characters);
-        field.val = new Slot[] {new Slot(arr)};
+        field.val = new Slot[]{new Slot(arr)};
         frame.pushRef(object);
         break;
       default:

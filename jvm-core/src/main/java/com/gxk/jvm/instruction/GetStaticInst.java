@@ -35,7 +35,7 @@ public class GetStaticInst implements Instruction {
     }
 
     if (!kClass.isStaticInit()) {
-      KMethod cinit = kClass.getMethod("<clinit>", "()V");
+      KMethod cinit = kClass.getClinitMethod();
       if (cinit == null) {
         throw new IllegalStateException();
       }

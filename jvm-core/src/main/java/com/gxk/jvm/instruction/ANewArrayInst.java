@@ -27,7 +27,7 @@ public class ANewArrayInst implements Instruction {
       kClass = frame.method.clazz.classLoader.loadClass(className);
     }
     if (!kClass.isStaticInit()) {
-      KMethod method = kClass.getMethod("<clinit>", "V()");
+      KMethod method = kClass.getClinitMethod();
       if (method != null) {
         Frame newFrame = new Frame(method, frame.thread);
         kClass.setStaticInit(1);

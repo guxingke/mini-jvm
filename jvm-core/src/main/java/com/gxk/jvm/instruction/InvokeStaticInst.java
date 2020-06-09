@@ -29,7 +29,7 @@ public class InvokeStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey( clazzName, methodName, descriptor));
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazzName, methodName, descriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
@@ -41,19 +41,17 @@ public class InvokeStaticInst implements Instruction {
     }
 
     if (!kClass.isStaticInit()) {
-      KMethod cinit = kClass.getMethod("<clinit>", "()V");
-      if (cinit == null) {
-        throw new IllegalStateException();
+      KMethod cinit = kClass.getClinitMethod();
+      if (cinit != null) {
+        Frame newFrame = new Frame(cinit, frame.thread);
+        kClass.setStaticInit(1);
+        KClass finalKClass = kClass;
+        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        frame.thread.pushFrame(newFrame);
+
+        frame.nextPc = frame.thread.getPc();
+        return;
       }
-
-      Frame newFrame = new Frame(cinit, frame.thread);
-      kClass.setStaticInit(1);
-      KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
-      frame.thread.pushFrame(newFrame);
-
-      frame.nextPc = frame.thread.getPc();
-      return;
     }
 
     KMethod method = kClass.getMethod(methodName, descriptor);

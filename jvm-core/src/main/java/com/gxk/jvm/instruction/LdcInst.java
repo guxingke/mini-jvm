@@ -37,7 +37,7 @@ public class LdcInst implements Instruction {
           klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
         if (!klass.isStaticInit()) {
-          Frame newFrame = new Frame(klass.getMethod("<clinit>", "()V"), frame.thread);
+          Frame newFrame = new Frame(klass.getClinitMethod(), frame.thread);
           klass.setStaticInit(1);
           KClass finalKlass = klass;
           newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
