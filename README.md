@@ -3,7 +3,7 @@
 ------
 使用 Java 8 实现 JVM
 
-<div align=center><img height="900" src="docs/assets/imgs/mini-jvm-logo.png"/></div>
+<div align=center><img height="300px" width="300px" src="docs/assets/imgs/mini-jvm-logo.png"/></div>
 
 ## 特性
 
