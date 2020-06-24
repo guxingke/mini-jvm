@@ -3,6 +3,8 @@
 ------
 使用 Java 8 实现 JVM
 
+<div align=center><img src="docs/assets/imgs/mini-jvm-logo.png"/></div>
+
 ## 特性
 
 ### 元循环(Metacircular)
@@ -93,7 +95,7 @@ mini-jvm HelloWold hello mini-jvm
 <summary>微信群</summary>
 <p>加个人微信 `guxingke_`，备注 mini-jvm 拉你进群。</p>
 
-<img style="margin:0 auto;display:block;" src='docs/assets/imgs/wechat.jpeg'></img>
+<div align="center"><img style="margin:0 auto;display:block;" src='docs/assets/imgs/wechat.jpeg'></img></div>
 </details>
 
 ## 参考
