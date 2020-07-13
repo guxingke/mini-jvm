@@ -2,10 +2,9 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.util.Logger;
 
 public class PutStaticInst implements Instruction {
 
@@ -26,7 +25,7 @@ public class PutStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
+    KClass kClass = MetaSpace.findClass(clazz);
     if (kClass == null) {
       kClass = frame.method.clazz.classLoader.loadClass(clazz);
     }

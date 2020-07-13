@@ -1,8 +1,7 @@
 package com.gxk.jvm.nativebridge.java.io;
 
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 
@@ -14,7 +13,7 @@ import java.io.IOException;
 public abstract class FileInputStreamBridge {
 
   public static void registerNatives0() {
-    Heap.registerMethod("java/io/FileInputStream_open0_(Ljava/lang/String;)V", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_open0_(Ljava/lang/String;)V", frame -> {
       KObject fileName = (KObject) frame.popRef();
       KObject thisObj = (KObject) frame.popRef();
 
@@ -27,7 +26,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
       KObject fd = (KObject) frame.popRef();
       KObject thisObj = (KObject) frame.popRef();
       Integer fdInt = fd.getField("fd", "I").val[0].num;
@@ -43,7 +42,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_available0_()I", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_available0_()I", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
@@ -54,7 +53,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_close0_()V", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_close0_()V", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
@@ -64,7 +63,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_read0_()I", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_read0_()I", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
@@ -75,7 +74,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_skip0_(J)J", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_skip0_(J)J", frame -> {
       Long val = frame.popLong();
       KObject thisObj = (KObject) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
@@ -87,7 +86,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_readBytes_([BII)I", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_readBytes_([BII)I", frame -> {
       Integer v3 = frame.popInt();
       Integer v2 = frame.popInt();
       KArray v1 = (KArray) frame.popRef();
@@ -107,7 +106,7 @@ public abstract class FileInputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileInputStream_initIDs_()V", frame -> {
+    MetaSpace.registerMethod("java/io/FileInputStream_initIDs_()V", frame -> {
     });
   }
 }

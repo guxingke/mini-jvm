@@ -2,7 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.*;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -23,7 +23,7 @@ public class NewInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
+    KClass kClass = MetaSpace.findClass(clazz);
 
     if (kClass == null) {
       ClassLoader loader = frame.method.clazz.classLoader;
@@ -44,7 +44,7 @@ public class NewInst implements Instruction {
       }
 
       String clNm = cinit.nativeMethodKey();
-      NativeMethod clm = Heap.findMethod(clNm);
+      NativeMethod clm = MetaSpace.findMethod(clNm);
       if (clm != null) {
         clm.invoke(frame);
       } else {

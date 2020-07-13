@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -35,13 +35,13 @@ public class InvokeInterfaceInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazzName, methodName, methodDescriptor));
+    NativeMethod nm = MetaSpace.findMethod(Utils.genNativeMethodKey(clazzName, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
     }
 
-    KClass clazz = Heap.findClass(this.clazzName);
+    KClass clazz = MetaSpace.findClass(this.clazzName);
     if (clazz == null) {
       clazz = frame.method.clazz.classLoader.loadClass(clazzName);
     }
@@ -53,7 +53,7 @@ public class InvokeInterfaceInst implements Instruction {
       } else {
         // hack by native method
         String key = Utils.genNativeMethodKey(cinit.clazz.name, cinit.name, cinit.descriptor);
-        NativeMethod ciNm = Heap.findMethod(key);
+        NativeMethod ciNm = MetaSpace.findMethod(key);
         if (ciNm != null) {
           ciNm.invoke(frame);
         } else {
@@ -116,7 +116,7 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     // hack for lambda
-    nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
+    nm = MetaSpace.findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
     if (nm != null) {
       // restore frame
       ArrayList<String> tmpArgs = new ArrayList<>(args);

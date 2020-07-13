@@ -1,13 +1,12 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KMethod;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 
 import com.gxk.jvm.util.Utils;
-import java.util.Arrays;
 import java.util.List;
 
 public class InvokeStaticInst implements Instruction {
@@ -29,13 +28,13 @@ public class InvokeStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazzName, methodName, descriptor));
+    NativeMethod nm = MetaSpace.findMethod(Utils.genNativeMethodKey(clazzName, methodName, descriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
     }
 
-    KClass kClass = Heap.findClass(clazzName);
+    KClass kClass = MetaSpace.findClass(clazzName);
     if (kClass == null) {
       kClass = frame.method.clazz.classLoader.loadClass(clazzName);
     }

@@ -12,7 +12,7 @@ import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -242,7 +242,7 @@ public abstract class Utils {
   }
 
   public static KObject str2Obj(String str, ClassLoader classLoader) {
-    KClass klass = Heap.findClass("java/lang/String");
+    KClass klass = MetaSpace.findClass("java/lang/String");
     KObject object = klass.newObject();
     KField field = object.getField("value", "[C");
     KClass arrClazz = new KClass(1, "[C", classLoader, null);

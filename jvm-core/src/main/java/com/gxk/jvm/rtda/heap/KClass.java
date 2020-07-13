@@ -5,6 +5,7 @@ import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 
 import java.util.ArrayList;
@@ -250,7 +251,7 @@ public class KClass {
   public void interfaceInit(Frame frame) {
     List<KClass> interfaces = new ArrayList<>();
     for (String interfaceName : this.interfaceNames) {
-      KClass tmp = Heap.findClass(interfaceName);
+      KClass tmp = MetaSpace.findClass(interfaceName);
       if (tmp == null) {
         tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
       }

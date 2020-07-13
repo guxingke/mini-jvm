@@ -3,7 +3,7 @@ package com.gxk.jvm.classloader;
 import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.util.EnvHolder;
 import org.junit.After;
@@ -53,7 +53,7 @@ public class ClassLoaderTest {
 
   @After
   public void tearDown() {
-    Heap.clear();
+    MetaSpace.clear();
   }
 
   @Test

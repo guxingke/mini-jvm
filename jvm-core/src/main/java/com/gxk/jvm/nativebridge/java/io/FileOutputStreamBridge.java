@@ -1,6 +1,6 @@
 package com.gxk.jvm.nativebridge.java.io;
 
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -11,22 +11,22 @@ import java.io.IOException;
 public abstract class FileOutputStreamBridge {
 
   public static void registerNatives0() {
-    Heap.registerMethod("java/io/FileOutputStream_open0_(Ljava/lang/String;Z)V", frame -> {
+    MetaSpace.registerMethod("java/io/FileOutputStream_open0_(Ljava/lang/String;Z)V", frame -> {
     });
 
-    Heap.registerMethod("java/io/FileOutputStream_initIDs_()V", frame -> {
+    MetaSpace.registerMethod("java/io/FileOutputStream_initIDs_()V", frame -> {
     });
 
-    Heap.registerMethod("java/io/FileOutputStream_close0_()V", frame -> {
+    MetaSpace.registerMethod("java/io/FileOutputStream_close0_()V", frame -> {
       // TODO real close
       frame.popRef();
     });
 
-    Heap.registerMethod("java/io/FileDescriptor_sync_()V", frame -> {
+    MetaSpace.registerMethod("java/io/FileDescriptor_sync_()V", frame -> {
       frame.popRef();
     });
 
-    Heap.registerMethod("java/io/FileOutputStream_write_(IZ)V", frame -> {
+    MetaSpace.registerMethod("java/io/FileOutputStream_write_(IZ)V", frame -> {
       boolean append = frame.popInt() == 1;
       Integer val = frame.popInt();
       KObject thisObj = (KObject) frame.popRef();
@@ -50,7 +50,7 @@ public abstract class FileOutputStreamBridge {
       }
     });
 
-    Heap.registerMethod("java/io/FileOutputStream_writeBytes_([BIIZ)V", frame -> {
+    MetaSpace.registerMethod("java/io/FileOutputStream_writeBytes_([BIIZ)V", frame -> {
       boolean append = frame.popInt() == 1;
       Integer len= frame.popInt();
       Integer off= frame.popInt();

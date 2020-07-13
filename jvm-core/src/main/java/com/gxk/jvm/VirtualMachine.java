@@ -31,7 +31,7 @@ import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -65,7 +65,7 @@ public class VirtualMachine {
     String mainClass = Utils.replace(cmd.clazz, '.', EnvHolder.FILE_SEPARATOR.toCharArray()[0]);
     classLoader.loadClass(mainClass);
 
-    KClass clazz = Heap.findClass(mainClass);
+    KClass clazz = MetaSpace.findClass(mainClass);
     KMethod method = clazz.getMainMethod();
     if (method == null) {
       throw new IllegalStateException("not found main method");
@@ -181,7 +181,7 @@ public class VirtualMachine {
   private static void loadFoundationClass(ClassLoader classLoader) {
     // class
     KClass metaClass = classLoader.loadClass("java/lang/Class");
-    for (KClass cls : Heap.getClasses()) {
+    for (KClass cls : MetaSpace.getClasses()) {
       if (cls.getRuntimeClass() == null) {
         KObject obj = metaClass.newObject();
         cls.setRuntimeClass(obj);

@@ -8,7 +8,7 @@ import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -30,12 +30,12 @@ public class ClassLoader {
   }
 
   public void loadPrimitiveClass(String name) {
-    KClass cache = Heap.findClass(name);
+    KClass cache = MetaSpace.findClass(name);
     if (cache != null) {
       return;
     }
     KClass cls = new KClass(1, name, this);
-    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    KObject metaCls = MetaSpace.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
 
@@ -43,12 +43,12 @@ public class ClassLoader {
   }
 
   public void loadPrimitiveArrayClass(String name) {
-    KClass cache = Heap.findClass(name);
+    KClass cache = MetaSpace.findClass(name);
     if (cache != null) {
       return;
     }
     KClass cls = new KClass(1, name, this);
-    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    KObject metaCls = MetaSpace.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
 
@@ -56,7 +56,7 @@ public class ClassLoader {
   }
 
   public KClass loadClass(String name) {
-    KClass cache = Heap.findClass(name);
+    KClass cache = MetaSpace.findClass(name);
     if (cache != null) {
       return cache;
     }
@@ -68,11 +68,11 @@ public class ClassLoader {
   }
 
   public void doRegister(KClass clazz) {
-    Heap.registerClass(clazz.name, clazz);
+    MetaSpace.registerClass(clazz.name, clazz);
     for (KMethod method : clazz.methods) {
       if (method.isNative()) {
         String key = Utils.genNativeMethodKey(method.clazz.name, method.name, method.descriptor);
-        NativeMethod nm = Heap.findMethod(key);
+        NativeMethod nm = MetaSpace.findMethod(key);
         if (nm == null) {
           System.err.println("not found native method " + key + " " + method);
         }
@@ -89,8 +89,8 @@ public class ClassLoader {
       kClass.setSuperClass(this.loadClass(kClass.superClassName));
     }
 
-    if (Heap.findClass("java/lang/Class") != null) {
-      KObject rcs = Heap.findClass("java/lang/Class").newObject();
+    if (MetaSpace.findClass("java/lang/Class") != null) {
+      KObject rcs = MetaSpace.findClass("java/lang/Class").newObject();
       kClass.setRuntimeClass(rcs);
       rcs.setMetaClass(kClass);
     }

@@ -2,7 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -32,7 +32,7 @@ public class LdcInst implements Instruction {
         frame.pushFloat(((float) val));
         break;
       case "Ljava/lang/String":
-        KClass klass = Heap.findClass("java/lang/String");
+        KClass klass = MetaSpace.findClass("java/lang/String");
         if (klass == null) {
           klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
@@ -60,7 +60,7 @@ public class LdcInst implements Instruction {
         frame.pushRef(object);
         break;
       case "L":
-        KClass klass2 = Heap.findClass(val.toString());
+        KClass klass2 = MetaSpace.findClass(val.toString());
         if (klass2 == null) {
           klass2 = frame.method.clazz.classLoader.loadClass(val.toString());
         }

@@ -1,7 +1,7 @@
 package com.gxk.jvm.nativebridge.sun.misc;
 
 import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 import java.nio.ByteBuffer;
@@ -14,17 +14,17 @@ public abstract class UnsafeBridge {
   private static Long next = 1L;
 
   public static void registerNatives0() {
-    Heap.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_registerNatives_()V", frame -> {
     });
-    Heap.registerMethod("sun/misc/Unsafe_getUnsafe_()Lsun/misc/Unsafe;", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_getUnsafe_()Lsun/misc/Unsafe;", frame -> {
       frame.pushRef(null);
     });
-    Heap.registerMethod("sun/misc/Unsafe_objectFieldOffset_(Ljava/lang/reflect/Field;)J", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_objectFieldOffset_(Ljava/lang/reflect/Field;)J", frame -> {
       frame.popRef();
       frame.popRef();
       frame.pushLong(1L);
     });
-    Heap.registerMethod("sun/misc/Unsafe_getAndAddInt_(Ljava/lang/Object;JI)I", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_getAndAddInt_(Ljava/lang/Object;JI)I", frame -> {
       Integer delta = frame.popInt();
       Long offset = frame.popLong();
       KObject obj = (KObject) frame.popRef();
@@ -36,7 +36,7 @@ public abstract class UnsafeBridge {
       frame.pushInt(val - delta);
     });
 
-    Heap.registerMethod("sun/misc/Unsafe_allocateMemory_(J)J", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_allocateMemory_(J)J", frame -> {
       Long val = frame.popLong();
       frame.popRef();
 
@@ -47,7 +47,7 @@ public abstract class UnsafeBridge {
       frame.pushLong(val);
     });
 
-    Heap.registerMethod("sun/misc/Unsafe_putLong_(JJ)V", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_putLong_(JJ)V", frame -> {
       Long v2 = frame.popLong();
       Long v1 = frame.popLong();
       frame.popRef(); // this
@@ -58,7 +58,7 @@ public abstract class UnsafeBridge {
       mem.put(v1, bytes);
     });
 
-    Heap.registerMethod("sun/misc/Unsafe_getByte_(J)B", frame -> {
+    MetaSpace.registerMethod("sun/misc/Unsafe_getByte_(J)B", frame -> {
       Long arg = frame.popLong();
       frame.popRef();
 

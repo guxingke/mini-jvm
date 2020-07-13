@@ -1,17 +1,19 @@
-package com.gxk.jvm.rtda.heap;
+package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * jvm heap
+ * jvm meta space
  */
-public abstract class Heap {
+public abstract class MetaSpace {
+
   private static final Map<String, NativeMethod> NATIVE_METHOD_MAP;
   private static final Map<String, KClass> STRING_K_CLASS_MAP;
 

@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 
@@ -51,7 +51,7 @@ public class NewArrayInst implements Instruction {
       throw new UnsupportedOperationException(String.valueOf(type));
     }
 
-    KClass clazz = Heap.findClass(this.clazz);
+    KClass clazz = MetaSpace.findClass(this.clazz);
     switch (type) {
       case 4:
         frame.pushRef(new KArray(clazz, new Boolean[count]));
