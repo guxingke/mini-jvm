@@ -16,7 +16,7 @@ public abstract class ObjectBridge {
       } catch (CloneNotSupportedException e) {
         e.printStackTrace();
       }
-      frame.pushRef(newObj);
+      frame.pushRef((KObject) newObj);
     });
     MetaSpace.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (frame) -> {
       KObject val = (KObject) frame.popRef();

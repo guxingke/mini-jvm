@@ -2,7 +2,7 @@ package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.heap.KMethod;
-
+import com.gxk.jvm.rtda.heap.KObject;
 import java.util.Map;
 
 public class Frame {
@@ -48,43 +48,43 @@ public class Frame {
 
   // operand stack operation
 
-  public void pushInt(Integer val) {
+  public void pushInt(int val) {
     this.operandStack.pushInt(val);
   }
 
-  public Integer popInt() {
+  public int popInt() {
     return this.operandStack.popInt();
   }
 
-  public void pushLong(Long val) {
+  public void pushLong(long val) {
     this.operandStack.pushLong(val);
   }
 
-  public Long popLong() {
+  public long popLong() {
     return this.operandStack.popLong();
   }
 
-  public void pushFloat(Float val) {
+  public void pushFloat(float val) {
     this.operandStack.pushFloat(val);
   }
 
-  public Float popFloat() {
+  public float popFloat() {
     return this.operandStack.popFloat();
   }
 
-  public void pushDouble(Double val) {
+  public void pushDouble(double val) {
     this.operandStack.pushDouble(val);
   }
 
-  public Double popDouble() {
+  public double popDouble() {
     return this.operandStack.popDouble();
   }
 
-  public void pushRef(Object val) {
+  public void pushRef(KObject val) {
     this.operandStack.pushRef(val);
   }
 
-  public Object popRef() {
+  public KObject popRef() {
     return this.operandStack.popRef();
   }
 
@@ -98,31 +98,31 @@ public class Frame {
 
   // local vars operation
 
-  public void setInt(Integer index, Integer val) {
+  public void setInt(int index, int val) {
     this.localVars.setInt(index, val);
   }
 
-  public Integer getInt(Integer index) {
+  public int getInt(int index) {
     return this.localVars.getInt(index);
   }
 
-  public void setFloat(Integer index, Float val) {
+  public void setFloat(int index, float val) {
     this.localVars.setFloat(index, val);
   }
 
-  public Float getFloat(Integer index) {
+  public Float getFloat(int index) {
     return this.localVars.getFloat(index);
   }
 
-  public Long getLong(Integer index) {
+  public Long getLong(int index) {
     return this.localVars.getLong(index);
   }
 
-  public void setLong(Integer index, Long val) {
+  public void setLong(int index, long val) {
     this.localVars.setLong(index, val);
   }
 
-  public void setDouble(int index, Double val) {
+  public void setDouble(int index, double val) {
     this.localVars.setDouble(index, val);
   }
 
@@ -130,11 +130,11 @@ public class Frame {
     return this.localVars.getDouble(index);
   }
 
-  public void setRef(Integer index, Object ref) {
+  public void setRef(int index, KObject ref) {
     this.localVars.setRef(index, ref);
   }
 
-  public Object getRef(Integer index) {
+  public KObject getRef(int index) {
     return this.localVars.getRef(index);
   }
 

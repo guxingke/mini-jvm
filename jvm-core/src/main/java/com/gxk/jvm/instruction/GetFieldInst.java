@@ -2,6 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
@@ -30,22 +31,15 @@ public class GetFieldInst implements Instruction {
     if (clazz.equals("java/nio/charset/Charset") && fieldName.equals("name")) {
       KObject obj = ((KObject) frame.popRef());
       KField field = obj.getField(fieldName, fieldDescriptor);
-      field.val = new Slot[]{new Slot(Utils.str2Obj("UTF-8", obj.clazz.classLoader))};
-      Slot[] val = field.val;
-
-      for (Slot slot : val) {
-        frame.pushSlot(slot);
-      }
+      KObject instance = Utils.str2Obj("UTF-8", obj.clazz.classLoader);
+      field.val = UnionSlot.of(instance);
+      frame.pushRef(instance);
       return;
     }
 
     KObject obj = ((KObject) frame.popRef());
     KField field = obj.getField(fieldName, fieldDescriptor);
-    Slot[] val = field.val;
-
-    for (Slot slot : val) {
-      frame.pushSlot(slot);
-    }
+    field.get(frame);
   }
 
   @Override

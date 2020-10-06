@@ -3,6 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -52,16 +53,14 @@ public class LdcWInst implements Instruction {
         KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
 
         char[] chars = val.toString().toCharArray();
-        Character[] characters = new Character[chars.length];
-        for (int i = 0; i < chars.length; i++) {
-          characters[i] = chars[i];
-        }
-        KArray arr = new KArray(arrClazz, characters);
-        field.val = new Slot[]{new Slot(arr)};
+        char[] characters = new char[chars.length];
+        System.arraycopy(chars, 0, characters, 0, chars.length);
+        KArray arr = new KArray(arrClazz, characters, characters.length);
+        field.val = UnionSlot.of(arr);
         frame.pushRef(object);
         break;
       default:
-        frame.pushRef(val);
+        frame.pushRef((KObject) val);
         break;
     }
   }

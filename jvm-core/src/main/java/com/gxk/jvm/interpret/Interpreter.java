@@ -39,7 +39,7 @@ public class Interpreter {
       arrClazz = new KClass(1, "[java/lang/String;", method.clazz.classLoader, null);
       MetaSpace.registerClass(arrClazz.name, arrClazz);
     }
-    KArray array = new KArray(arrClazz, kargs);
+    KArray array = new KArray(arrClazz, kargs, kargs.length);
     frame.setRef(0, array);
 
     doInterpret(thread, frame);

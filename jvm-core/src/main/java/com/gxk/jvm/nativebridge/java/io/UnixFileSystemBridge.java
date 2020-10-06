@@ -16,10 +16,10 @@ public abstract class UnixFileSystemBridge {
     });
 
     MetaSpace.registerMethod("java/io/UnixFileSystem_getBooleanAttributes0_(Ljava/io/File;)I", frame -> {
-      KObject fileObj = (KObject) frame.popRef();
+      KObject fileObj = frame.popRef();
       Object thisObj = frame.popRef();
 
-      KObject pathObj = (KObject) fileObj.getField("path", "Ljava/lang/String;").val[0].ref;
+      KObject pathObj = fileObj.getField("path", "Ljava/lang/String;").val.getRef();
       String path = Utils.obj2Str(pathObj);
       File file = new File(path);
       boolean exists = file.exists();
@@ -41,10 +41,10 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     MetaSpace.registerMethod("java/io/UnixFileSystem_getLastModifiedTime_(Ljava/io/File;)J", frame -> {
-      KObject file = (KObject) frame.popRef();
+      KObject file = frame.popRef();
       frame.popRef();
       KField path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      String pathStr = Utils.obj2Str(path.val.getRef());
       long lm = new File(pathStr).lastModified();
       frame.pushLong(lm);
     });
@@ -61,10 +61,10 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     MetaSpace.registerMethod("java/io/UnixFileSystem_list_(Ljava/io/File;)[Ljava/lang/String;", frame -> {
-      KObject file = (KObject) frame.popRef();
+      KObject file = frame.popRef();
       frame.popRef();
       KField path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      String pathStr = Utils.obj2Str((path.val.getRef()));
       String[] list = new File(pathStr).list();
 
       KObject[] items = new KObject[list.length];
@@ -81,7 +81,7 @@ public abstract class UnixFileSystemBridge {
         MetaSpace.registerClass(name, clazz);
       }
 
-      KArray arr = new KArray(clazz, items);
+      KArray arr = new KArray(clazz, items, items.length);
       frame.pushRef(arr);
     });
     MetaSpace.registerMethod("java/io/UnixFileSystem_createDirectory_(Ljava/io/File;)Z", frame -> {

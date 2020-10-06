@@ -12,14 +12,14 @@ public abstract class StringBridge {
     });
 
     MetaSpace.registerMethod("java/lang/String_getBytes_()[B", frame -> {
-      KObject obj = (KObject) frame.popRef();
+      KObject obj = frame.popRef();
       String str = Utils.obj2Str(obj);
       byte[] bytes = str.getBytes();
-      Byte[] byteObj = new Byte[bytes.length];
+      byte[] byteObj = new byte[bytes.length];
       for (int i = 0; i < bytes.length; i++) {
         byteObj[i] = bytes[i];
       }
-      KArray arr = new KArray(MetaSpace.findClass("[B"), byteObj);
+      KArray arr = new KArray(MetaSpace.findClass("[B"), byteObj, byteObj.length);
 
       frame.pushRef(arr);
     });

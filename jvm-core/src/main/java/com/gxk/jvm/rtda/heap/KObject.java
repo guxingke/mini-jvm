@@ -1,6 +1,6 @@
 package com.gxk.jvm.rtda.heap;
 
-import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +47,7 @@ public class KObject implements Cloneable {
     this.superObject = superObject;
   }
 
-  public void setField(String name, String desc, Slot[] val) {
+  public void setField(String name, String desc, UnionSlot val) {
     KField field = this.getField(name, desc);
     field.val = val;
   }

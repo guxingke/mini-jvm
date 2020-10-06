@@ -9,7 +9,7 @@ public class LALoadInst implements Instruction {
   public void execute(Frame frame) {
     Integer index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    long item = (Long) array.items[index];
+    long item = ((long[]) array.items)[index];
     frame.pushLong(item);
   }
 

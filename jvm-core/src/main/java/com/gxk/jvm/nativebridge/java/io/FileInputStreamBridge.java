@@ -14,8 +14,8 @@ public abstract class FileInputStreamBridge {
 
   public static void registerNatives0() {
     MetaSpace.registerMethod("java/io/FileInputStream_open0_(Ljava/lang/String;)V", frame -> {
-      KObject fileName = (KObject) frame.popRef();
-      KObject thisObj = (KObject) frame.popRef();
+      KObject fileName = frame.popRef();
+      KObject thisObj = frame.popRef();
 
       String filePath = Utils.obj2Str(fileName);
       try {
@@ -27,9 +27,9 @@ public abstract class FileInputStreamBridge {
     });
 
     MetaSpace.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
-      KObject fd = (KObject) frame.popRef();
-      KObject thisObj = (KObject) frame.popRef();
-      Integer fdInt = fd.getField("fd", "I").val[0].num;
+      KObject fd = frame.popRef();
+      KObject thisObj = frame.popRef();
+      int fdInt = fd.getField("fd", "I").val.getInt();
       try {
         if (fdInt == 0) {
           FileInputStream fis = new FileInputStream(FileDescriptor.in);
@@ -43,7 +43,7 @@ public abstract class FileInputStreamBridge {
     });
 
     MetaSpace.registerMethod("java/io/FileInputStream_available0_()I", frame -> {
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         int available = extra.available();
@@ -54,7 +54,7 @@ public abstract class FileInputStreamBridge {
     });
 
     MetaSpace.registerMethod("java/io/FileInputStream_close0_()V", frame -> {
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         extra.close();
@@ -64,7 +64,7 @@ public abstract class FileInputStreamBridge {
     });
 
     MetaSpace.registerMethod("java/io/FileInputStream_read0_()I", frame -> {
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         int read = extra.read();
@@ -76,7 +76,7 @@ public abstract class FileInputStreamBridge {
 
     MetaSpace.registerMethod("java/io/FileInputStream_skip0_(J)J", frame -> {
       Long val = frame.popLong();
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         long skip = extra.skip(val);
@@ -90,14 +90,14 @@ public abstract class FileInputStreamBridge {
       Integer v3 = frame.popInt();
       Integer v2 = frame.popInt();
       KArray v1 = (KArray) frame.popRef();
-      byte[] ba = new byte[v1.items.length];
-      KObject thisObj = (KObject) frame.popRef();
+      byte[] ba = new byte[v1.length];
+      KObject thisObj = frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         int read = extra.read(ba, v2, v3);
 
         for (int i = v2; i < v2 + v3; i++) {
-          v1.items[i] = ba[i];
+          ((byte[]) v1.items)[i] = ba[i];
         }
 
         frame.pushInt(read);

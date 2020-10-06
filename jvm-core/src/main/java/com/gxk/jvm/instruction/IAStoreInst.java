@@ -7,10 +7,10 @@ public class IAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popInt();
-    Integer index = frame.popInt();
+    int val = frame.popInt();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    ((int[]) array.items)[index] = val;
   }
 
   @Override

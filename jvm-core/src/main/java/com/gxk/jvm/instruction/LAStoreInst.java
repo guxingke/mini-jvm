@@ -7,10 +7,10 @@ public class LAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popLong();
-    Integer index = frame.popInt();
+    long val = frame.popLong();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    ((long[]) array.items)[index] = val;
   }
 
   @Override

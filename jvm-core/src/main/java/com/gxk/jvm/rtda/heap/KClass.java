@@ -8,6 +8,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 
+import com.gxk.jvm.rtda.UnionSlot;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -188,20 +189,15 @@ public class KClass {
       case "B":
       case "S":
       case "I":
-        return new KField(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.INT)});
+        return new KField(source.accessFlags, source.name, source.descriptor, UnionSlot.of(0));
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.FLOAT)});
+        return new KField(source.accessFlags, source.name, source.descriptor, UnionSlot.of(0f));
       case "D":
-        return new KField(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
+        return new KField(source.accessFlags, source.name, source.descriptor, UnionSlot.of(0d));
       case "J":
-        return new KField(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
+        return new KField(source.accessFlags, source.name, source.descriptor, UnionSlot.of(0L));
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(null)});
+        return new KField(source.accessFlags, source.name, source.descriptor, UnionSlot.of((KObject) null));
     }
   }
 

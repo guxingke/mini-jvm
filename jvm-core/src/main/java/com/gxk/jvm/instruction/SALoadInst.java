@@ -7,9 +7,9 @@ public class SALoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer index = frame.popInt();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    int val = ((Short) array.items[index]).intValue();
+    int val = ((short[]) array.items)[index];
     frame.pushInt(val);
   }
 }

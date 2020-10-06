@@ -7,9 +7,9 @@ public class DAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popDouble();
-    Integer index = frame.popInt();
+    double val = frame.popDouble();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    ((double[]) array.items)[index] = val;
   }
 }

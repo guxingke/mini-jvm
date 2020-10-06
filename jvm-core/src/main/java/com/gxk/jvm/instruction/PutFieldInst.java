@@ -2,6 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class PutFieldInst implements Instruction {
@@ -26,12 +27,12 @@ public class PutFieldInst implements Instruction {
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();
       KObject obj = (KObject) frame.popRef();
-      obj.setField(fieldName, fieldDescriptor, new Slot[]{v1, v2});
+      obj.setField(fieldName, fieldDescriptor, UnionSlot.of(v1, v2));
       return;
     }
 
     Slot v = frame.popSlot();
-    ((KObject) frame.popRef()).setField(fieldName, fieldDescriptor, new Slot[]{v});
+    frame.popRef().setField(fieldName, fieldDescriptor, UnionSlot.of(v));
   }
 
   @Override

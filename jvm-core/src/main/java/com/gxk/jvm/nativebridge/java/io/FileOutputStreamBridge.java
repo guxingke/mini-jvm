@@ -29,10 +29,10 @@ public abstract class FileOutputStreamBridge {
     MetaSpace.registerMethod("java/io/FileOutputStream_write_(IZ)V", frame -> {
       boolean append = frame.popInt() == 1;
       Integer val = frame.popInt();
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val[0].ref;
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = fd.val.getRef();
+      int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {
         try {
@@ -52,19 +52,19 @@ public abstract class FileOutputStreamBridge {
 
     MetaSpace.registerMethod("java/io/FileOutputStream_writeBytes_([BIIZ)V", frame -> {
       boolean append = frame.popInt() == 1;
-      Integer len= frame.popInt();
-      Integer off= frame.popInt();
+      int len= frame.popInt();
+      int off= frame.popInt();
       KArray arg1 = (KArray) frame.popRef();
 
       byte[] bytes = new byte[len];
       for (int i = off; i < len; i++) {
-        bytes[i - off] = (byte) arg1.items[i];
+        bytes[i - off] = ((byte[]) arg1.items)[i];
       }
 
-      KObject thisObj = (KObject) frame.popRef();
+      KObject thisObj = frame.popRef();
       KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val[0].ref;
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = fd.val.getRef();
+      int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {
         try {

@@ -7,9 +7,9 @@ public class SAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    short val = frame.popInt().shortValue();
-    Integer index = frame.popInt();
+    int val = frame.popInt();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    ((short[]) array.items)[index] = (short) val;
   }
 }

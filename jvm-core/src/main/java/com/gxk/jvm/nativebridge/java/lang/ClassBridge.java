@@ -1,8 +1,8 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -17,17 +17,15 @@ public abstract class ClassBridge {
     MetaSpace.registerMethod("java/lang/Class_registerNatives_()V", (frame) -> {
     });
     MetaSpace.registerMethod("java/lang/Class_getName0_()Ljava/lang/String;", frame -> {
-      KObject obj = (KObject) frame.popRef();
+      KObject obj = frame.popRef();
       String name = obj.getMetaClass().name;
       KClass strClazz = MetaSpace.findClass("java/lang/String");
       KObject nameObj = strClazz.newObject();
       char[] chars = Utils.replace(name, '/', '.').toCharArray();
-      Character[] characters = new Character[chars.length];
-      for (int i = 0; i < chars.length; i++) {
-        characters[i] = chars[i];
-      }
-      KArray kArray = new KArray(MetaSpace.findClass("java/lang/Character"), characters);
-      nameObj.setField("value", "[C", new Slot[]{new Slot(kArray)});
+      char[] characters = new char[chars.length];
+      System.arraycopy(chars, 0, characters, 0, chars.length);
+      KArray kArray = new KArray(MetaSpace.findClass("java/lang/Character"), characters, characters.length);
+      nameObj.setField("value", "[C", UnionSlot.of(kArray));
       frame.pushRef(nameObj);
     });
     MetaSpace.registerMethod(
@@ -36,7 +34,7 @@ public abstract class ClassBridge {
           frame.popRef();
           frame.popRef();
           Integer init = frame.popInt();
-          KObject name = (KObject) frame.popRef();
+          KObject name = frame.popRef();
           String clsName = Utils.replace(Utils.obj2Str(name), '.', '/');
           KClass clazz = MetaSpace.findClass(clsName);
           if (clazz == null) {
@@ -69,12 +67,12 @@ public abstract class ClassBridge {
       throw new UnsupportedOperationException();
     });
     MetaSpace.registerMethod("java/lang/Class_isInterface_()Z", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      KClass cls = frame.popRef().getMetaClass();
       frame.pushInt(cls.isInterface() ? 1 : 0);
     });
     MetaSpace.registerMethod("java/lang/Class_isArray_()Z", frame -> {
-      KClass metaClass = ((KObject) frame.popRef()).getMetaClass();
-      boolean isArray = metaClass.name.startsWith("[") ? true : false;
+      KClass metaClass = frame.popRef().getMetaClass();
+      boolean isArray = metaClass.name.startsWith("[");
       frame.pushInt(isArray ? 1 : 0);
     });
     MetaSpace.registerMethod("java/lang/Class_isPrimitive_()Z", frame -> {
@@ -94,7 +92,7 @@ public abstract class ClassBridge {
       throw new UnsupportedOperationException();
     });
     MetaSpace.registerMethod("java/lang/Class_getComponentType_()Ljava/lang/Class;", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      KClass cls = frame.popRef().getMetaClass();
       if (cls.name.startsWith("[")) {
         String name = cls.name.substring(1);
         switch (name) {
@@ -159,12 +157,10 @@ public abstract class ClassBridge {
     });
     MetaSpace.registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;",
         (frame) -> {
-          Character[] values = (Character[]) ((KArray) ((KObject) frame.popRef())
-              .getField("value", "[C").val[0].ref).items;
+          char[] values = (char[]) ((KArray) ((KObject) frame.popRef())
+              .getField("value", "[C").val.getRef()).items;
           char[] v2 = new char[values.length];
-          for (int i = 0; i < values.length; i++) {
-            v2[i] = values[i];
-          }
+          System.arraycopy(values, 0, v2, 0, values.length);
           String val = new String(v2);
           KClass cls = MetaSpace.findClass(val);
           frame.pushRef(cls.getRuntimeClass());
@@ -218,7 +214,7 @@ public abstract class ClassBridge {
         objs[i] = interfaces.get(i).getRuntimeClass();
       }
 
-      KArray kArray = new KArray(clazz, objs);
+      KArray kArray = new KArray(clazz, objs, objs.length);
       frame.pushRef(kArray);
     });
 
@@ -234,7 +230,7 @@ public abstract class ClassBridge {
           KObject thisObj = (KObject) frame.popRef();
           String name = Utils.obj2Str(nameObj);
           KField field = thisObj.getMetaClass().getField(name);
-          frame.pushRef(new Slot[]{new Slot(null)});
+          frame.pushRef(null);
         });
   }
 }

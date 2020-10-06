@@ -7,8 +7,8 @@ import com.gxk.jvm.classfile.Method;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -116,19 +116,19 @@ public class ClassLoader {
         case "B":
         case "S":
         case "I":
-          it.val = new Slot[]{new Slot(0, Slot.INT)};
+          it.val = UnionSlot.of(0);
           break;
         case "F":
-          it.val = new Slot[]{new Slot(0, Slot.FLOAT)};
+          it.val = UnionSlot.of(0f);
           break;
         case "D":
-          it.val = new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)};
+          it.val = UnionSlot.of(0d);
           break;
         case "J":
-          it.val = new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)};
+          it.val = UnionSlot.of(0L);
           break;
         default:
-          it.val = new Slot[]{new Slot(null)};
+          it.val = UnionSlot.of((KObject) null);
           break;
       }
     }

@@ -50,7 +50,7 @@ public class ANewArrayInst implements Instruction {
       MetaSpace.registerClass(name, clazz);
     }
     KObject[] objs = new KObject[count];
-    KArray kArray = new KArray(clazz, objs);
+    KArray kArray = new KArray(clazz, objs, objs.length);
     frame.pushRef(kArray);
   }
 

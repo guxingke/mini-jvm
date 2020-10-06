@@ -7,9 +7,9 @@ public class FAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object val = frame.popFloat();
-    Integer index = frame.popInt();
+    float val = frame.popFloat();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    array.items[index] = val;
+    ((float[]) array.items)[index] = val;
   }
 }

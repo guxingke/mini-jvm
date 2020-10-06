@@ -11,8 +11,8 @@ import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
@@ -199,7 +199,7 @@ public abstract class Utils {
         ret++;
         break;
       default:
-        frame.setRef(idx, val);
+        frame.setRef(idx, (KObject) val);
         break;
     }
     return ret;
@@ -224,7 +224,7 @@ public abstract class Utils {
         frame.pushDouble(((Double) obj));
         break;
       default:
-        frame.pushRef(obj);
+        frame.pushRef((KObject) obj);
         break;
     }
   }
@@ -233,12 +233,8 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Object[] values = ((KArray) name.getField("value", "[C").val[0].ref).items;
-    char[] chars = new char[values.length];
-    for (int i = 0; i < values.length; i++) {
-      chars[i] = (char) values[i];
-    }
-    return new String(chars);
+    char[] values = (char[]) ((KArray) name.getField("value", "[C").val.getRef()).items;
+    return new String(values);
   }
 
   public static KObject str2Obj(String str, ClassLoader classLoader) {
@@ -248,12 +244,10 @@ public abstract class Utils {
     KClass arrClazz = new KClass(1, "[C", classLoader, null);
 
     char[] chars = str.toCharArray();
-    Character[] characters = new Character[chars.length];
-    for (int i = 0; i < chars.length; i++) {
-      characters[i] = chars[i];
-    }
-    KArray arr = new KArray(arrClazz, characters);
-    field.val = new Slot[]{new Slot(arr)};
+    char[] characters = new char[chars.length];
+    System.arraycopy(chars, 0, characters, 0, chars.length);
+    KArray arr = new KArray(arrClazz, characters, chars.length);
+    field.val = UnionSlot.of(arr);
     return object;
   }
 

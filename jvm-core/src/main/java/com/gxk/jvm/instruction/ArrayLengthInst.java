@@ -8,7 +8,7 @@ public class ArrayLengthInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     KArray kArray = (KArray) frame.popRef();
-    int length = kArray.items.length;
+    int length = kArray.length;
     frame.pushInt(length);
   }
 

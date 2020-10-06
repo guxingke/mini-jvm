@@ -3,6 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 
@@ -34,10 +35,10 @@ public class PutStaticInst implements Instruction {
     if (fieldDescriptor.equals("J")) {
       Slot low = frame.popSlot();
       Slot high = frame.popSlot();
-      field.val = new Slot[]{high, low};
+      field.val = UnionSlot.of(high, low);
       return;
     }
-    field.val = new Slot[]{frame.popSlot()};
+    field.val = UnionSlot.of(frame.popSlot());
   }
 
   @Override

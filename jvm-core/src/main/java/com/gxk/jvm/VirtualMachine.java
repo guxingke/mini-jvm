@@ -29,9 +29,9 @@ import com.gxk.jvm.nativebridge.java.util.ZipFileBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.MetaSpace;
+import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KField;
 import com.gxk.jvm.rtda.heap.KMethod;
@@ -113,8 +113,7 @@ public class VirtualMachine {
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("err", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
-
+    outField.val = UnionSlot.of(psObj);
   }
 
   private static void initSystemOut(ClassLoader classLoader) {
@@ -148,7 +147,7 @@ public class VirtualMachine {
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("out", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
+    outField.val = UnionSlot.of(psObj);
   }
 
   public static void loadLibrary() {

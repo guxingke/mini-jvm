@@ -7,10 +7,10 @@ public class CAloadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer index = frame.popInt();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    char item = (char) array.items[index];
-    frame.pushInt(((int) (item)));
+    char item = ((char[]) array.items)[index];
+    frame.pushInt(item);
   }
 
   @Override

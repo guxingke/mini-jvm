@@ -1,6 +1,9 @@
 package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KObject;
+
 public class LocalVars {
+
   private final Slot[] slots;
 
   public LocalVars(int size) {
@@ -15,61 +18,61 @@ public class LocalVars {
     return this.slots;
   }
 
-  public void setInt(Integer index, Integer val) {
-    slots[index] = new Slot(val, Slot.INT);
+  public void setInt(int index, int val) {
+    slots[index] = Slot.val(val);
   }
 
-  public Integer getInt(Integer index) {
-    return slots[index].num;
+  public int getInt(int index) {
+    return slots[index].val;
   }
 
-  public void setFloat(Integer index, Float val) {
+  public void setFloat(int index, Float val) {
     int tmp = Float.floatToIntBits(val);
-    slots[index] = new Slot(tmp, Slot.FLOAT);
+    slots[index] = Slot.val(tmp);
   }
 
-  public Float getFloat(Integer index) {
-    Integer num = slots[index].num;
+  public float getFloat(int index) {
+    int num = slots[index].val;
     return Float.intBitsToFloat(num);
   }
 
-  public Long getLong(Integer index) {
-    Integer high = slots[index].num;
-    Integer low = slots[index + 1].num;
+  public long getLong(int index) {
+    int high = slots[index].val;
+    int low = slots[index + 1].val;
 
     long l1 = (high & 0x000000ffffffffL) << 32;
     long l2 = low & 0x00000000ffffffffL;
     return l1 | l2;
   }
 
-  public void setLong(Integer index, Long val) {
+  public void setLong(int index, long val) {
     int high = (int) (val >> 32); //高32位
     int low = (int) (val & 0x000000ffffffffL); //低32位
 
-    slots[index] = new Slot(high, Slot.LONG_HIGH);
-    slots[index + 1] = new Slot(low, Slot.LONG_LOW);
+    slots[index] = Slot.val(high);
+    slots[index + 1] = Slot.val(low);
   }
 
-  public void setDouble(int index, Double val) {
+  public void setDouble(int index, double val) {
     long tmp = Double.doubleToLongBits(val);
 
     int high = (int) (tmp >> 32); //高32位
     int low = (int) (tmp & 0x000000ffffffffL); //低32位
 
-    slots[index] = new Slot(high, Slot.DOUBLE_HIGH);
-    slots[index + 1] = new Slot(low, Slot.DOUBLE_LOW);
+    slots[index] = Slot.val(high);
+    slots[index + 1] = Slot.val(low);
   }
 
-  public Double getDouble(int index) {
-    Long tmp = this.getLong(index);
+  public double getDouble(int index) {
+    long tmp = this.getLong(index);
     return Double.longBitsToDouble(tmp);
   }
 
-  public void setRef(Integer index, Object ref) {
-    slots[index] = new Slot(ref);
+  public void setRef(int index, KObject ref) {
+    slots[index] = Slot.ref(ref);
   }
 
-  public Object getRef(Integer index) {
+  public KObject getRef(int index) {
     return slots[index].ref;
   }
 
@@ -86,7 +89,7 @@ public class LocalVars {
         sb.append(space).append(String.format("%d | ref       | %s", i, slot.ref)).append("\n");
         continue;
       }
-      sb.append(space).append(String.format("%d | primitive | %s", i, slot.num)).append("\n");
+      sb.append(space).append(String.format("%d | primitive | %s", i, slot.val)).append("\n");
     }
     return sb.append("\n").toString();
   }

@@ -17,35 +17,63 @@ public abstract class SystemBridge {
     });
     MetaSpace.registerMethod("java/lang/System_setErr0_(Ljava/io/PrintStream;)V", (frame) -> {
     });
-    MetaSpace.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
-    MetaSpace.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.pushLong(java.lang.System.nanoTime()));
-    MetaSpace.registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (frame) -> {
-      Integer len = frame.popInt();
-      Integer dsp = frame.popInt();
-      KArray dest = (KArray) frame.popRef();
-      Integer ssp = frame.popInt();
-      KArray source = (KArray) frame.popRef();
+    MetaSpace.registerMethod("java/lang/System_currentTimeMillis_()J",
+        (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
+    MetaSpace.registerMethod("java/lang/System_nanoTime_()J",
+        (frame) -> frame.pushLong(java.lang.System.nanoTime()));
+    MetaSpace
+        .registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V",
+            (frame) -> {
+              int len = frame.popInt();
+              int dsp = frame.popInt();
+              KArray dest = (KArray) frame.popRef();
+              int ssp = frame.popInt();
+              KArray source = (KArray) frame.popRef();
 
-      for (int i = 0; i < len; i++) {
-        dest.items[dsp++] = source.items[ssp++];
-      }
-    });
-    MetaSpace.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.pushInt(frame.popRef().hashCode()));
-    MetaSpace.registerMethod("java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;", (frame) -> {
-    });
-    MetaSpace.registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;", (frame) -> {
-    });
+              for (int i = 0; i < len; i++) {
+                if (dest.items instanceof char[]) {
+                  ((char[]) dest.items)[dsp++] = ((char[]) source.items)[ssp++];
+                } else if (dest.items instanceof boolean[]) {
+                  ((boolean[]) dest.items)[dsp++] = ((boolean[]) source.items)[ssp++];
+                } else if (dest.items instanceof byte[]) {
+                  ((byte[]) dest.items)[dsp++] = ((byte[]) source.items)[ssp++];
+                } else if (dest.items instanceof short[]) {
+                  ((short[]) dest.items)[dsp++] = ((short[]) source.items)[ssp++];
+                } else if (dest.items instanceof int[]) {
+                  ((int[]) dest.items)[dsp++] = ((int[]) source.items)[ssp++];
+                } else if (dest.items instanceof long[]) {
+                  ((long[]) dest.items)[dsp++] = ((long[]) source.items)[ssp++];
+                } else if (dest.items instanceof float[]) {
+                  ((float[]) dest.items)[dsp++] = ((float[]) source.items)[ssp++];
+                } else if (dest.items instanceof double[]) {
+                  ((double[]) dest.items)[dsp++] = ((double[]) source.items)[ssp++];
+                } else {
+                  ((KObject[]) dest.items)[dsp++] = ((KObject[]) source.items)[ssp++];
+                }
+              }
+            });
+    MetaSpace.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I",
+        (frame) -> frame.pushInt(frame.popRef().hashCode()));
+    MetaSpace.registerMethod(
+        "java/lang/System_initProperties_(Ljava/util/Properties;)Ljava/util/Properties;",
+        (frame) -> {
+        });
+    MetaSpace
+        .registerMethod("java/lang/System_mapLibraryName_(Ljava/lang/String;)Ljava/lang/String;",
+            (frame) -> {
+            });
 
     // hack
-    MetaSpace.registerMethod("java/lang/System_getenv_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
-      KObject nameObj = (KObject) frame.popRef();
+    MetaSpace
+        .registerMethod("java/lang/System_getenv_(Ljava/lang/String;)Ljava/lang/String;", frame -> {
+          KObject nameObj = (KObject) frame.popRef();
 
-      String val = System.getenv(Utils.obj2Str(nameObj));
-      if (val == null) {
-        frame.pushRef(null);
-        return;
-      }
-      frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
-    });
+          String val = System.getenv(Utils.obj2Str(nameObj));
+          if (val == null) {
+            frame.pushRef(null);
+            return;
+          }
+          frame.pushRef(Utils.str2Obj(val, frame.method.clazz.classLoader));
+        });
   }
 }

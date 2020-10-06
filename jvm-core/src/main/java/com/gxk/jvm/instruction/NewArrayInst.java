@@ -54,28 +54,28 @@ public class NewArrayInst implements Instruction {
     KClass clazz = MetaSpace.findClass(this.clazz);
     switch (type) {
       case 4:
-        frame.pushRef(new KArray(clazz, new Boolean[count]));
+        frame.pushRef(new KArray(clazz, new boolean[count], count));
         return;
       case 5:
-        frame.pushRef(new KArray(clazz, new Character[count]));
+        frame.pushRef(new KArray(clazz, new char[count],count));
         return;
       case 6:
-        frame.pushRef(new KArray(clazz, new Float[count]));
+        frame.pushRef(new KArray(clazz, new float[count], count));
         return;
       case 7:
-        frame.pushRef(new KArray(clazz, new Double[count]));
+        frame.pushRef(new KArray(clazz, new double[count], count));
         return;
       case 8:
-        frame.pushRef(new KArray(clazz, new Byte[count]));
+        frame.pushRef(new KArray(clazz, new byte[count], count));
         return;
       case 9:
-        frame.pushRef(new KArray(clazz, new Short[count]));
+        frame.pushRef(new KArray(clazz, new short[count], count));
         return;
       case 10:
-        frame.pushRef(new KArray(clazz, new Integer[count]));
+        frame.pushRef(new KArray(clazz, new int[count], count));
         return;
       case 11:
-        frame.pushRef(new KArray(clazz, new Long[count]));
+        frame.pushRef(new KArray(clazz, new long[count], count));
         return;
       default:
         throw new IllegalStateException();

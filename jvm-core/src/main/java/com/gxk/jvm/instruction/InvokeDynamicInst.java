@@ -8,6 +8,7 @@ import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.heap.KClass;
 import com.gxk.jvm.rtda.heap.KLambdaObject;
 import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class InvokeDynamicInst implements Instruction {
         }
 
         if (!bsm.isStatic()) {
-          newFrame.setRef(0, argObjs.get(0));
+          newFrame.setRef(0, (KObject) argObjs.get(0));
         }
 
         f.thread.pushFrame(newFrame);

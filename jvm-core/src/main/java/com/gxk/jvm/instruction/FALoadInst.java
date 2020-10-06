@@ -7,9 +7,9 @@ public class FALoadInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer index = frame.popInt();
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
-    float item = (float) array.items[index];
+    float item = ((float[]) array.items)[index];
     frame.pushFloat(item);
   }
 }

@@ -1,6 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.heap.KObject;
 
 public class AStoreInst implements Instruction {
 
@@ -17,7 +18,7 @@ public class AStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.popRef();
+    KObject tmp = frame.popRef();
     frame.setRef(index, tmp);
   }
 
