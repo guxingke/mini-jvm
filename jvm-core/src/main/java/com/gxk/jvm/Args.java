@@ -15,18 +15,10 @@ public class Args {
 
   private static final String MINUS_VERSION = "-version";
   private static final String MINUS_HELP = "-help";
-  private static final String MINUS_VERBOSE = "-verbose";
-  private static final String MINUS_VERBOSE_TRACE = "-verbose:trace";
-  private static final String MINUS_VERBOSE_CALL = "-verbose:call";
-  private static final String MINUS_VERBOSE_CLASS = "-verbose:class";
-  private static final String MINUS_VERBOSE_DEBUG = "-verbose:debug";
 
   private static final String MINUS_COLOR_RED = "-Xcolor:red";
   private static final String MINUS_COLOR_GREEN = "-Xcolor:green";
   private static final String MINUS_COLOR_YELLOW = "-Xcolor:yellow";
-
-  private static final String MINUS_CP = "-cp";
-  private static final String MINUS_JAR = "-jar";
 
   boolean version;
   boolean help;
@@ -53,81 +45,83 @@ public class Args {
       return args;
     }
 
-    int idx = 0;
-    int tries = 0;
-    while (true) {
-      String tmp = cliArgs[idx];
-      if (Objects.equals(MINUS_CP, tmp)) {
-        break;
-      }
-      if (Objects.equals(MINUS_JAR, tmp)) {
-        break;
-      }
-      if (tries > 200) {
-        System.out.println("parse args in loop. check input args.");
-        throw new IllegalArgumentException();
-      }
-      if (Objects.equals(MINUS_VERBOSE, cliArgs[idx])) {
-        idx++;
-        args.verbose = true;
-      }
-
-      if (Objects.equals(MINUS_VERBOSE_TRACE, cliArgs[idx])) {
-        idx++;
-        args.verboseTrace = true;
-      }
-
-      if (Objects.equals(MINUS_VERBOSE_CALL, cliArgs[idx])) {
-        idx++;
-        args.verboseCall = true;
-      }
-
-      if (Objects.equals(MINUS_VERBOSE_CLASS, cliArgs[idx])) {
-        idx++;
-        args.verboseClass = true;
-      }
-
-      if (Objects.equals(MINUS_VERBOSE_DEBUG, cliArgs[idx])) {
-        idx++;
-        args.verboseDebug = true;
-      }
-
-      if (Objects.equals(MINUS_COLOR_RED, cliArgs[idx])) {
-        idx++;
+    // 解析参数
+    int programArgIdx = 0;
+    boolean isJar = false;
+    String jar = null;
+    for (int i = 0; i < cliArgs.length; i++) {
+      if (Objects.equals(MINUS_COLOR_RED, cliArgs[i])) {
         Logger.fg = Logger.ANSI_RED;
+        continue;
       }
-
-      if (Objects.equals(MINUS_COLOR_GREEN, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_COLOR_GREEN, cliArgs[i])) {
         Logger.fg = Logger.ANSI_GREEN;
+        continue;
       }
 
-      if (Objects.equals(MINUS_COLOR_YELLOW, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_COLOR_YELLOW, cliArgs[i])) {
         Logger.fg = Logger.ANSI_YELLOW;
+        continue;
       }
 
-      tries++;
+      if (cliArgs[i].startsWith("-verbose:")) {
+        final String[] split = cliArgs[i].split(":");
+        switch (split[1]) {
+          case "call":
+            args.verboseCall = true;
+            continue;
+          case "trace":
+            args.verboseTrace = true;
+            continue;
+          case "class":
+            args.verboseClass = true;
+            continue;
+          case "debug":
+            args.verboseDebug = true;
+            continue;
+          default:
+            continue;
+        }
+      }
+
+      if (cliArgs[i].equals("-verbose")) {
+        args.verbose = true;
+        continue;
+      }
+
+      if (cliArgs[i].equals("-cp")) {
+        args.classpath = cliArgs[i + 1];
+        i++;
+        continue;
+      }
+
+      if (cliArgs[i].equals("-jar")) {
+        isJar = true;
+        jar = cliArgs[i + 1];
+        args.classpath = args.classpath + ":" + jar;
+        i++;
+        programArgIdx = i + 1;
+        break;
+      }
+
+      if (cliArgs[i].startsWith("-")) {
+        continue;
+      }
+
+      if (args.clazz == null && !isJar) {
+        args.clazz = cliArgs[i].replace('.', '/');
+        programArgIdx = i + 1;
+      }
     }
 
-    if (MINUS_CP.equals(cliArgs[idx])) {
-      idx++;
-      args.classpath = cliArgs[idx++];
+    if (isJar) {
+      args.clazz = parseMainClass(jar);
     }
 
-    if (MINUS_JAR.equals(cliArgs[idx])) {
-      idx++;
-      String mainJar = cliArgs[idx++];
-      args.classpath = args.classpath + ":" + mainJar;
-      args.clazz = parseMainClass(mainJar);
-    } else {
-      args.clazz = cliArgs[idx++];
-    }
-
-    if (cliArgs.length > idx) {
-      String[] programArgs = new String[cliArgs.length - idx];
-      System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
-      args.args = programArgs;
+    if (programArgIdx < cliArgs.length) {
+      // -cp . hello a1 a2
+      args.args = new String[cliArgs.length - programArgIdx];
+      System.arraycopy(cliArgs, programArgIdx, args.args, 0, args.args.length);
     }
 
     return args;

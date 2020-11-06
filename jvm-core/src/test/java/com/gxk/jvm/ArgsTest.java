@@ -48,7 +48,7 @@ public class ArgsTest {
   @Test
   public void test_verbose_cp2() {
     Args args = Args.parseArgs("-cp", "example", "-verbose", "Main");
-    assertTrue(!args.verbose);
+    assertTrue(args.verbose);
   }
 
   @Test
