@@ -90,4 +90,8 @@ public class LocalVars {
     }
     return sb.append("\n").toString();
   }
+
+  public void set(int i, Slot val) {
+    this.slots[i] = val;
+  }
 }

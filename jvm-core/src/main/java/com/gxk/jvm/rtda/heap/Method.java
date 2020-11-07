@@ -59,6 +59,9 @@ public class Method {
       }
       cnt++;
     }
+    if (!Utils.isStatic(this.accessFlags)) {
+      cnt++;
+    }
     return cnt;
   }
 
@@ -108,5 +111,9 @@ public class Method {
       }
     }
     return ret;
+  }
+
+  public String getKey() {
+    return Utils.genNativeMethodKey(this);
   }
 }

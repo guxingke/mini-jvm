@@ -189,4 +189,8 @@ public class Frame {
   public void push(Slot val) {
     this.operandStack.pushSlot(val);
   }
+
+  public void set(int i, Slot val) {
+    this.localVars.set(i, val);
+  }
 }

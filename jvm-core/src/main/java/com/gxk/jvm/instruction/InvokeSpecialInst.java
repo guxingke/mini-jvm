@@ -52,7 +52,7 @@ public class InvokeSpecialInst implements Instruction {
     Frame newFrame = new Frame(method);
     // fill args
     List<String> args = method.getArgs();
-    int slotIdx = method.getArgSlotSize() + 1;
+    int slotIdx = method.getArgSlotSize();
 
     int idx = args.size() - 1;
     while (idx >= 0) {

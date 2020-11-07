@@ -22,6 +22,7 @@ import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 
+import com.gxk.jvm.rtda.heap.NativeMethod;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -397,5 +398,57 @@ public abstract class Utils {
     Frame newFrame = new Frame(clinitMethod);
     Interpreter.execute(newFrame);
     clazz.stat = Const.CLASS_INITED;
+  }
+
+  public static void invokeMethod(Method method) {
+    if (Utils.isNative(method.accessFlags)) {
+      final String key = method.getKey();
+      NativeMethod nm = MetaSpace.findNativeMethod(key);
+      if (nm == null) {
+        throw new IllegalStateException("not found native method: " + key);
+      }
+      nm.invoke(MetaSpace.getMainEnv().topFrame());
+    } else {
+      Frame newFrame = new Frame(method);
+      final Thread env = MetaSpace.getMainEnv();
+      final Frame old = env.topFrame();
+
+      // 传参
+      final int slots = method.getArgSlotSize();
+      for (int i = slots - 1; i >= 0; i--) {
+        newFrame.set(i, old.pop());
+      }
+
+//      if (!Utils.isStatic(method.accessFlags)) {
+//        // check npe
+//        if (Utils.checkNullPointException(newFrame.getRef(0))) {
+//          return;
+//        }
+//      }
+
+      env.pushFrame(newFrame);
+    }
+  }
+
+  /**
+   * 判定访问标志是否是 static
+   */
+  public static boolean isStatic(int accessFlags) {
+    return (accessFlags & Const.ACC_STATIC) != 0;
+  }
+
+  /**
+   * 判定访问标志是否是 native
+   */
+  public static boolean isNative(int accessFlags) {
+    return (accessFlags & Const.ACC_NATIVE) != 0;
+  }
+
+  public static boolean isInterface(int accessFlags) {
+    return (accessFlags & Const.ACC_INTERFACE) != 0;
+  }
+
+  public static boolean isAbstract(int accessFlags) {
+    return (accessFlags & Const.ACC_ABSTRACT) != 0;
   }
 }

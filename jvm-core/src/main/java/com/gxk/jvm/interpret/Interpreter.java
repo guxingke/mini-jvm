@@ -79,36 +79,6 @@ public class Interpreter {
     loop(thread);
   }
 
-  public void doInterpret(Thread thread, Frame frame) {
-    thread.pushFrame(frame);
-
-    Class clazz = frame.method.clazz;
-    if (clazz != null) {
-      // super clazz static interfaceInit
-      Class superClazz = clazz.getUnStaticInitSuperClass();
-      while (superClazz != null) {
-        if (!superClazz.getStat()) {
-          // interfaceInit
-          Method cinit = superClazz.getMethod("<clinit>", "()V");
-          if (cinit == null) {
-            superClazz.setStat(2);
-            frame.nextPc = frame.getPc();
-            break;
-          }
-
-          Frame newFrame = new Frame(cinit);
-          superClazz.setStat(1);
-          Class finalClass = superClazz;
-          newFrame.setOnPop(() -> finalClass.setStat(2));
-          frame.thread.pushFrame(newFrame);
-        }
-        superClazz = clazz.getUnStaticInitSuperClass();
-      }
-    }
-
-    loop(thread);
-  }
-
   public void loop(Thread thread) {
     if (EnvHolder.debug) {
       try {
