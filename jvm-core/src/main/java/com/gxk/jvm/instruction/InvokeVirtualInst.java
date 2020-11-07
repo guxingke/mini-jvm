@@ -110,7 +110,7 @@ public class InvokeVirtualInst implements Instruction {
 
     Collections.reverse(argObjs);
 
-    Frame newFrame = new Frame(implMethod, frame.thread);
+    Frame newFrame = new Frame(implMethod);
 
     int slotIdx = 1;
     for (int i = 0; i < args.size(); i++) {

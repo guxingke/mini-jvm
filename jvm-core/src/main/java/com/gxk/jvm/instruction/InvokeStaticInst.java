@@ -46,7 +46,7 @@ public class InvokeStaticInst implements Instruction {
         throw new IllegalStateException();
       }
 
-      Frame newFrame = new Frame(cinit, frame.thread);
+      Frame newFrame = new Frame(cinit);
       kClass.setStaticInit(1);
       KClass finalKClass = kClass;
       newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
@@ -62,7 +62,7 @@ public class InvokeStaticInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    Frame newFrame = new Frame(method, frame.thread);
+    Frame newFrame = new Frame(method);
     // fill args
     List<String> args = method.getArgs();
     int slotIdx = method.getArgSlotSize();

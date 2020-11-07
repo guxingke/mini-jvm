@@ -17,11 +17,13 @@ public class Frame {
 
   private Runnable onPop;
 
-  public Frame(KMethod method, Thread thread) {
+  public int stat;
+
+  public Frame(KMethod method) {
     this.method = method;
     this.localVars = new LocalVars(method.maxLocals);
     this.operandStack = new OperandStack(method.maxStacks);
-    this.thread = thread;
+    this.thread = MetaSpace.getMainEnv();
     this.instructionMap = method.instructionMap;
   }
 
@@ -178,5 +180,13 @@ public class Frame {
 
   public String getCurrentSource() {
     return this.method.clazz.getSource();
+  }
+
+  public Slot pop() {
+    return this.operandStack.popSlot();
+  }
+
+  public void push(Slot val) {
+    this.operandStack.pushSlot(val);
   }
 }

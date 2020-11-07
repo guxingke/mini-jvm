@@ -255,7 +255,7 @@ public class KClass {
           throw new IllegalStateException();
         }
 
-        Frame newFrame = new Frame(cinit, frame.thread);
+        Frame newFrame = new Frame(cinit);
         tmp.setStaticInit(1);
         KClass finalKClass = tmp;
         newFrame.setOnPop(() -> finalKClass.setStaticInit(2));

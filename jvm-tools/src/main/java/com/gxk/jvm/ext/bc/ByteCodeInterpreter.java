@@ -16,6 +16,7 @@ import com.gxk.jvm.instruction.IfICmpGtInst;
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.KMethod;
 import java.io.IOException;
@@ -126,8 +127,9 @@ public class ByteCodeInterpreter {
 
     Interpreter interpreter = new Interpreter();
     Thread thread = new Thread(2);
+    MetaSpace.main = thread;
     KMethod method = new KMethod(1, "main", "()I", stacks, locals, instructionMap, null, null);
-    Frame frame = new Frame(method, thread);
+    Frame frame = new Frame(method);
     thread.pushFrame(frame);
 
     // args

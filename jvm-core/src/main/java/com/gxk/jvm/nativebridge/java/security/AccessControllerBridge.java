@@ -12,7 +12,7 @@ public abstract class AccessControllerBridge {
     Heap.registerMethod("java/security/AccessController_doPrivileged_(Ljava/security/PrivilegedAction;)Ljava/lang/Object;", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       KMethod method = thisObj.clazz.getMethod("run", "()Ljava/lang/Object;");
-      Frame newFrame = new Frame(method, frame.thread);
+      Frame newFrame = new Frame(method);
       newFrame.setRef(0, thisObj);
       frame.thread.pushFrame(newFrame);
     });
@@ -20,7 +20,7 @@ public abstract class AccessControllerBridge {
     Heap.registerMethod("java/security/AccessController_doPrivileged_(Ljava/security/PrivilegedExceptionAction;)Ljava/lang/Object;", frame -> {
       KObject thisObj = (KObject) frame.popRef();
       KMethod method = thisObj.clazz.getMethod("run", "()Ljava/lang/Object;");
-      Frame newFrame = new Frame(method, frame.thread);
+      Frame newFrame = new Frame(method);
       newFrame.setRef(0, thisObj);
       frame.thread.pushFrame(newFrame);
     });

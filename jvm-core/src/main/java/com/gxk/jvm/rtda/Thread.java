@@ -34,4 +34,8 @@ public class Thread {
   public int size() {
     return this.stack.size();
   }
+
+  public Frame topFrame() {
+    return currentFrame();
+  }
 }

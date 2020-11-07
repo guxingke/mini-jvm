@@ -29,7 +29,7 @@ public class ANewArrayInst implements Instruction {
     if (!kClass.isStaticInit()) {
       KMethod method = kClass.getMethod("<clinit>", "V()");
       if (method != null) {
-        Frame newFrame = new Frame(method, frame.thread);
+        Frame newFrame = new Frame(method);
         kClass.setStaticInit(1);
         KClass finalKClass = kClass;
         newFrame.setOnPop(() -> finalKClass.setStaticInit(2));

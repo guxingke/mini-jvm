@@ -48,7 +48,7 @@ public class NewInst implements Instruction {
       if (clm != null) {
         clm.invoke(frame);
       } else {
-        Frame newFrame = new Frame(cinit, frame.thread);
+        Frame newFrame = new Frame(cinit);
         kClass.setStaticInit(1);
         KClass finalKClass = kClass;
         newFrame.setOnPop(() -> finalKClass.setStaticInit(2));

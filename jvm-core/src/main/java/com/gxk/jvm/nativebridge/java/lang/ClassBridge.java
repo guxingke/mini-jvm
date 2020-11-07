@@ -54,7 +54,7 @@ public abstract class ClassBridge {
               throw new IllegalStateException();
             }
 
-            Frame newFrame = new Frame(cinit, frame.thread);
+            Frame newFrame = new Frame(cinit);
             clazz.setStaticInit(1);
             KClass finalKClass = clazz;
             newFrame.setOnPop(() -> finalKClass.setStaticInit(2));

@@ -81,7 +81,7 @@ public class InvokeDynamicInst implements Instruction {
         KLambdaObject ref = (KLambdaObject) f.popRef();
         Collections.reverse(argObjs);
 
-        Frame newFrame = new Frame(bsm, f.thread);
+        Frame newFrame = new Frame(bsm);
 
         for (Object arg : ref.args) {
           argObjs.add(0, arg);

@@ -40,7 +40,7 @@ public class GetStaticInst implements Instruction {
         throw new IllegalStateException();
       }
 
-      Frame newFrame = new Frame(cinit, frame.thread);
+      Frame newFrame = new Frame(cinit);
       kClass.setStaticInit(1);
       KClass finalKClass = kClass;
       newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
@@ -81,7 +81,7 @@ public class GetStaticInst implements Instruction {
               throw new IllegalStateException();
             }
 
-            Frame newFrame = new Frame(cinit, frame.thread);
+            Frame newFrame = new Frame(cinit);
             tmp.setStaticInit(1);
             KClass finalKClass = tmp;
             newFrame.setOnPop(() -> finalKClass.setStaticInit(2));

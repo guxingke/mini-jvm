@@ -11,7 +11,9 @@ import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
 
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.KClass;
@@ -305,5 +307,52 @@ public abstract class Utils {
       }
     }
     return new String(sources);
+  }
+
+  // ============
+  /**
+   * 返回操作
+   * @param slotSize 返回值占用 slot 大小
+   */
+  public static void doReturn(int slotSize) {
+    final Thread env = MetaSpace.getMainEnv();
+    final Frame old = env.popFrame();
+
+    // 解释器同步执行方法的结束条件
+    if (old.stat == Const.FAKE_FRAME) {
+      old.stat = Const.FAKE_FRAME_END;
+    }
+
+    if (slotSize == 0) {
+      return;
+    }
+
+    final Frame now = env.topFrame();
+    if (slotSize == 1) {
+      now.push(old.pop());
+      return;
+    }
+
+    if (slotSize == 2) {
+      final Slot v2 = old.pop();
+      final Slot v1 = old.pop();
+      now.push(v1);
+      now.push(v2);
+      return;
+    }
+
+    throw new IllegalStateException();
+  }
+
+  public static void doReturn0() {
+    doReturn(0);
+  }
+
+  public static void doReturn1() {
+    doReturn(1);
+  }
+
+  public static void doReturn2() {
+    doReturn(2);
   }
 }

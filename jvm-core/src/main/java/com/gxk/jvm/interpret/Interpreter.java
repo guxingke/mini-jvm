@@ -2,6 +2,7 @@ package com.gxk.jvm.interpret;
 
 import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
@@ -23,10 +24,12 @@ public class Interpreter {
   }
 
   public void interpret(KMethod method, String[] args) {
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(method, thread);
+    if (MetaSpace.main == null) {
+      MetaSpace.main = new Thread(1024);
+    }
+    Frame frame = new Frame(method);
     if (args == null) {
-      doInterpret(thread, frame);
+      doInterpret(frame);
       return;
     }
 
@@ -42,7 +45,38 @@ public class Interpreter {
     KArray array = new KArray(arrClazz, kargs);
     frame.setRef(0, array);
 
-    doInterpret(thread, frame);
+    doInterpret(frame);
+  }
+
+  public void doInterpret(Frame frame) {
+    final Thread thread = MetaSpace.getMainEnv();
+    thread.pushFrame(frame);
+
+    KClass clazz = frame.method.clazz;
+    if (clazz != null) {
+      // super clazz static interfaceInit
+      KClass superClazz = clazz.getUnStaticInitSuperClass();
+      while (superClazz != null) {
+        if (!superClazz.isStaticInit()) {
+          // interfaceInit
+          KMethod cinit = superClazz.getMethod("<clinit>", "()V");
+          if (cinit == null) {
+            superClazz.setStaticInit(2);
+            frame.nextPc = frame.getPc();
+            break;
+          }
+
+          Frame newFrame = new Frame(cinit);
+          superClazz.setStaticInit(1);
+          KClass finalKClass = superClazz;
+          newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+          frame.thread.pushFrame(newFrame);
+        }
+        superClazz = clazz.getUnStaticInitSuperClass();
+      }
+    }
+
+    loop(thread);
   }
 
   public void doInterpret(Thread thread, Frame frame) {
@@ -62,7 +96,7 @@ public class Interpreter {
             break;
           }
 
-          Frame newFrame = new Frame(cinit, frame.thread);
+          Frame newFrame = new Frame(cinit);
           superClazz.setStaticInit(1);
           KClass finalKClass = superClazz;
           newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
@@ -106,14 +140,14 @@ public class Interpreter {
       traceBefore(inst, frame);
 
       frame.nextPc += inst.offset();
-      if (EnvHolder.debug) {
-        boolean cont = doDebug(inst, frame);
-        if (!cont) {
-          // restore
-          frame.nextPc -= inst.offset();
-          continue;
-        }
-      }
+//      if (EnvHolder.debug) {
+//        boolean cont = doDebug(inst, frame);
+//        if (!cont) {
+//          // restore
+//          frame.nextPc -= inst.offset();
+//          continue;
+//        }
+//      }
       try {
         inst.execute(frame);
       } catch (Exception e) {
@@ -128,76 +162,76 @@ public class Interpreter {
     } while (!thread.empty());
   }
 
-  private boolean doDebug(Instruction inst, Frame frame) {
-    if (DebugContextHolder.next) {
-      if (!inst.format().startsWith("invoke")) {
-        return true;
-      }
-      DebugContextHolder.next = false;
-    }
-
-    Scanner scanner = DebugContextHolder.scanner;
-    if (scanner == null) {
-      Logger.error("reader init err in debug mode, debug mode closed");
-      EnvHolder.debug = false;
-      return false;
-    }
-    try {
-      String promot = frame.thread.size() + " > ";
-      System.out.print(promot);
-      String line = scanner.nextLine();
-      if (line == null || line.trim().isEmpty()) {
-        return false;
-      }
-
-      String cmd = line.trim().toLowerCase();
-      if (!DebugContextHolder.running && !(Objects.equals("run", cmd) || Objects
-          .equals("help", cmd))) {
-        System.out.println(String.format("在使用 'run' 命令启动 VM 前, 命令 '%s' 是无效的", line));
-        return false;
-      }
-      switch (cmd) {
-        case "run":
-          System.out.println(String.format("运行 %s", DebugContextHolder.mainClass));
-          DebugContextHolder.running = true;
-          break;
-        case "help":
-        case "h":
-          System.out.println("print help");
-          break;
-        case "env":
-          debugBefore(inst, frame);
-          break;
-        case "step":
-        case "s":
-          DebugContextHolder.step = true;
-          break;
-        case "next":
-        case "n":
-          DebugContextHolder.next = true;
-          break;
-        case "list":
-        case "ls":
-          frame.method.instructionMap.forEach((key, val) -> {
-            String prefix = "     ";
-            if (frame.getPc() == key) {
-              prefix = "==>  ";
-            }
-            System.out.println(prefix + key + " " + val.format());
-          });
-          break;
-        default:
-          System.out.println("unsupport " + cmd);
-          break;
-      }
-      if (!DebugContextHolder.isContinue()) {
-        return false;
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return true;
-  }
+//  private boolean doDebug(Instruction inst, Frame frame) {
+//    if (DebugContextHolder.next) {
+//      if (!inst.format().startsWith("invoke")) {
+//        return true;
+//      }
+//      DebugContextHolder.next = false;
+//    }
+//
+//    Scanner scanner = DebugContextHolder.scanner;
+//    if (scanner == null) {
+//      Logger.error("reader init err in debug mode, debug mode closed");
+//      EnvHolder.debug = false;
+//      return false;
+//    }
+//    try {
+//      String promot = frame.thread.size() + " > ";
+//      System.out.print(promot);
+//      String line = scanner.nextLine();
+//      if (line == null || line.trim().isEmpty()) {
+//        return false;
+//      }
+//
+//      String cmd = line.trim().toLowerCase();
+//      if (!DebugContextHolder.running && !(Objects.equals("run", cmd) || Objects
+//          .equals("help", cmd))) {
+//        System.out.println(String.format("在使用 'run' 命令启动 VM 前, 命令 '%s' 是无效的", line));
+//        return false;
+//      }
+//      switch (cmd) {
+//        case "run":
+//          System.out.println(String.format("运行 %s", DebugContextHolder.mainClass));
+//          DebugContextHolder.running = true;
+//          break;
+//        case "help":
+//        case "h":
+//          System.out.println("print help");
+//          break;
+//        case "env":
+//          debugBefore(inst, frame);
+//          break;
+//        case "step":
+//        case "s":
+//          DebugContextHolder.step = true;
+//          break;
+//        case "next":
+//        case "n":
+//          DebugContextHolder.next = true;
+//          break;
+//        case "list":
+//        case "ls":
+//          frame.method.instructionMap.forEach((key, val) -> {
+//            String prefix = "     ";
+//            if (frame.getPc() == key) {
+//              prefix = "==>  ";
+//            }
+//            System.out.println(prefix + key + " " + val.format());
+//          });
+//          break;
+//        default:
+//          System.out.println("unsupport " + cmd);
+//          break;
+//      }
+//      if (!DebugContextHolder.isContinue()) {
+//        return false;
+//      }
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//    return true;
+//  }
 
   private void traceBefore(Instruction inst, Frame frame) {
     if (EnvHolder.verboseDebug) {

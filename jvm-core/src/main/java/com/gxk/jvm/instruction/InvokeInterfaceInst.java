@@ -58,7 +58,7 @@ public class InvokeInterfaceInst implements Instruction {
       if (ciNm != null) {
         ciNm.invoke(frame);
       } else {
-        Frame newFrame = new Frame(cinit, frame.thread);
+        Frame newFrame = new Frame(cinit);
         clazz.setStaticInit(1);
         KClass finalClass = clazz;
         newFrame.setOnPop(() -> finalClass.setStaticInit(2));
@@ -133,7 +133,7 @@ public class InvokeInterfaceInst implements Instruction {
 
     Collections.reverse(argObjs);
 
-    Frame newFrame = new Frame(implMethod, frame.thread);
+    Frame newFrame = new Frame(implMethod);
 
     int slotIdx = 1;
     for (int i = 0; i < args.size(); i++) {

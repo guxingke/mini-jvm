@@ -29,6 +29,7 @@ import com.gxk.jvm.nativebridge.java.util.ZipFileBridge;
 import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
+import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
@@ -75,6 +76,7 @@ public class VirtualMachine {
   }
 
   public static void initVm(ClassLoader classLoader) {
+    MetaSpace.main = new Thread(1024);
     loadLibrary();
     loadFoundationClass(classLoader);
 
@@ -86,30 +88,27 @@ public class VirtualMachine {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
     KObject outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
-    Thread t1 = new Thread(1024);
-    Frame f1 = new Frame(fdInitMethod, t1);
+    Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 2);
-    new Interpreter().doInterpret(t1, f1);
+    new Interpreter().doInterpret(f1);
 
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
-    Thread t2 = new Thread(1024);
-    Frame f2 = new Frame(fosInitMethod, t2);
+    Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
-    new Interpreter().doInterpret(t2, f2);
+    new Interpreter().doInterpret(f2);
 
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(psInitMethod, thread);
+    Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
-    new Interpreter().doInterpret(thread, frame);
+    new Interpreter().doInterpret(frame);
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("err", "Ljava/io/PrintStream;");
@@ -121,30 +120,27 @@ public class VirtualMachine {
     KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
     KObject outFdObj = fdCls.newObject();
     KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
-    Thread t1 = new Thread(1024);
-    Frame f1 = new Frame(fdInitMethod, t1);
+    Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 1);
-    new Interpreter().doInterpret(t1, f1);
+    new Interpreter().doInterpret(f1);
 
     KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
     KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
-    Thread t2 = new Thread(1024);
-    Frame f2 = new Frame(fosInitMethod, t2);
+    Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
-    new Interpreter().doInterpret(t2, f2);
+    new Interpreter().doInterpret(f2);
 
     KClass psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
     KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
-    Thread thread = new Thread(1024);
-    Frame frame = new Frame(psInitMethod, thread);
+    Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
-    new Interpreter().doInterpret(thread, frame);
+    new Interpreter().doInterpret(frame);
 
     KClass sysCls = classLoader.loadClass("java/lang/System");
     KField outField = sysCls.getField("out", "Ljava/io/PrintStream;");

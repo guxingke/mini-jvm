@@ -49,7 +49,7 @@ public class InvokeSpecialInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    Frame newFrame = new Frame(method, frame.thread);
+    Frame newFrame = new Frame(method);
     // fill args
     List<String> args = method.getArgs();
     int slotIdx = method.getArgSlotSize() + 1;
