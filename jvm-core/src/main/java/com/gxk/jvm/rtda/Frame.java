@@ -33,9 +33,9 @@ public class Frame {
     this.instructionMap = method.instructionMap;
   }
 
-  public Instruction getInst(int pc) {
-    this.pc = pc;
-    return this.instructionMap.get(pc);
+  public Instruction getInst() {
+    this.pc = nextPc;
+    return this.instructionMap.get(this.pc);
   }
 
   public Runnable getOnPop() {

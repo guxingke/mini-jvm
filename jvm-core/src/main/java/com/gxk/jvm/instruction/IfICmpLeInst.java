@@ -19,7 +19,7 @@ public class IfICmpLeInst implements Instruction {
     Integer val2= frame.popInt();
     Integer val1= frame.popInt();
     if (val1 <= val2) {
-      frame.nextPc = frame.thread.getPc() + offset;
+      frame.nextPc = frame.getPc() + offset;
     }
   }
 

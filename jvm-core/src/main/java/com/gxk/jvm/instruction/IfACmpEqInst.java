@@ -19,7 +19,7 @@ public class IfACmpEqInst implements Instruction {
     Object val2= frame.popRef();
     Object val1= frame.popRef();
     if (val1 == val2) {
-      frame.nextPc = frame.thread.getPc() + offset;
+      frame.nextPc = frame.getPc() + offset;
     }
   }
 }

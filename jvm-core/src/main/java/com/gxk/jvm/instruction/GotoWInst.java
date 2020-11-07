@@ -17,6 +17,6 @@ public class GotoWInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    frame.nextPc = frame.thread.getPc() + offset;
+    frame.nextPc = frame.getPc() + offset;
   }
 }

@@ -18,7 +18,7 @@ public class IfNonNullInst implements Instruction {
   public void execute(Frame frame) {
     Object ref = frame.popRef();
     if (ref != null) {
-      frame.nextPc = frame.thread.getPc() + offset;
+      frame.nextPc = frame.getPc() + offset;
     }
   }
 

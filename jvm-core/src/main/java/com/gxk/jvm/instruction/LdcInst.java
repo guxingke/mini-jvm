@@ -43,7 +43,7 @@ public class LdcInst implements Instruction {
           newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
           frame.thread.pushFrame(newFrame);
 
-          frame.nextPc = frame.thread.getPc();
+          frame.nextPc = frame.getPc();
           return;
         }
         KObject object = klass.newObject();

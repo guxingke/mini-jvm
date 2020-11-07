@@ -58,7 +58,7 @@ public class Interpreter {
           KMethod cinit = superClazz.getMethod("<clinit>", "()V");
           if (cinit == null) {
             superClazz.setStaticInit(2);
-            frame.nextPc = frame.thread.getPc();
+            frame.nextPc = frame.getPc();
             break;
           }
 
@@ -88,9 +88,8 @@ public class Interpreter {
     do {
       Frame frame = thread.currentFrame();
       int pc = frame.nextPc;
-      thread.setPc(pc);
 
-      Instruction inst = frame.getInst(pc);
+      Instruction inst = frame.getInst();
       if (inst == null) {
         StringBuilder sb = new StringBuilder();
         sb.append(pc).append("\n");
@@ -219,12 +218,12 @@ public class Interpreter {
       return;
     }
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace(space + frame.thread.getPc() + " " + inst.format());
+    Logger.trace(space + frame.getPc() + " " + inst.format());
   }
 
   private void trace(Instruction inst, Frame frame) {
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace(space + frame.thread.getPc() + " " + inst.format());
+    Logger.trace(space + frame.getPc() + " " + inst.format());
   }
 
   void debugBefore(Instruction inst, Frame frame) {

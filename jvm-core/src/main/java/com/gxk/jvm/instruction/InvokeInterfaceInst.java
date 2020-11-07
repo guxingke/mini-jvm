@@ -64,7 +64,7 @@ public class InvokeInterfaceInst implements Instruction {
         newFrame.setOnPop(() -> finalClass.setStaticInit(2));
         frame.thread.pushFrame(newFrame);
 
-        frame.nextPc = frame.thread.getPc();
+        frame.nextPc = frame.getPc();
         return;
       }
     }

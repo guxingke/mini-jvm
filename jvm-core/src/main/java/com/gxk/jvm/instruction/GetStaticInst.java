@@ -46,7 +46,7 @@ public class GetStaticInst implements Instruction {
       newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
       frame.thread.pushFrame(newFrame);
 
-      frame.nextPc = frame.thread.getPc();
+      frame.nextPc = frame.getPc();
       return;
     }
 
@@ -86,7 +86,7 @@ public class GetStaticInst implements Instruction {
             KClass finalKClass = tmp;
             newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
             frame.thread.pushFrame(newFrame);
-            frame.nextPc = frame.thread.getPc();
+            frame.nextPc = frame.getPc();
           }
         }
         kClass.setInterfaces(interfaces);

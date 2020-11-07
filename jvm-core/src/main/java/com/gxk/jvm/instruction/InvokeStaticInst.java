@@ -52,7 +52,7 @@ public class InvokeStaticInst implements Instruction {
       newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
       frame.thread.pushFrame(newFrame);
 
-      frame.nextPc = frame.thread.getPc();
+      frame.nextPc = frame.getPc();
       return;
     }
 

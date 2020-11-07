@@ -18,7 +18,7 @@ public class IfGtInst implements Instruction {
   public void execute(Frame frame) {
     Integer val= frame.popInt();
     if (val > 0) {
-      frame.nextPc = frame.thread.getPc() + offset;
+      frame.nextPc = frame.getPc() + offset;
     }
   }
 

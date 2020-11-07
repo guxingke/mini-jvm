@@ -12,7 +12,7 @@ public class AThrowInst implements Instruction {
     KObject exc = (KObject) frame.popRef();
     String name = exc.clazz.name;
 
-    Integer handlerPc = thread.currentFrame().method.getHandlerPc(thread.getPc(), name);
+    Integer handlerPc = frame.method.getHandlerPc(frame.getPc(), name);
     while (handlerPc == null && !thread.empty()) {
       Frame ef = thread.popFrame();
       String msg = ef.getCurrentMethodFullName() + "(" + ef.getCurrentSource() + ":" + ef.getCurrentLine() + ")";
@@ -20,7 +20,8 @@ public class AThrowInst implements Instruction {
       if (thread.empty()) {
         break;
       }
-      handlerPc = thread.currentFrame().method.getHandlerPc(thread.getPc(), name);
+      final Frame f = thread.currentFrame();
+      handlerPc = f.method.getHandlerPc(f.getPc(), name);
     }
 
     // no exception handler ...

@@ -28,6 +28,6 @@ public class TableSwitchInst implements Instruction {
   public void execute(Frame frame) {
     Integer tmp = frame.popInt();
     Integer jump = table.getOrDefault(tmp, def);
-    frame.nextPc = frame.thread.getPc() + jump;
+    frame.nextPc = frame.getPc() + jump;
   }
 }
