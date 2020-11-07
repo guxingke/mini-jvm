@@ -3,9 +3,9 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Method;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,67 +29,67 @@ public class GetStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
-    if (kClass == null) {
-      kClass = frame.method.clazz.classLoader.loadClass(clazz);
+    Class aClass = Heap.findClass(clazz);
+    if (aClass == null) {
+      aClass = frame.method.clazz.classLoader.loadClass(clazz);
     }
 
-    if (!kClass.isStaticInit()) {
-      KMethod cinit = kClass.getMethod("<clinit>", "()V");
+    if (!aClass.getStat()) {
+      Method cinit = aClass.getMethod("<clinit>", "()V");
       if (cinit == null) {
         throw new IllegalStateException();
       }
 
       Frame newFrame = new Frame(cinit);
-      kClass.setStaticInit(1);
-      KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+      aClass.setStat(1);
+      Class finalClass = aClass;
+      newFrame.setOnPop(() -> finalClass.setStat(2));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.getPc();
       return;
     }
 
-    KField field = kClass.getField(fieldName, fieldDescriptor);
+    Field field = aClass.getField(fieldName, fieldDescriptor);
     if (field == null) {
       // interface
-      if (kClass.interfaceNames.isEmpty()) {
+      if (aClass.interfaceNames.isEmpty()) {
         throw new IllegalStateException();
       }
 
       // already load interface
-      if (!kClass.getInterfaces().isEmpty()) {
-        for (KClass intClass : kClass.getInterfaces()) {
+      if (!aClass.getInterfaces().isEmpty()) {
+        for (Class intClass : aClass.getInterfaces()) {
           field = intClass.getField(fieldName, fieldDescriptor);
           if (field != null) {
             break;
           }
         }
       } else {
-        List<KClass> interfaces = new ArrayList<>();
-        for (String interfaceName : kClass.interfaceNames) {
-          KClass tmp = Heap.findClass(interfaceName);
+        List<Class> interfaces = new ArrayList<>();
+        for (String interfaceName : aClass.interfaceNames) {
+          Class tmp = Heap.findClass(interfaceName);
           if (tmp == null) {
             tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
           }
 
           interfaces.add(tmp);
 
-          if (!tmp.isStaticInit()) {
-            KMethod cinit = tmp.getClinitMethod();
+          if (!tmp.getStat()) {
+            Method cinit = tmp.getClinitMethod();
             if (cinit == null) {
               throw new IllegalStateException();
             }
 
             Frame newFrame = new Frame(cinit);
-            tmp.setStaticInit(1);
-            KClass finalKClass = tmp;
-            newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+            tmp.setStat(1);
+            Class finalClass = tmp;
+            newFrame.setOnPop(() -> finalClass.setStat(2));
             frame.thread.pushFrame(newFrame);
             frame.nextPc = frame.getPc();
           }
         }
-        kClass.setInterfaces(interfaces);
+        aClass.setInterfaces(interfaces);
         return;
       }
     }

@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.KObject;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -30,7 +30,7 @@ public abstract class FileOutputStreamBridge {
       boolean append = frame.popInt() == 1;
       Integer val = frame.popInt();
       KObject thisObj = (KObject) frame.popRef();
-      KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
+      Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
       KObject fdObj = (KObject) fd.val[0].ref;
       Integer realFd = fdObj.getField("fd", "I").val[0].num;
       // out
@@ -62,7 +62,7 @@ public abstract class FileOutputStreamBridge {
       }
 
       KObject thisObj = (KObject) frame.popRef();
-      KField fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
+      Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
       KObject fdObj = (KObject) fd.val[0].ref;
       Integer realFd = fdObj.getField("fd", "I").val[0].num;
       // out

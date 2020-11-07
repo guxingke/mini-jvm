@@ -2,10 +2,10 @@ package com.gxk.jvm.ext.bc;
 
 import com.gxk.jvm.classfile.ClassFile;
 import com.gxk.jvm.classfile.ClassReader;
-import com.gxk.jvm.classfile.Method;
+import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Method;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -28,10 +28,10 @@ public class ByteCodeGenerator {
       return;
     }
 
-    Method target = null;
-    for (Method method : cf.methods.methods) {
-      if (method.name.equals(methodName)) {
-        target = method;
+    MethodInfo target = null;
+    for (MethodInfo methodInfo : cf.methods.methodInfos) {
+      if (methodInfo.name.equals(methodName)) {
+        target = methodInfo;
       }
     }
 
@@ -40,7 +40,7 @@ public class ByteCodeGenerator {
       return;
     }
 
-    KMethod method = map(target);
+    Method method = map(target);
 
     String header =
         "main " + method.maxStacks + " " + method.maxLocals + " " + method.getArgs().size();
@@ -54,13 +54,13 @@ public class ByteCodeGenerator {
     }
   }
 
-  private static KMethod map(Method cfMethod) {
-    Code code = cfMethod.getCode();
+  private static Method map(MethodInfo cfMethodInfo) {
+    Code code = cfMethodInfo.getCode();
     if (code == null) {
-      return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0,
+      return new Method(cfMethodInfo.accessFlags, cfMethodInfo.name, cfMethodInfo.descriptor.descriptor, 0, 0,
           null, null, null);
     }
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor,
+    return new Method(cfMethodInfo.accessFlags, cfMethodInfo.name, cfMethodInfo.descriptor.descriptor,
         code.maxStacks, code.maxLocals, code.getInstructions(), null, null);
   }
 }

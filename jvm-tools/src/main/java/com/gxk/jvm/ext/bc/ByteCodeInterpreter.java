@@ -18,7 +18,7 @@ import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Method;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -128,7 +128,7 @@ public class ByteCodeInterpreter {
     Interpreter interpreter = new Interpreter();
     Thread thread = new Thread(2);
     MetaSpace.main = thread;
-    KMethod method = new KMethod(1, "main", "()I", stacks, locals, instructionMap, null, null);
+    Method method = new Method(1, "main", "()I", stacks, locals, instructionMap, null, null);
     Frame frame = new Frame(method);
     thread.pushFrame(frame);
 

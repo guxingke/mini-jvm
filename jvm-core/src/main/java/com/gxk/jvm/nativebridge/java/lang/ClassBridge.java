@@ -4,9 +4,9 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
@@ -19,7 +19,7 @@ public abstract class ClassBridge {
     Heap.registerMethod("java/lang/Class_getName0_()Ljava/lang/String;", frame -> {
       KObject obj = (KObject) frame.popRef();
       String name = obj.getMetaClass().name;
-      KClass strClazz = Heap.findClass("java/lang/String");
+      Class strClazz = Heap.findClass("java/lang/String");
       KObject nameObj = strClazz.newObject();
       char[] chars = Utils.replace(name, '/', '.').toCharArray();
       Character[] characters = new Character[chars.length];
@@ -38,7 +38,7 @@ public abstract class ClassBridge {
           Integer init = frame.popInt();
           KObject name = (KObject) frame.popRef();
           String clsName = Utils.replace(Utils.obj2Str(name), '.', '/');
-          KClass clazz = Heap.findClass(clsName);
+          Class clazz = Heap.findClass(clsName);
           if (clazz == null) {
             clazz = frame.method.clazz.classLoader.loadClass(clsName);
           }
@@ -48,16 +48,16 @@ public abstract class ClassBridge {
 
           frame.pushRef(clazz.getRuntimeClass());
 
-          if (init == 1 && !clazz.isStaticInit()) {
-            KMethod cinit = clazz.getClinitMethod();
+          if (init == 1 && !clazz.getStat()) {
+            Method cinit = clazz.getClinitMethod();
             if (cinit == null) {
               throw new IllegalStateException();
             }
 
             Frame newFrame = new Frame(cinit);
-            clazz.setStaticInit(1);
-            KClass finalKClass = clazz;
-            newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+            clazz.setStat(1);
+            Class finalClass = clazz;
+            newFrame.setOnPop(() -> finalClass.setStat(2));
             frame.thread.pushFrame(newFrame);
           }
         });
@@ -69,21 +69,21 @@ public abstract class ClassBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/lang/Class_isInterface_()Z", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       frame.pushInt(cls.isInterface() ? 1 : 0);
     });
     Heap.registerMethod("java/lang/Class_isArray_()Z", frame -> {
-      KClass metaClass = ((KObject) frame.popRef()).getMetaClass();
+      Class metaClass = ((KObject) frame.popRef()).getMetaClass();
       boolean isArray = metaClass.name.startsWith("[") ? true : false;
       frame.pushInt(isArray ? 1 : 0);
     });
     Heap.registerMethod("java/lang/Class_isPrimitive_()Z", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       boolean isPrimitive = cls.isPrimitive();
       frame.pushInt(isPrimitive ? 1 : 0);
     });
     Heap.registerMethod("java/lang/Class_getSuperclass_()Ljava/lang/Class;", frame -> {
-      KClass superClass = ((KObject) frame.popRef()).getMetaClass().getSuperClass();
+      Class superClass = ((KObject) frame.popRef()).getMetaClass().getSuperClass();
       if (superClass == null) {
         frame.pushRef(null);
         return;
@@ -94,12 +94,12 @@ public abstract class ClassBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/lang/Class_getComponentType_()Ljava/lang/Class;", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       if (cls.name.startsWith("[")) {
         String name = cls.name.substring(1);
         switch (name) {
           case "C":
-            KClass ccls = Heap.findClass("java/lang/Character");
+            Class ccls = Heap.findClass("java/lang/Character");
             KObject runtimeClass = ccls.getRuntimeClass();
             frame.pushRef(runtimeClass);
             break;
@@ -166,7 +166,7 @@ public abstract class ClassBridge {
             v2[i] = values[i];
           }
           String val = new String(v2);
-          KClass cls = Heap.findClass(val);
+          Class cls = Heap.findClass(val);
           frame.pushRef(cls.getRuntimeClass());
         });
     Heap.registerMethod("java/lang/Class_desiredAssertionStatus_()Z", frame -> {
@@ -176,7 +176,7 @@ public abstract class ClassBridge {
 
     // hack
     Heap.registerMethod("java/lang/Class_getSimpleName_()Ljava/lang/String;", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       int lidx = cls.name.lastIndexOf("/");
       int idx = 0;
       if (lidx > 0) {
@@ -188,7 +188,7 @@ public abstract class ClassBridge {
     });
 
     Heap.registerMethod("java/lang/Class_getCanonicalName_()Ljava/lang/String;", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       String sn = Utils.replace(cls.name, '/', '.');
       KObject obj = Utils.str2Obj(sn, frame.method.clazz.classLoader);
       frame.pushRef(obj);
@@ -196,20 +196,20 @@ public abstract class ClassBridge {
 
     Heap.registerMethod("java/lang/Class_getInterfaces_()[Ljava/lang/Class;", frame -> {
       KObject thisObj = ((KObject) frame.popRef());
-      KClass cls = (thisObj).getMetaClass();
+      Class cls = (thisObj).getMetaClass();
       if (!cls.interfaceNames.isEmpty() && cls.getInterfaces().isEmpty()) {
         frame.pushRef(thisObj);
         cls.interfaceInit(frame);
         return;
       }
-      List<KClass> interfaces = cls.getInterfaces();
+      List<Class> interfaces = cls.getInterfaces();
       Integer count = interfaces.size();
       String name = "[Ljava/lang/Class;";
-      KClass clazz = Heap.findClass(name);
+      Class clazz = Heap.findClass(name);
       if (clazz == null) {
-        clazz = new KClass(1, name, frame.method.clazz.classLoader, null);
+        clazz = new Class(1, name, frame.method.clazz.classLoader, null);
         clazz.setSuperClass(Heap.findClass("java/lang/Object"));
-        clazz.setStaticInit(2);
+        clazz.setStat(2);
         Heap.registerClass(name, clazz);
       }
       KObject[] objs = new KObject[count];
@@ -223,7 +223,7 @@ public abstract class ClassBridge {
     });
 
     Heap.registerMethod("java/lang/Class_newInstance_()Ljava/lang/Object;", frame -> {
-      KClass cls = ((KObject) frame.popRef()).getMetaClass();
+      Class cls = ((KObject) frame.popRef()).getMetaClass();
       KObject obj = cls.newObject();
       frame.pushRef(obj);
     });
@@ -233,7 +233,7 @@ public abstract class ClassBridge {
           KObject nameObj = (KObject) frame.popRef();
           KObject thisObj = (KObject) frame.popRef();
           String name = Utils.obj2Str(nameObj);
-          KField field = thisObj.getMetaClass().getField(name);
+          Field field = thisObj.getMetaClass().getField(name);
           frame.pushRef(new Slot[]{new Slot(null)});
         });
   }

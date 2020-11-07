@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import java.util.Map;
 
-public class KMethod {
+public class Method {
 
   public final int accessFlags;
   public final String name;
@@ -23,9 +23,9 @@ public class KMethod {
   public final ExceptionTable exceptionTable;
   public final LineNumberTable lineNumberTable;
 
-  public KClass clazz;
+  public Class clazz;
 
-  public KMethod(int accessFlags, String name, String descriptor, int maxStacks, int maxLocals,
+  public Method(int accessFlags, String name, String descriptor, int maxStacks, int maxLocals,
       Map<Integer, Instruction> instructionMap, ExceptionTable exceptionTable,
       LineNumberTable lineNumberTable) {
     this.accessFlags = accessFlags;

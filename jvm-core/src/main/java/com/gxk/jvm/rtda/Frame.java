@@ -1,13 +1,13 @@
 package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.instruction.Instruction;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Method;
 
 import java.util.Map;
 
 public class Frame {
 
-  public final KMethod method;
+  public final Method method;
   private final LocalVars localVars;
   private final OperandStack operandStack;
   private final Map<Integer, Instruction> instructionMap;
@@ -19,7 +19,7 @@ public class Frame {
 
   public int stat;
 
-  public Frame(KMethod method) {
+  public Frame(Method method) {
     this.method = method;
     this.localVars = new LocalVars(method.maxLocals);
     this.operandStack = new OperandStack(method.maxStacks);
@@ -27,7 +27,7 @@ public class Frame {
     this.instructionMap = method.instructionMap;
   }
 
-  public Frame(KMethod method, LocalVars localVars, Thread thread) {
+  public Frame(Method method, LocalVars localVars, Thread thread) {
     this.method = method;
     this.localVars = localVars;
     this.operandStack = new OperandStack(method.maxStacks);

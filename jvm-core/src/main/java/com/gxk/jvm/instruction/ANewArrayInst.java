@@ -3,8 +3,8 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class ANewArrayInst implements Instruction {
@@ -22,31 +22,31 @@ public class ANewArrayInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(className);
-    if (kClass == null) {
-      kClass = frame.method.clazz.classLoader.loadClass(className);
+    Class aClass = Heap.findClass(className);
+    if (aClass == null) {
+      aClass = frame.method.clazz.classLoader.loadClass(className);
     }
-    if (!kClass.isStaticInit()) {
-      KMethod method = kClass.getMethod("<clinit>", "V()");
+    if (!aClass.getStat()) {
+      Method method = aClass.getMethod("<clinit>", "V()");
       if (method != null) {
         Frame newFrame = new Frame(method);
-        kClass.setStaticInit(1);
-        KClass finalKClass = kClass;
-        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        aClass.setStat(1);
+        Class finalClass = aClass;
+        newFrame.setOnPop(() -> finalClass.setStat(2));
         frame.thread.pushFrame(frame);
         return;
       }
-      kClass.setStaticInit(2);
+      aClass.setStat(2);
     }
 
     Integer count = frame.popInt();
-    String name = "[L" + kClass.name + ";";
+    String name = "[L" + aClass.name + ";";
 
-    KClass clazz = Heap.findClass(name);
+    Class clazz = Heap.findClass(name);
     if (clazz == null) {
-      clazz = new KClass(1, name, kClass.classLoader, null);
+      clazz = new Class(1, name, aClass.classLoader, null);
       clazz.setSuperClass(Heap.findClass("java/lang/Object"));
-      clazz.setStaticInit(2);
+      clazz.setStat(2);
       Heap.registerClass(name, clazz);
     }
     KObject[] objs = new KObject[count];

@@ -33,9 +33,9 @@ import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Utils;
@@ -66,8 +66,8 @@ public class VirtualMachine {
     String mainClass = Utils.replace(cmd.clazz, '.', EnvHolder.FILE_SEPARATOR.toCharArray()[0]);
     classLoader.loadClass(mainClass);
 
-    KClass clazz = Heap.findClass(mainClass);
-    KMethod method = clazz.getMainMethod();
+    Class clazz = Heap.findClass(mainClass);
+    Method method = clazz.getMainMethod();
     if (method == null) {
       throw new IllegalStateException("not found main method");
     }
@@ -85,65 +85,65 @@ public class VirtualMachine {
   }
 
   private static void initSystemErr(ClassLoader classLoader) {
-    KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
+    Class fdCls = classLoader.loadClass("java/io/FileDescriptor");
     KObject outFdObj = fdCls.newObject();
-    KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
+    Method fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 2);
     new Interpreter().doInterpret(f1);
 
-    KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
+    Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
-    KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
+    Method fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
     new Interpreter().doInterpret(f2);
 
-    KClass psCls = classLoader.loadClass("java/io/PrintStream");
+    Class psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
-    KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
+    Method psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
     new Interpreter().doInterpret(frame);
 
-    KClass sysCls = classLoader.loadClass("java/lang/System");
-    KField outField = sysCls.getField("err", "Ljava/io/PrintStream;");
+    Class sysCls = classLoader.loadClass("java/lang/System");
+    Field outField = sysCls.getField("err", "Ljava/io/PrintStream;");
     outField.val = new Slot[]{new Slot(psObj)};
 
   }
 
   private static void initSystemOut(ClassLoader classLoader) {
-    KClass fdCls = classLoader.loadClass("java/io/FileDescriptor");
+    Class fdCls = classLoader.loadClass("java/io/FileDescriptor");
     KObject outFdObj = fdCls.newObject();
-    KMethod fdInitMethod = fdCls.getMethod("<init>", "(I)V");
+    Method fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 1);
     new Interpreter().doInterpret(f1);
 
-    KClass fosCls = classLoader.loadClass("java/io/FileOutputStream");
+    Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
-    KMethod fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
+    Method fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
     new Interpreter().doInterpret(f2);
 
-    KClass psCls = classLoader.loadClass("java/io/PrintStream");
+    Class psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
-    KMethod psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
+    Method psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
     new Interpreter().doInterpret(frame);
 
-    KClass sysCls = classLoader.loadClass("java/lang/System");
-    KField outField = sysCls.getField("out", "Ljava/io/PrintStream;");
+    Class sysCls = classLoader.loadClass("java/lang/System");
+    Field outField = sysCls.getField("out", "Ljava/io/PrintStream;");
     outField.val = new Slot[]{new Slot(psObj)};
   }
 
@@ -176,8 +176,8 @@ public class VirtualMachine {
 
   private static void loadFoundationClass(ClassLoader classLoader) {
     // class
-    KClass metaClass = classLoader.loadClass("java/lang/Class");
-    for (KClass cls : Heap.getClasses()) {
+    Class metaClass = classLoader.loadClass("java/lang/Class");
+    for (Class cls : Heap.getClasses()) {
       if (cls.getRuntimeClass() == null) {
         KObject obj = metaClass.newObject();
         cls.setRuntimeClass(obj);

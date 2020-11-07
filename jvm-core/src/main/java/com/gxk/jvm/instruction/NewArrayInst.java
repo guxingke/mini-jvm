@@ -3,7 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.Class;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class NewArrayInst implements Instruction {
       throw new UnsupportedOperationException(String.valueOf(type));
     }
 
-    KClass clazz = Heap.findClass(this.clazz);
+    Class clazz = Heap.findClass(this.clazz);
     switch (type) {
       case 4:
         frame.pushRef(new KArray(clazz, new Boolean[count]));

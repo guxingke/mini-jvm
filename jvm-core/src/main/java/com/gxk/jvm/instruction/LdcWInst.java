@@ -4,8 +4,8 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class LdcWInst implements Instruction {
@@ -32,23 +32,23 @@ public class LdcWInst implements Instruction {
         frame.pushFloat(((float) val));
         break;
       case "Ljava/lang/String":
-        KClass klass = Heap.findClass("java/lang/String");
+        Class klass = Heap.findClass("java/lang/String");
         if (klass == null) {
           klass = frame.method.clazz.classLoader.loadClass("java/lang/String");
         }
-        if (!klass.isStaticInit()) {
+        if (!klass.getStat()) {
           Frame newFrame = new Frame(klass.getMethod("<clinit>", "()V"));
-          klass.setStaticInit(1);
-          KClass finalKlass = klass;
-          newFrame.setOnPop(() -> finalKlass.setStaticInit(2));
+          klass.setStat(1);
+          Class finalKlass = klass;
+          newFrame.setOnPop(() -> finalKlass.setStat(2));
           frame.thread.pushFrame(newFrame);
 
           frame.nextPc = frame.getPc();
           return;
         }
         KObject object = klass.newObject();
-        KField field = object.getField("value", "[C");
-        KClass arrClazz = new KClass(1, "[C", frame.method.clazz.classLoader, null);
+        Field field = object.getField("value", "[C");
+        Class arrClazz = new Class(1, "[C", frame.method.clazz.classLoader, null);
 
         char[] chars = val.toString().toCharArray();
         Character[] characters = new Character[chars.length];

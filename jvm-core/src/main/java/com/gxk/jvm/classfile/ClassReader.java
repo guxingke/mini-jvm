@@ -85,7 +85,7 @@ public abstract class ClassReader {
 
   private static Fields readFields(DataInputStream is, int fieldCount, ConstantPool constantPool)
       throws IOException {
-    Field[] fields = new Field[fieldCount];
+    FieldInfo[] fieldInfos = new FieldInfo[fieldCount];
     for (int i = 0; i < fieldCount; i++) {
       int accessFlag = is.readUnsignedShort();
       int nameIndex = is.readUnsignedShort();
@@ -99,10 +99,10 @@ public abstract class ClassReader {
 
       String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();
 
-      Field field = new Field(accessFlag, name, new Descriptor(descriptor), attributes);
-      fields[i] = field;
+      FieldInfo fieldInfo = new FieldInfo(accessFlag, name, new Descriptor(descriptor), attributes);
+      fieldInfos[i] = fieldInfo;
     }
-    return new Fields(fields);
+    return new Fields(fieldInfos);
   }
 
   private static Interfaces readInterfaces(DataInputStream is, int interfaceCount, ConstantPool cp)
@@ -140,7 +140,7 @@ public abstract class ClassReader {
 
       String descriptor = ((Utf8) constantPool.infos[descriptorIndex - 1]).getString();
 
-      methods.methods[i] = new Method(accessFlag, name, new Descriptor(descriptor), attributes);
+      methods.methodInfos[i] = new MethodInfo(accessFlag, name, new Descriptor(descriptor), attributes);
     }
     return methods;
   }

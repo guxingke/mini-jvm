@@ -10,14 +10,14 @@ import com.gxk.jvm.classfile.attribute.LineNumberTable;
 //    u2             attributes_count;
 //    attribute_info attributes[attributes_count];
 //    }
-public class Method {
+public class MethodInfo {
 
   public final int accessFlags;
   public final String name;
   public final Descriptor descriptor;
   public final Attributes attributes;
 
-  public Method(int accessFlags, String name, Descriptor descriptor, Attributes attributes) {
+  public MethodInfo(int accessFlags, String name, Descriptor descriptor, Attributes attributes) {
     this.accessFlags = accessFlags;
     this.name = name;
     this.descriptor = descriptor;

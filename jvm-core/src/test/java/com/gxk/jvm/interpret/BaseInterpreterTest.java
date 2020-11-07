@@ -4,11 +4,9 @@ import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.MetaSpace;
-import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.EnvHolder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,17 +22,17 @@ public abstract class BaseInterpreterTest {
   }
 
   protected void testMain(String hello) {
-    KMethod method = loadAndGetMainMethod(hello);
+    Method method = loadAndGetMainMethod(hello);
     new Interpreter().interpret(method);
   }
 
-  protected KMethod loadAndGetMainMethod(String clazzName) {
-    KClass clazz = this.loadAndGetClazz(clazzName);
-    KMethod method = clazz.getMainMethod();
+  protected Method loadAndGetMainMethod(String clazzName) {
+    Class clazz = this.loadAndGetClazz(clazzName);
+    Method method = clazz.getMainMethod();
     return method;
   }
 
-  protected KClass loadAndGetClazz(String clazzName) {
+  protected Class loadAndGetClazz(String clazzName) {
     // check MINI_JVM_HOME ready
     // 1. env
     String miniJvmHome = System.getenv("MINI_JVM_HOME");
@@ -61,7 +59,7 @@ public abstract class BaseInterpreterTest {
     Entry entry = Classpath.parse(classpath);
     ClassLoader loader = new ClassLoader("boot", entry);
     VirtualMachine.initVm(loader);
-    KClass clazz = loader.loadClass(clazzName);
+    Class clazz = loader.loadClass(clazzName);
     return clazz;
   }
 }

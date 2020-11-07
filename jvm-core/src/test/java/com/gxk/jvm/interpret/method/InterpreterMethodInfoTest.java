@@ -1,18 +1,12 @@
 package com.gxk.jvm.interpret.method;
 
 import com.gxk.jvm.interpret.BaseInterpreterTest;
-import com.gxk.jvm.interpret.Interpreter;
-import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.MetaSpace;
-import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
 import org.junit.Test;
 
 /**
  * 方法相关单测
  */
-public class InterpreterMethodTest extends BaseInterpreterTest {
+public class InterpreterMethodInfoTest extends BaseInterpreterTest {
 
 //  @Test
 //  public void test_with_class() {

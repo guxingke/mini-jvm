@@ -2,8 +2,8 @@ package com.gxk.jvm.classfile;
 
 public class Methods {
 
-  public final Method[] methods;
+  public final MethodInfo[] methodInfos;
   public Methods(int methodCount) {
-    this.methods = new Method[methodCount];
+    this.methodInfos = new MethodInfo[methodCount];
   }
 }

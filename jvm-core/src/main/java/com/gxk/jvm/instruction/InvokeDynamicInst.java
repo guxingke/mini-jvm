@@ -5,9 +5,9 @@ import com.gxk.jvm.classfile.cp.MethodHandle;
 import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KLambdaObject;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.LambdaObject;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
@@ -53,21 +53,21 @@ public class InvokeDynamicInst implements Instruction {
     MethodType methodType= (MethodType) frame.method.clazz.constantPool.infos[descRef - 1];
     String bstMethodDesc = Utils.getString(frame.method.clazz.constantPool, methodType.descriptorIndex);
 
-    KClass clazz = Heap.findClass(bsTargetClass);
-    KMethod method = clazz.getLambdaMethod(bsTargetMethod);
+    Class clazz = Heap.findClass(bsTargetClass);
+    Method method = clazz.getLambdaMethod(bsTargetMethod);
     int maxLocals = method.maxLocals;
 
     String lcname = frame.method.clazz.name + "$" + frame.method.name + "$" + bsTargetClass + "$" + bsTargetMethod;
-    List<KMethod> lcMehods = new ArrayList<>();
-    KMethod lm = new KMethod(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null,
+    List<Method> lcMehods = new ArrayList<>();
+    Method lm = new Method(method.accessFlags, methodName, bstMethodDesc0, method.maxStacks, maxLocals + 1, null, null,
         null);
     lcMehods.add(lm);
 
     String format =Utils.genNativeMethodKey( lcname, lm.name, lm.descriptor);
     if (Heap.findMethod(format) == null) {
       Heap.registerMethod(format, (f) -> {
-        KClass bsc= Heap.findClass(bsTargetClass);
-        KMethod bsm = bsc.getLambdaMethod(bsTargetMethod);
+        Class bsc= Heap.findClass(bsTargetClass);
+        Method bsm = bsc.getLambdaMethod(bsTargetMethod);
 
         List<String> args = bsm.getArgs();
         int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
@@ -78,7 +78,7 @@ public class InvokeDynamicInst implements Instruction {
           argObjs.add(Utils.pop(f, arg));
         }
 
-        KLambdaObject ref = (KLambdaObject) f.popRef();
+        LambdaObject ref = (LambdaObject) f.popRef();
         Collections.reverse(argObjs);
 
         Frame newFrame = new Frame(bsm);
@@ -104,7 +104,7 @@ public class InvokeDynamicInst implements Instruction {
       });
     }
 
-    KClass lcClazz = new KClass(1, lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
+    Class lcClazz = new Class(1, lcname, "java/lang/Object", new ArrayList<>(), lcMehods, new ArrayList<>(), null, null, frame.method.clazz.classLoader, null);
 
     int realSize = method.getArgs().size();
     int bsSize = Utils.parseMethodDescriptor(bstMethodDesc).size();
@@ -120,7 +120,7 @@ public class InvokeDynamicInst implements Instruction {
       args.add(frame.popRef());
     }
 
-    KLambdaObject kObject = lcClazz.newLambdaObject(args);
+    LambdaObject kObject = lcClazz.newLambdaObject(args);
     frame.pushRef(kObject);
   }
 

@@ -1,17 +1,17 @@
 package com.gxk.jvm.classloader;
 
 import com.gxk.jvm.classfile.ClassFile;
-import com.gxk.jvm.classfile.Field;
+import com.gxk.jvm.classfile.FieldInfo;
 import com.gxk.jvm.classfile.Interface;
-import com.gxk.jvm.classfile.Method;
+import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
@@ -30,11 +30,11 @@ public class ClassLoader {
   }
 
   public void loadPrimitiveClass(String name) {
-    KClass cache = Heap.findClass(name);
+    Class cache = Heap.findClass(name);
     if (cache != null) {
       return;
     }
-    KClass cls = new KClass(1, name, this);
+    Class cls = new Class(1, name, this);
     KObject metaCls = Heap.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
@@ -43,11 +43,11 @@ public class ClassLoader {
   }
 
   public void loadPrimitiveArrayClass(String name) {
-    KClass cache = Heap.findClass(name);
+    Class cache = Heap.findClass(name);
     if (cache != null) {
       return;
     }
-    KClass cls = new KClass(1, name, this);
+    Class cls = new Class(1, name, this);
     KObject metaCls = Heap.findClass("java/lang/Class").newObject();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
@@ -55,21 +55,21 @@ public class ClassLoader {
     doRegister(cls);
   }
 
-  public KClass loadClass(String name) {
-    KClass cache = Heap.findClass(name);
+  public Class loadClass(String name) {
+    Class cache = Heap.findClass(name);
     if (cache != null) {
       return cache;
     }
 
-    KClass clazz = doLoadClass(name);
+    Class clazz = doLoadClass(name);
     doRegister(clazz);
 
     return clazz;
   }
 
-  public void doRegister(KClass clazz) {
+  public void doRegister(Class clazz) {
     Heap.registerClass(clazz.name, clazz);
-    for (KMethod method : clazz.methods) {
+    for (Method method : clazz.methods) {
       if (method.isNative()) {
         String key = Utils.genNativeMethodKey(method.clazz.name, method.name, method.descriptor);
         NativeMethod nm = Heap.findMethod(key);
@@ -80,36 +80,36 @@ public class ClassLoader {
     }
   }
 
-  public KClass doLoadClass(String name) {
+  public Class doLoadClass(String name) {
     ClassFile clazz = entry.findClass(name);
-    KClass kClass = doLoadClass(name, clazz);
+    Class aClass = doLoadClass(name, clazz);
 
     // superclass
-    if (kClass.superClassName != null) {
-      kClass.setSuperClass(this.loadClass(kClass.superClassName));
+    if (aClass.superClassName != null) {
+      aClass.setSuperClass(this.loadClass(aClass.superClassName));
     }
 
     if (Heap.findClass("java/lang/Class") != null) {
       KObject rcs = Heap.findClass("java/lang/Class").newObject();
-      kClass.setRuntimeClass(rcs);
-      rcs.setMetaClass(kClass);
+      aClass.setRuntimeClass(rcs);
+      rcs.setMetaClass(aClass);
     }
 
-    return kClass;
+    return aClass;
   }
 
-  public KClass doLoadClass(String name, ClassFile classFile) {
-    List<KMethod> methods = new ArrayList<>();
-    for (Method method : classFile.methods.methods) {
-      methods.add(this.map(method));
+  public Class doLoadClass(String name, ClassFile classFile) {
+    List<Method> methods = new ArrayList<>();
+    for (MethodInfo methodInfo : classFile.methods.methodInfos) {
+      methods.add(this.map(methodInfo));
     }
-    List<KField> fields = new ArrayList<>();
-    for (Field field : classFile.fields.fields) {
-      fields.add(this.map(field));
+    List<Field> fields = new ArrayList<>();
+    for (FieldInfo fieldInfo : classFile.fields.fieldInfos) {
+      fields.add(this.map(fieldInfo));
     }
 
     // field interfaceInit
-    for (KField it : fields) {
+    for (Field it : fields) {
       switch (it.descriptor) {
         case "Z":
         case "C":
@@ -148,23 +148,23 @@ public class ClassLoader {
 
     BootstrapMethods bootstrapMethods = classFile.getBootstrapMethods();
 
-    return new KClass(classFile.accessFlags, name, superClassName, interfaceNames, methods, fields,
+    return new Class(classFile.accessFlags, name, superClassName, interfaceNames, methods, fields,
         bootstrapMethods, classFile.cpInfo, this, classFile);
   }
 
-  public KMethod map(Method cfMethod) {
-    Code code = cfMethod.getCode();
+  public Method map(MethodInfo cfMethodInfo) {
+    Code code = cfMethodInfo.getCode();
     if (code == null) {
-      return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor, 0, 0,
-          null, null, cfMethod.getLineNumber());
+      return new Method(cfMethodInfo.accessFlags, cfMethodInfo.name, cfMethodInfo.descriptor.descriptor, 0, 0,
+          null, null, cfMethodInfo.getLineNumber());
     }
-    return new KMethod(cfMethod.accessFlags, cfMethod.name, cfMethod.descriptor.descriptor,
+    return new Method(cfMethodInfo.accessFlags, cfMethodInfo.name, cfMethodInfo.descriptor.descriptor,
         code.maxStacks, code.maxLocals, code.getInstructions(), code.exceptionTable,
-        cfMethod.getLineNumber());
+        cfMethodInfo.getLineNumber());
   }
 
-  public KField map(Field field) {
-    return new KField(field.accessFlags, field.name, field.descriptor.descriptor);
+  public Field map(FieldInfo fieldInfo) {
+    return new Field(fieldInfo.accessFlags, fieldInfo.name, fieldInfo.descriptor.descriptor);
   }
 
   public String getName() {

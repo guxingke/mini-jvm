@@ -2,10 +2,10 @@ package com.gxk.jvm.rtda.heap;
 
 import java.util.List;
 
-public class KLambdaObject extends KObject{
+public class LambdaObject extends KObject{
   public final List<Object> args;
 
-  public KLambdaObject(KClass clazz, List<Object> vars) {
+  public LambdaObject(Class clazz, List<Object> vars) {
     super(clazz);
     this.args = vars;
   }

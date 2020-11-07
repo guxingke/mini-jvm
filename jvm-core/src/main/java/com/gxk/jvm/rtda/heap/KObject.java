@@ -7,29 +7,29 @@ import java.util.Objects;
 
 public class KObject implements Cloneable {
 
-  public final List<KField> fields;
-  public final KClass clazz;
+  public final List<Field> fields;
+  public final Class clazz;
   private KObject superObject;
 
   // for class obj
-  private KClass metaClass;
+  private Class metaClass;
 
   // extra
   private Object extra;
 
-  public KObject(KClass clazz) {
+  public KObject(Class clazz) {
     fields = new ArrayList<>();
     this.clazz = clazz;
   }
 
-  public KObject(List<KField> fields, KClass clazz) {
+  public KObject(List<Field> fields, Class clazz) {
     this.fields = fields;
     this.clazz = clazz;
   }
 
-  public KField getField(String fieldName, String fieldDescriptor) {
+  public Field getField(String fieldName, String fieldDescriptor) {
     // this object
-    for (KField field : fields) {
+    for (Field field : fields) {
       if (Objects.equals(field.name, fieldName) && Objects.equals(field.descriptor, fieldDescriptor)) {
         return field;
       }
@@ -48,7 +48,7 @@ public class KObject implements Cloneable {
   }
 
   public void setField(String name, String desc, Slot[] val) {
-    KField field = this.getField(name, desc);
+    Field field = this.getField(name, desc);
     field.val = val;
   }
 
@@ -62,11 +62,11 @@ public class KObject implements Cloneable {
     return clazz.name + "@" + this.hashCode();
   }
 
-  public KClass getMetaClass() {
+  public Class getMetaClass() {
     return metaClass;
   }
 
-  public void setMetaClass(KClass metaClass) {
+  public void setMetaClass(Class metaClass) {
     this.metaClass = metaClass;
   }
 

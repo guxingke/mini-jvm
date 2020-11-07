@@ -2,8 +2,8 @@ package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 
@@ -43,7 +43,7 @@ public abstract class UnixFileSystemBridge {
     Heap.registerMethod("java/io/UnixFileSystem_getLastModifiedTime_(Ljava/io/File;)J", frame -> {
       KObject file = (KObject) frame.popRef();
       frame.popRef();
-      KField path = file.getField("path", "Ljava/lang/String;");
+      Field path = file.getField("path", "Ljava/lang/String;");
       String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
       long lm = new File(pathStr).lastModified();
       frame.pushLong(lm);
@@ -63,7 +63,7 @@ public abstract class UnixFileSystemBridge {
     Heap.registerMethod("java/io/UnixFileSystem_list_(Ljava/io/File;)[Ljava/lang/String;", frame -> {
       KObject file = (KObject) frame.popRef();
       frame.popRef();
-      KField path = file.getField("path", "Ljava/lang/String;");
+      Field path = file.getField("path", "Ljava/lang/String;");
       String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
       String[] list = new File(pathStr).list();
 
@@ -73,11 +73,11 @@ public abstract class UnixFileSystemBridge {
       }
 
       String name = "[Ljava/lang/String;";
-      KClass clazz = Heap.findClass(name);
+      Class clazz = Heap.findClass(name);
       if (clazz == null) {
-        clazz = new KClass(1, name, frame.method.clazz.classLoader, null);
+        clazz = new Class(1, name, frame.method.clazz.classLoader, null);
         clazz.setSuperClass(Heap.findClass("java/lang/Object"));
-        clazz.setStaticInit(2);
+        clazz.setStat(2);
         Heap.registerClass(name, clazz);
       }
 

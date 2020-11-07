@@ -1,15 +1,12 @@
 package com.gxk.jvm.nativebridge.java.util;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -39,7 +36,7 @@ public abstract class ZipFileBridge {
         return;
       }
 
-      KClass cls = Heap.findClass("java/util/zip/ZipEntry");
+      Class cls = Heap.findClass("java/util/zip/ZipEntry");
       if (cls == null) {
         cls = frame.method.clazz.classLoader.loadClass("java/util/zip/ZipEntry");
       }
@@ -52,7 +49,7 @@ public abstract class ZipFileBridge {
       ZipFile file = (ZipFile) ((KObject) frame.popRef()).getExtra();
       try {
         InputStream is = file.getInputStream(entry);
-        KClass cls = Heap.findClass("java/io/NativeInputStream");
+        Class cls = Heap.findClass("java/io/NativeInputStream");
         if (cls == null) {
           cls = frame.method.clazz.classLoader.loadClass("java/io/NativeInputStream");
        }

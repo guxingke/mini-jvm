@@ -9,6 +9,7 @@ import com.gxk.jvm.classfile.cp.MethodDef;
 import com.gxk.jvm.classfile.cp.NameAndType;
 import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.classloader.ClassLoader;
+import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Frame;
 
 import com.gxk.jvm.rtda.MetaSpace;
@@ -16,9 +17,9 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 
 import java.io.DataInputStream;
@@ -152,7 +153,7 @@ public abstract class Utils {
     return rets;
   }
 
-  public static String genNativeMethodKey(KMethod method) {
+  public static String genNativeMethodKey(Method method) {
     return genNativeMethodKey(method.clazz.name, method.name, method.descriptor);
   }
 
@@ -244,10 +245,10 @@ public abstract class Utils {
   }
 
   public static KObject str2Obj(String str, ClassLoader classLoader) {
-    KClass klass = Heap.findClass("java/lang/String");
+    Class klass = Heap.findClass("java/lang/String");
     KObject object = klass.newObject();
-    KField field = object.getField("value", "[C");
-    KClass arrClazz = new KClass(1, "[C", classLoader, null);
+    Field field = object.getField("value", "[C");
+    Class arrClazz = new Class(1, "[C", classLoader, null);
 
     char[] chars = str.toCharArray();
     Character[] characters = new Character[chars.length];
@@ -354,5 +355,47 @@ public abstract class Utils {
 
   public static void doReturn2() {
     doReturn(2);
+  }
+
+  /**
+   * 类初始化
+   */
+  public static void clinit(Class clazz) {
+    // 类在初始化中，或已完成初始化，直接返回
+    if (clazz.stat >= Const.CLASS_INITING) {
+      return;
+    }
+
+    // 递归初始化父类
+    if (clazz.getSuperClass() != null) {
+      clinit(clazz.getSuperClass());
+    }
+
+    // 初始化包含默认方法的接口
+//    for (Class inter : clazz.interfaces) {
+//       初始化接口的接口
+//      for (Class superInter : inter.interfaces) {
+//        if (superInter.hasDefaultMethod) {
+//          clinit(superInter);
+//        }
+//      }
+//       初始化当前接口
+//      if (inter.hasDefaultMethod) {
+//        clinit(inter);
+//      }
+//    }
+
+    // 初始化自身
+    final Method clinitMethod = clazz.getClinitMethod();
+//    // 存在没有类初始化的情况
+    if (clinitMethod == null) {
+      clazz.stat = Const.CLASS_INITED;
+      return;
+    }
+
+    clazz.stat = Const.CLASS_INITING;
+    Frame newFrame = new Frame(clinitMethod);
+    Interpreter.execute(newFrame);
+    clazz.stat = Const.CLASS_INITED;
   }
 }

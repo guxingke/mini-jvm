@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public abstract class DoubleBridge {
@@ -20,7 +20,7 @@ public abstract class DoubleBridge {
     });
 
     Heap.registerMethod("java/lang/Double_valueOf_(D)Ljava/lang/Double;", frame -> {
-      KClass clazz = Heap.findClass("java/lang/Double");
+      Class clazz = Heap.findClass("java/lang/Double");
       KObject kObject = clazz.newObject();
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();

@@ -6,24 +6,45 @@ import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.util.Const;
 import com.gxk.jvm.util.DebugContextHolder;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
 import com.gxk.jvm.util.Utils;
 
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Interpreter {
 
-  public void interpret(KMethod method) {
+  /**
+   * 同步执行栈帧
+   */
+  public static void execute(Frame newFrame) {
+    final Thread env = MetaSpace.getMainEnv();
+    env.pushFrame(newFrame);
+
+    newFrame.stat = Const.FAKE_FRAME;
+    do {
+      Frame frame = env.topFrame();
+      Instruction instruction = frame.getInst();
+      frame.nextPc += instruction.offset();
+      instruction.execute(frame);
+//      if (env.exception != null) {
+//        Utils.handleException(env.exception);
+//        env.exception = null;
+//      }
+    } while (newFrame.stat == Const.FAKE_FRAME);
+  }
+
+  public void interpret(Method method) {
     interpret(method, null);
   }
 
-  public void interpret(KMethod method, String[] args) {
+  public void interpret(Method method, String[] args) {
     if (MetaSpace.main == null) {
       MetaSpace.main = new Thread(1024);
     }
@@ -37,9 +58,9 @@ public class Interpreter {
     for (int i = 0; i < args.length; i++) {
       kargs[i] = Utils.str2Obj(args[i], frame.method.clazz.classLoader);
     }
-    KClass arrClazz = Heap.findClass("[java/lang/String;");
+    Class arrClazz = Heap.findClass("[Ljava/lang/String;");
     if (arrClazz == null) {
-      arrClazz = new KClass(1, "[java/lang/String;", method.clazz.classLoader, null);
+      arrClazz = new Class(1, "[Ljava/lang/String;", method.clazz.classLoader, null);
       Heap.registerClass(arrClazz.name, arrClazz);
     }
     KArray array = new KArray(arrClazz, kargs);
@@ -52,29 +73,8 @@ public class Interpreter {
     final Thread thread = MetaSpace.getMainEnv();
     thread.pushFrame(frame);
 
-    KClass clazz = frame.method.clazz;
-    if (clazz != null) {
-      // super clazz static interfaceInit
-      KClass superClazz = clazz.getUnStaticInitSuperClass();
-      while (superClazz != null) {
-        if (!superClazz.isStaticInit()) {
-          // interfaceInit
-          KMethod cinit = superClazz.getMethod("<clinit>", "()V");
-          if (cinit == null) {
-            superClazz.setStaticInit(2);
-            frame.nextPc = frame.getPc();
-            break;
-          }
-
-          Frame newFrame = new Frame(cinit);
-          superClazz.setStaticInit(1);
-          KClass finalKClass = superClazz;
-          newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
-          frame.thread.pushFrame(newFrame);
-        }
-        superClazz = clazz.getUnStaticInitSuperClass();
-      }
-    }
+    Class clazz = frame.method.clazz;
+    Utils.clinit(clazz);
 
     loop(thread);
   }
@@ -82,24 +82,24 @@ public class Interpreter {
   public void doInterpret(Thread thread, Frame frame) {
     thread.pushFrame(frame);
 
-    KClass clazz = frame.method.clazz;
+    Class clazz = frame.method.clazz;
     if (clazz != null) {
       // super clazz static interfaceInit
-      KClass superClazz = clazz.getUnStaticInitSuperClass();
+      Class superClazz = clazz.getUnStaticInitSuperClass();
       while (superClazz != null) {
-        if (!superClazz.isStaticInit()) {
+        if (!superClazz.getStat()) {
           // interfaceInit
-          KMethod cinit = superClazz.getMethod("<clinit>", "()V");
+          Method cinit = superClazz.getMethod("<clinit>", "()V");
           if (cinit == null) {
-            superClazz.setStaticInit(2);
+            superClazz.setStat(2);
             frame.nextPc = frame.getPc();
             break;
           }
 
           Frame newFrame = new Frame(cinit);
-          superClazz.setStaticInit(1);
-          KClass finalKClass = superClazz;
-          newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+          superClazz.setStat(1);
+          Class finalClass = superClazz;
+          newFrame.setOnPop(() -> finalClass.setStat(2));
           frame.thread.pushFrame(newFrame);
         }
         superClazz = clazz.getUnStaticInitSuperClass();

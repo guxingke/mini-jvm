@@ -3,8 +3,8 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.*;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 
@@ -23,22 +23,22 @@ public class NewInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
+    Class aClass = Heap.findClass(clazz);
 
-    if (kClass == null) {
+    if (aClass == null) {
       ClassLoader loader = frame.method.clazz.classLoader;
-      kClass = loader.loadClass(clazz);
+      aClass = loader.loadClass(clazz);
     }
 
-    if (kClass == null) {
+    if (aClass == null) {
       throw new IllegalStateException(ClassNotFoundException.class.getName());
     }
 
-    if (!kClass.isStaticInit()) {
+    if (!aClass.getStat()) {
       // interfaceInit
-      KMethod cinit = kClass.getClinitMethod();
+      Method cinit = aClass.getClinitMethod();
       if (cinit == null) {
-        kClass.setStaticInit(2);
+        aClass.setStat(2);
         frame.nextPc = frame.getPc();
         return;
       }
@@ -49,9 +49,9 @@ public class NewInst implements Instruction {
         clm.invoke(frame);
       } else {
         Frame newFrame = new Frame(cinit);
-        kClass.setStaticInit(1);
-        KClass finalKClass = kClass;
-        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        aClass.setStat(1);
+        Class finalClass = aClass;
+        newFrame.setOnPop(() -> finalClass.setStat(2));
         frame.thread.pushFrame(newFrame);
 
         frame.nextPc = frame.getPc();
@@ -59,7 +59,7 @@ public class NewInst implements Instruction {
       }
     }
 
-    KObject obj = kClass.newObject();
+    KObject obj = aClass.newObject();
     frame.pushRef(obj);
   }
 

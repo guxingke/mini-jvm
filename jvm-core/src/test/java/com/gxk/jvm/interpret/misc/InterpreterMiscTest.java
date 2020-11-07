@@ -2,8 +2,7 @@ package com.gxk.jvm.interpret.misc;
 
 import com.gxk.jvm.interpret.BaseInterpreterTest;
 import com.gxk.jvm.interpret.Interpreter;
-import com.gxk.jvm.rtda.heap.KMethod;
-import com.gxk.jvm.util.EnvHolder;
+import com.gxk.jvm.rtda.heap.Method;
 import org.junit.Test;
 
 public class InterpreterMiscTest extends BaseInterpreterTest {
@@ -35,13 +34,13 @@ public class InterpreterMiscTest extends BaseInterpreterTest {
 
   @Test
   public void test_array_0() {
-    KMethod method = loadAndGetMainMethod("HelloWorld");
+    Method method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
   }
 
   @Test
   public void test_array_1() {
-    KMethod method = loadAndGetMainMethod("HelloWorld");
+    Method method = loadAndGetMainMethod("HelloWorld");
     new Interpreter().interpret(method, new String[0]);
   }
 

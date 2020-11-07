@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.sun.misc;
 
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KField;
+import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.KObject;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public abstract class UnsafeBridge {
       KObject obj = (KObject) frame.popRef();
       Object thisObj = frame.popRef();
 
-      KField field = obj.getField("value", "I");
+      Field field = obj.getField("value", "I");
       Integer val = field.val[0].num + delta;
       field.val = new Slot[]{new Slot(val, Slot.INT)};
       frame.pushInt(val - delta);

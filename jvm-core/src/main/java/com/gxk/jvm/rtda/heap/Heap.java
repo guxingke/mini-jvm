@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public abstract class Heap {
   private static final Map<String, NativeMethod> NATIVE_METHOD_MAP;
-  private static final Map<String, KClass> STRING_K_CLASS_MAP;
+  private static final Map<String, Class> STRING_K_CLASS_MAP;
 
   static {
     NATIVE_METHOD_MAP = new HashMap<>();
@@ -31,11 +31,11 @@ public abstract class Heap {
     return NATIVE_METHOD_MAP.get(key);
   }
 
-  public static KClass findClass(String name) {
+  public static Class findClass(String name) {
     return STRING_K_CLASS_MAP.get(name);
   }
 
-  public static void registerClass(String name, KClass clazz) {
+  public static void registerClass(String name, Class clazz) {
     if (EnvHolder.verboseClass) {
       String source = clazz.classLoader.getName();
       if (clazz.classFile != null && clazz.classFile.getSource() != null) {
@@ -46,7 +46,7 @@ public abstract class Heap {
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }
 
-  public static List<KClass> getClasses() {
+  public static List<Class> getClasses() {
     return new ArrayList<>(STRING_K_CLASS_MAP.values());
   }
 

@@ -3,9 +3,8 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KField;
-import com.gxk.jvm.util.Logger;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Field;
 
 public class PutStaticInst implements Instruction {
 
@@ -26,11 +25,11 @@ public class PutStaticInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KClass kClass = Heap.findClass(clazz);
-    if (kClass == null) {
-      kClass = frame.method.clazz.classLoader.loadClass(clazz);
+    Class aClass = Heap.findClass(clazz);
+    if (aClass == null) {
+      aClass = frame.method.clazz.classLoader.loadClass(clazz);
     }
-    KField field = kClass.getField(fieldName, fieldDescriptor);
+    Field field = aClass.getField(fieldName, fieldDescriptor);
 
     if (fieldDescriptor.equals("J")) {
       Slot low = frame.popSlot();

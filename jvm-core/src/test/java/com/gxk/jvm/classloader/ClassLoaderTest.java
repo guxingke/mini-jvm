@@ -4,7 +4,7 @@ import com.gxk.jvm.VirtualMachine;
 import com.gxk.jvm.classpath.Classpath;
 import com.gxk.jvm.classpath.Entry;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
+import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.util.EnvHolder;
 import org.junit.After;
 import org.junit.Before;
@@ -58,25 +58,25 @@ public class ClassLoaderTest {
 
   @Test
   public void test_object() {
-    KClass kClass = classLoader.loadClass("java/lang/Object");
-    assertNotNull(kClass);
+    Class aClass = classLoader.loadClass("java/lang/Object");
+    assertNotNull(aClass);
   }
 
   @Test
   public void test_hello() {
-    KClass kClass = classLoader.loadClass("Hello");
-    assertNotNull(kClass);
+    Class aClass = classLoader.loadClass("Hello");
+    assertNotNull(aClass);
   }
 
   @Test
   public void test_onjava8_passobject() {
-    KClass clazz = classLoader.loadClass("PassObject");
+    Class clazz = classLoader.loadClass("PassObject");
     assertNotNull(clazz);
   }
 
   @Test
   public void test_system() {
-    KClass kClass = classLoader.loadClass("java/lang/System");
-    assertNotNull(kClass);
+    Class aClass = classLoader.loadClass("java/lang/System");
+    assertNotNull(aClass);
   }
 }

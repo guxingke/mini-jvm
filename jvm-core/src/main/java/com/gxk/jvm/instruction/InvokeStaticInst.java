@@ -2,12 +2,11 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 
 import com.gxk.jvm.util.Utils;
-import java.util.Arrays;
 import java.util.List;
 
 public class InvokeStaticInst implements Instruction {
@@ -35,28 +34,28 @@ public class InvokeStaticInst implements Instruction {
       return;
     }
 
-    KClass kClass = Heap.findClass(clazzName);
-    if (kClass == null) {
-      kClass = frame.method.clazz.classLoader.loadClass(clazzName);
+    Class aClass = Heap.findClass(clazzName);
+    if (aClass == null) {
+      aClass = frame.method.clazz.classLoader.loadClass(clazzName);
     }
 
-    if (!kClass.isStaticInit()) {
-      KMethod cinit = kClass.getMethod("<clinit>", "()V");
+    if (!aClass.getStat()) {
+      Method cinit = aClass.getMethod("<clinit>", "()V");
       if (cinit == null) {
         throw new IllegalStateException();
       }
 
       Frame newFrame = new Frame(cinit);
-      kClass.setStaticInit(1);
-      KClass finalKClass = kClass;
-      newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+      aClass.setStat(1);
+      Class finalClass = aClass;
+      newFrame.setOnPop(() -> finalClass.setStat(2));
       frame.thread.pushFrame(newFrame);
 
       frame.nextPc = frame.getPc();
       return;
     }
 
-    KMethod method = kClass.getMethod(methodName, descriptor);
+    Method method = aClass.getMethod(methodName, descriptor);
 
     if (method.isNative()) {
       throw new IllegalStateException("un impl native method call, " + method);

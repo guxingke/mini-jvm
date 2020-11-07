@@ -1,9 +1,9 @@
 package com.gxk.jvm.classfile;
 
 public class Fields {
-  public final Field[] fields;
+  public final FieldInfo[] fieldInfos;
 
-  public Fields(Field[] fields) {
-    this.fields = fields;
+  public Fields(FieldInfo[] fieldInfos) {
+    this.fieldInfos = fieldInfos;
   }
 }

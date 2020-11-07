@@ -2,8 +2,8 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
@@ -41,13 +41,13 @@ public class InvokeInterfaceInst implements Instruction {
       return;
     }
 
-    KClass clazz = Heap.findClass(this.clazzName);
+    Class clazz = Heap.findClass(this.clazzName);
     if (clazz == null) {
       clazz = frame.method.clazz.classLoader.loadClass(clazzName);
     }
 
-    if (!clazz.isStaticInit()) {
-      KMethod cinit = clazz.getClinitMethod();
+    if (!clazz.getStat()) {
+      Method cinit = clazz.getClinitMethod();
       if (cinit == null) {
         throw new IllegalStateException();
       }
@@ -59,9 +59,9 @@ public class InvokeInterfaceInst implements Instruction {
         ciNm.invoke(frame);
       } else {
         Frame newFrame = new Frame(cinit);
-        clazz.setStaticInit(1);
-        KClass finalClass = clazz;
-        newFrame.setOnPop(() -> finalClass.setStaticInit(2));
+        clazz.setStat(1);
+        Class finalClass = clazz;
+        newFrame.setOnPop(() -> finalClass.setStat(2));
         frame.thread.pushFrame(newFrame);
 
         frame.nextPc = frame.getPc();
@@ -69,7 +69,7 @@ public class InvokeInterfaceInst implements Instruction {
       }
     }
 
-    KMethod method = clazz.getMethod(methodName, methodDescriptor);
+    Method method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
       // try find interfaces
@@ -79,7 +79,7 @@ public class InvokeInterfaceInst implements Instruction {
 
       // already load interface
       if (!clazz.getInterfaces().isEmpty()) {
-        for (KClass intClass : clazz.getInterfaces()) {
+        for (Class intClass : clazz.getInterfaces()) {
           method= intClass.getMethod(methodName, methodDescriptor);
           if (method != null) {
             break;
@@ -107,7 +107,7 @@ public class InvokeInterfaceInst implements Instruction {
     }
 
     KObject ref = (KObject) frame.popRef();
-    KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+    Method implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
     // method is default method
     if (implMethod == null) {
       implMethod = method;

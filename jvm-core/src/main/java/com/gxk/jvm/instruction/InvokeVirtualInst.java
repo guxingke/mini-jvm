@@ -2,17 +2,15 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KClass;
-import com.gxk.jvm.rtda.heap.KMethod;
+import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -47,8 +45,8 @@ public class InvokeVirtualInst implements Instruction {
       }
     }
 
-    KClass clazz = Heap.findClass(this.clazz);
-    KMethod method = clazz.getMethod(methodName, methodDescriptor);
+    Class clazz = Heap.findClass(this.clazz);
+    Method method = clazz.getMethod(methodName, methodDescriptor);
 
     if (method == null) {
       // try find interfaces
@@ -59,7 +57,7 @@ public class InvokeVirtualInst implements Instruction {
 
       // already load interface
       if (!clazz.getInterfaces().isEmpty()) {
-        for (KClass intClass : clazz.getInterfaces()) {
+        for (Class intClass : clazz.getInterfaces()) {
           method = intClass.getMethod(methodName, methodDescriptor);
           if (method != null) {
             break;
@@ -85,7 +83,7 @@ public class InvokeVirtualInst implements Instruction {
     }
 
     KObject ref = (KObject) frame.popRef();
-    KMethod implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+    Method implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
 
     NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod));
     if (nm != null) {

@@ -12,26 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class KClass {
+public class Class {
 
   public final int accessFlags;
   public final String name;
   public final String superClassName;
   public final List<String> interfaceNames;
-  public final List<KMethod> methods;
-  public final List<KField> fields;
+  public final List<Method> methods;
+  public final List<Field> fields;
   public final BootstrapMethods bootstrapMethods;
   public final ConstantPool constantPool;
   public final ClassLoader classLoader;
   public final ClassFile classFile;
 
-  private KClass superClass;
-  private List<KClass> interfaces;
-  private int staticInit = 0;
+  private Class superClass;
+  private List<Class> interfaces;
+  public int stat = 0;
 
   private KObject runtimeClass;
 
-  public KClass(int accessFlags, String name, ClassLoader classLoader, ClassFile classFile) {
+  public Class(int accessFlags, String name, ClassLoader classLoader, ClassFile classFile) {
     this.accessFlags = accessFlags;
     this.name = name;
     this.classFile = classFile;
@@ -43,10 +43,10 @@ public class KClass {
     this.classLoader = classLoader;
     this.methods = new ArrayList<>();
     this.fields = new ArrayList<>();
-    this.staticInit = 2;
+    this.stat = 2;
   }
 
-  public KClass(int accessFlags, String name, ClassLoader classLoader) {
+  public Class(int accessFlags, String name, ClassLoader classLoader) {
     this.accessFlags = accessFlags;
     this.name = name;
     this.classFile = null;
@@ -58,16 +58,16 @@ public class KClass {
     this.classLoader = classLoader;
     this.methods = new ArrayList<>();
     this.fields = new ArrayList<>();
-    this.staticInit = 2;
+    this.stat = 2;
   }
 
-  public KClass(
+  public Class(
       int accessFlags,
       String name,
       String superClassName,
       List<String> interfaceNames,
-      List<KMethod> methods,
-      List<KField> fields,
+      List<Method> methods,
+      List<Field> fields,
       BootstrapMethods bootstrapMethods,
       ConstantPool constantPool,
       ClassLoader classLoader,
@@ -87,8 +87,8 @@ public class KClass {
     methods.forEach(it -> it.clazz = this);
   }
 
-  public KMethod getMainMethod() {
-    for (KMethod method : methods) {
+  public Method getMainMethod() {
+    for (Method method : methods) {
       if (Objects.equals("main", method.name)) {
         return method;
       }
@@ -96,19 +96,19 @@ public class KClass {
     return null;
   }
 
-  public KMethod getClinitMethod() {
+  public Method getClinitMethod() {
     return getMethod("<clinit>", "()V");
   }
 
-  public KMethod getMethod(String name, String descriptor) {
-    for (KMethod method : methods) {
+  public Method getMethod(String name, String descriptor) {
+    for (Method method : methods) {
       if (Objects.equals(method.name, name) && Objects.equals(method.descriptor, descriptor)) {
         return method;
       }
     }
 
-    for (KClass inter : this.interfaces) {
-      KMethod method = inter.getMethod(name, descriptor);
+    for (Class inter : this.interfaces) {
+      Method method = inter.getMethod(name, descriptor);
       if (method != null) {
         return method;
       }
@@ -120,8 +120,8 @@ public class KClass {
     return this.superClass.getMethod(name, descriptor);
   }
 
-  public KMethod getLambdaMethod(String name) {
-    for (KMethod method : methods) {
+  public Method getLambdaMethod(String name) {
+    for (Method method : methods) {
       if (Objects.equals(method.name, name)) {
         return method;
       }
@@ -129,8 +129,8 @@ public class KClass {
     return null;
   }
 
-  public KField getField(String fieldName, String fieldDescriptor) {
-    for (KField field : fields) {
+  public Field getField(String fieldName, String fieldDescriptor) {
+    for (Field field : fields) {
       if (Objects.equals(field.name, fieldName) && Objects
           .equals(field.descriptor, fieldDescriptor)) {
         return field;
@@ -139,8 +139,8 @@ public class KClass {
     return null;
   }
 
-  public KField getField(String fieldName) {
-    for (KField field : fields) {
+  public Field getField(String fieldName) {
+    for (Field field : fields) {
       if (Objects.equals(field.name, fieldName)) {
         return field;
       }
@@ -148,17 +148,17 @@ public class KClass {
     return null;
   }
 
-  public void setSuperClass(KClass superClass) {
+  public void setSuperClass(Class superClass) {
     this.superClass = superClass;
   }
 
-  public KClass getSuperClass() {
+  public Class getSuperClass() {
     return this.superClass;
   }
 
   public KObject newObject() {
-    List<KField> newFields = new ArrayList<>();
-    for (KField field : fields) {
+    List<Field> newFields = new ArrayList<>();
+    for (Field field : fields) {
       newFields.add(this.map(field));
     }
     KObject object = new KObject(newFields, this);
@@ -168,11 +168,11 @@ public class KClass {
     return object;
   }
 
-  public KLambdaObject newLambdaObject(List<Object> args) {
-    return new KLambdaObject(this, args);
+  public LambdaObject newLambdaObject(List<Object> args) {
+    return new LambdaObject(this, args);
   }
 
-  private KField map(KField source) {
+  private Field map(Field source) {
     if (source.isStatic()) {
       return source;
     }
@@ -182,33 +182,33 @@ public class KClass {
       case "B":
       case "S":
       case "I":
-        return new KField(source.accessFlags, source.name, source.descriptor,
+        return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.INT)});
       case "F":
-        return new KField(source.accessFlags, source.name, source.descriptor,
+        return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.FLOAT)});
       case "D":
-        return new KField(source.accessFlags, source.name, source.descriptor,
+        return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
       case "J":
-        return new KField(source.accessFlags, source.name, source.descriptor,
+        return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
       default:
-        return new KField(source.accessFlags, source.name, source.descriptor,
+        return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(null)});
     }
   }
 
-  public boolean isStaticInit() {
-    return this.staticInit > 0;
+  public boolean getStat() {
+    return this.stat > 0;
   }
 
-  public void setStaticInit(int level) {
-    this.staticInit = level;
+  public void setStat(int level) {
+    this.stat = level;
   }
 
-  public KClass getUnStaticInitSuperClass() {
-    if (!this.isStaticInit()) {
+  public Class getUnStaticInitSuperClass() {
+    if (!this.getStat()) {
       return this;
     }
     if (this.superClass == null) {
@@ -217,11 +217,11 @@ public class KClass {
     return this.superClass.getUnStaticInitSuperClass();
   }
 
-  public void setInterfaces(List<KClass> interfaces) {
+  public void setInterfaces(List<Class> interfaces) {
     this.interfaces = interfaces;
   }
 
-  public List<KClass> getInterfaces() {
+  public List<Class> getInterfaces() {
     return interfaces;
   }
 
@@ -234,14 +234,14 @@ public class KClass {
         ", fields=" + fields.size() +
         ", classLoader=" + classLoader.getClass().getName() +
         ", superClass=" + (superClass == null ? "null" : superClass.name) +
-        ", staticInit=" + staticInit +
+        ", staticInit=" + stat +
         '}';
   }
 
   public void interfaceInit(Frame frame) {
-    List<KClass> interfaces = new ArrayList<>();
+    List<Class> interfaces = new ArrayList<>();
     for (String interfaceName : this.interfaceNames) {
-      KClass tmp = Heap.findClass(interfaceName);
+      Class tmp = Heap.findClass(interfaceName);
       if (tmp == null) {
         tmp = frame.method.clazz.classLoader.loadClass(interfaceName);
       }
@@ -249,16 +249,16 @@ public class KClass {
       tmp.interfaceInit(frame);
 
       interfaces.add(tmp);
-      if (!tmp.isStaticInit()) {
-        KMethod cinit = tmp.getClinitMethod();
+      if (!tmp.getStat()) {
+        Method cinit = tmp.getClinitMethod();
         if (cinit == null) {
           throw new IllegalStateException();
         }
 
         Frame newFrame = new Frame(cinit);
-        tmp.setStaticInit(1);
-        KClass finalKClass = tmp;
-        newFrame.setOnPop(() -> finalKClass.setStaticInit(2));
+        tmp.setStat(1);
+        Class finalClass = tmp;
+        newFrame.setOnPop(() -> finalClass.setStat(2));
         frame.thread.pushFrame(newFrame);
         frame.nextPc = frame.getPc();
       }
