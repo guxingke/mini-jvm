@@ -27,8 +27,7 @@ public class InvokeSpecialInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    NativeMethod nm = Heap
-        .findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
+    NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(clazz, methodName, methodDescriptor));
     if (nm != null) {
       nm.invoke(frame);
       return;
@@ -49,46 +48,7 @@ public class InvokeSpecialInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    Frame newFrame = new Frame(method);
-    // fill args
-    List<String> args = method.getArgs();
-    int slotIdx = method.getArgSlotSize();
-
-    int idx = args.size() - 1;
-    while (idx >= 0) {
-      String arg = args.get(idx);
-      switch (arg) {
-        case "I":
-        case "B":
-        case "C":
-        case "S":
-        case "Z":
-          slotIdx--;
-          newFrame.setInt(slotIdx, frame.popInt());
-          break;
-        case "J":
-          slotIdx -= 2;
-          newFrame.setLong(slotIdx, frame.popLong());
-          break;
-        case "F":
-          slotIdx -= 1;
-          newFrame.setFloat(slotIdx, frame.popFloat());
-          break;
-        case "D":
-          slotIdx -= 2;
-          newFrame.setDouble(slotIdx, frame.popDouble());
-          idx -= 2;
-          break;
-        default:
-          slotIdx--;
-          newFrame.setRef(slotIdx, frame.popRef());
-          break;
-      }
-      idx--;
-    }
-
-    newFrame.setRef(0, frame.popRef());
-    frame.thread.pushFrame(newFrame);
+    Utils.invokeMethod(method);
   }
 
   @Override

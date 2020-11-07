@@ -46,28 +46,7 @@ public class InvokeInterfaceInst implements Instruction {
       clazz = frame.method.clazz.classLoader.loadClass(clazzName);
     }
 
-    if (!clazz.getStat()) {
-      Method cinit = clazz.getClinitMethod();
-      if (cinit == null) {
-        throw new IllegalStateException();
-      }
-
-      // hack by native method
-      String key =Utils.genNativeMethodKey( cinit.clazz.name, cinit.name, cinit.descriptor);
-      NativeMethod ciNm = Heap.findMethod(key);
-      if (ciNm != null) {
-        ciNm.invoke(frame);
-      } else {
-        Frame newFrame = new Frame(cinit);
-        clazz.setStat(1);
-        Class finalClass = clazz;
-        newFrame.setOnPop(() -> finalClass.setStat(2));
-        frame.thread.pushFrame(newFrame);
-
-        frame.nextPc = frame.getPc();
-        return;
-      }
-    }
+    Utils.clinit(clazz);
 
     Method method = clazz.getMethod(methodName, methodDescriptor);
 
@@ -99,50 +78,13 @@ public class InvokeInterfaceInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    List<String> args = method.getArgs();
-    List<Object> argObjs = new ArrayList<>();
-    for (int i = args.size() - 1; i >= 0; i--) {
-      String arg = args.get(i);
-      argObjs.add(Utils.pop(frame, arg));
-    }
-
-    KObject ref = (KObject) frame.popRef();
+    final KObject ref = frame.getThis(method.getArgSlotSize());
     Method implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
     // method is default method
     if (implMethod == null) {
       implMethod = method;
     }
-
-    // hack for lambda
-    nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod.clazz.name, implMethod.name, implMethod.descriptor));
-    if (nm != null) {
-      // restore frame
-      ArrayList<String> tmpArgs = new ArrayList<>(args);
-      Collections.reverse(tmpArgs);
-
-      frame.pushRef(ref);
-      for (int i = 0; i < tmpArgs.size(); i++) {
-        String arg = tmpArgs.get(i);
-        Object obj = argObjs.get(argObjs.size() - 1 - i);
-        Utils.push(frame, arg, obj);
-      }
-
-      nm.invoke(frame);
-      return;
-    }
-
-    Collections.reverse(argObjs);
-
-    Frame newFrame = new Frame(implMethod);
-
-    int slotIdx = 1;
-    for (int i = 0; i < args.size(); i++) {
-      String arg = args.get(i);
-      slotIdx += Utils.setLocals(newFrame, slotIdx, arg, argObjs.get(i));
-    }
-
-    newFrame.setRef(0, ref);
-    frame.thread.pushFrame(newFrame);
+    Utils.invokeMethod(implMethod);
   }
 
   @Override

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Utils {
@@ -394,6 +395,14 @@ public abstract class Utils {
       return;
     }
 
+    final NativeMethod nm = MetaSpace.findNativeMethod(clinitMethod.getKey());
+    if (nm != null) {
+      clazz.stat = Const.CLASS_INITING;
+      nm.invoke(MetaSpace.getMainEnv().currentFrame());
+      clazz.stat = Const.CLASS_INITED;
+      return;
+    }
+
     clazz.stat = Const.CLASS_INITING;
     Frame newFrame = new Frame(clinitMethod);
     Interpreter.execute(newFrame);
@@ -401,6 +410,12 @@ public abstract class Utils {
   }
 
   public static void invokeMethod(Method method) {
+    NativeMethod nmb = Heap.findMethod(Utils.genNativeMethodKey(method));
+    if (nmb != null) {
+      nmb.invoke(MetaSpace.getMainEnv().topFrame());
+      return;
+    }
+
     if (Utils.isNative(method.accessFlags)) {
       final String key = method.getKey();
       NativeMethod nm = MetaSpace.findNativeMethod(key);

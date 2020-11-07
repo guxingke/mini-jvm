@@ -1,6 +1,7 @@
 package com.gxk.jvm.rtda;
 
 import com.gxk.jvm.instruction.Instruction;
+import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.Method;
 
 import java.util.Map;
@@ -192,5 +193,10 @@ public class Frame {
 
   public void set(int i, Slot val) {
     this.localVars.set(i, val);
+  }
+
+  public KObject getThis(int size) {
+    final Stack<Slot> slots = this.operandStack.getSlots();
+    return ((KObject) slots.get(slots.size() - size).ref);
   }
 }

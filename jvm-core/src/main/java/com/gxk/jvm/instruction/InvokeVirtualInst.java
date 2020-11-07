@@ -75,29 +75,12 @@ public class InvokeVirtualInst implements Instruction {
 
     // super method
     // fill args
-    List<String> args = method.getArgs();
-    List<Object> argObjs = new ArrayList<>();
-    for (int i = args.size() - 1; i >= 0; i--) {
-      String arg = args.get(i);
-      argObjs.add(Utils.pop(frame, arg));
-    }
-
-    KObject ref = (KObject) frame.popRef();
-    Method implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
+    final int size = method.getArgSlotSize();
+    KObject self = frame.getThis(size);
+    Method implMethod = self.clazz.getMethod(methodName, methodDescriptor);
 
     NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod));
     if (nm != null) {
-      // restore frame
-      ArrayList<String> tmpArgs = new ArrayList<>(args);
-      Collections.reverse(tmpArgs);
-
-      frame.pushRef(ref);
-      for (int i = 0; i < tmpArgs.size(); i++) {
-        String arg = tmpArgs.get(i);
-        Object obj = argObjs.get(argObjs.size() - 1 - i);
-        Utils.push(frame, arg, obj);
-      }
-
       nm.invoke(frame);
       return;
     }
@@ -105,19 +88,7 @@ public class InvokeVirtualInst implements Instruction {
     if (implMethod.isNative()) {
       throw new IllegalStateException();
     }
-
-    Collections.reverse(argObjs);
-
-    Frame newFrame = new Frame(implMethod);
-
-    int slotIdx = 1;
-    for (int i = 0; i < args.size(); i++) {
-      String arg = args.get(i);
-      slotIdx += Utils.setLocals(newFrame, slotIdx, arg, argObjs.get(i));
-    }
-
-    newFrame.setRef(0, ref);
-    frame.thread.pushFrame(newFrame);
+    Utils.invokeMethod(implMethod);
   }
 
   @Override
