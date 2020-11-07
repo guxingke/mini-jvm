@@ -60,7 +60,7 @@ public class LdcWInst implements Instruction {
         frame.pushRef(object);
         break;
       default:
-        frame.pushRef(val);
+        frame.pushRef((KObject) val);
         break;
     }
   }

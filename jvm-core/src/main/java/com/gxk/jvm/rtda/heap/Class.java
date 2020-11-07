@@ -183,16 +183,16 @@ public class Class {
       case "S":
       case "I":
         return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.INT)});
+            new Slot[]{new Slot(0)});
       case "F":
         return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.FLOAT)});
+            new Slot[]{new Slot(0)});
       case "D":
         return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.DOUBLE_HIGH), new Slot(0, Slot.DOUBLE_LOW)});
+            new Slot[]{new Slot(0), new Slot(0)});
       case "J":
         return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0, Slot.LONG_HIGH), new Slot(0, Slot.LONG_LOW)});
+            new Slot[]{new Slot(0), new Slot(0)});
       default:
         return new Field(source.accessFlags, source.name, source.descriptor,
             new Slot[]{new Slot(null)});

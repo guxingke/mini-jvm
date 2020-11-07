@@ -204,7 +204,7 @@ public abstract class Utils {
         ret++;
         break;
       default:
-        frame.setRef(idx, val);
+        frame.setRef(idx, (KObject) val);
         break;
     }
     return ret;
@@ -229,7 +229,7 @@ public abstract class Utils {
         frame.pushDouble(((Double) obj));
         break;
       default:
-        frame.pushRef(obj);
+        frame.pushRef((KObject) obj);
         break;
     }
   }

@@ -67,7 +67,7 @@ public class LdcInst implements Instruction {
         frame.pushRef(klass2.getRuntimeClass());
         break;
       default:
-        frame.pushRef(val);
+        frame.pushRef((KObject) val);
         break;
     }
   }

@@ -6,6 +6,7 @@ import com.gxk.jvm.classfile.cp.MethodType;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
+import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.rtda.heap.LambdaObject;
 import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.Utils;
@@ -97,7 +98,7 @@ public class InvokeDynamicInst implements Instruction {
         }
 
         if (!bsm.isStatic()) {
-          newFrame.setRef(0, argObjs.get(0));
+          newFrame.setRef(0, (KObject) argObjs.get(0));
         }
 
         f.thread.pushFrame(newFrame);

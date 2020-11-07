@@ -1,5 +1,6 @@
 package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KObject;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -58,7 +59,7 @@ public class OperandStackTest {
   public void test_ref() {
     OperandStack stack = new OperandStack(1);
 
-    Object val = new Object();
+    KObject val = new KObject(null);
 
     stack.pushRef(val);
     Object ret = stack.popRef();

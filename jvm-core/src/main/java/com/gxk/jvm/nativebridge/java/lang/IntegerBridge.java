@@ -11,7 +11,7 @@ public abstract class IntegerBridge {
     Heap.registerMethod("java/lang/Integer_valueOf_(I)Ljava/lang/Integer;", frame -> {
       Class clazz = Heap.findClass("java/lang/Integer");
       KObject kObject = clazz.newObject();
-      kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt(), Slot.INT)});
+      kObject.setField("value", "I", new Slot[] {new Slot(frame.popInt())});
       frame.pushRef(kObject);
     });
   }

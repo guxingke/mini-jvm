@@ -1,5 +1,7 @@
 package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KObject;
+
 public class LocalVars {
   private final Slot[] slots;
 
@@ -16,7 +18,7 @@ public class LocalVars {
   }
 
   public void setInt(Integer index, Integer val) {
-    slots[index] = new Slot(val, Slot.INT);
+    slots[index] = new Slot(val);
   }
 
   public Integer getInt(Integer index) {
@@ -25,7 +27,7 @@ public class LocalVars {
 
   public void setFloat(Integer index, Float val) {
     int tmp = Float.floatToIntBits(val);
-    slots[index] = new Slot(tmp, Slot.FLOAT);
+    slots[index] = new Slot(tmp);
   }
 
   public Float getFloat(Integer index) {
@@ -46,8 +48,8 @@ public class LocalVars {
     int high = (int) (val >> 32); //高32位
     int low = (int) (val & 0x000000ffffffffL); //低32位
 
-    slots[index] = new Slot(high, Slot.LONG_HIGH);
-    slots[index + 1] = new Slot(low, Slot.LONG_LOW);
+    slots[index] = new Slot(high);
+    slots[index + 1] = new Slot(low);
   }
 
   public void setDouble(int index, Double val) {
@@ -56,8 +58,8 @@ public class LocalVars {
     int high = (int) (tmp >> 32); //高32位
     int low = (int) (tmp & 0x000000ffffffffL); //低32位
 
-    slots[index] = new Slot(high, Slot.DOUBLE_HIGH);
-    slots[index + 1] = new Slot(low, Slot.DOUBLE_LOW);
+    slots[index] = new Slot(high);
+    slots[index + 1] = new Slot(low);
   }
 
   public Double getDouble(int index) {
@@ -65,7 +67,7 @@ public class LocalVars {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void setRef(Integer index, Object ref) {
+  public void setRef(Integer index, KObject ref) {
     slots[index] = new Slot(ref);
   }
 

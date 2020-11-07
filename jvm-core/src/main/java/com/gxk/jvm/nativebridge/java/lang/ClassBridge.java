@@ -234,7 +234,7 @@ public abstract class ClassBridge {
           KObject thisObj = (KObject) frame.popRef();
           String name = Utils.obj2Str(nameObj);
           Field field = thisObj.getMetaClass().getField(name);
-          frame.pushRef(new Slot[]{new Slot(null)});
+          frame.pushRef(null);
         });
   }
 }

@@ -1,5 +1,7 @@
 package com.gxk.jvm.rtda;
 
+import com.gxk.jvm.rtda.heap.KObject;
+
 public class OperandStack {
   private final Stack<Slot> slots;
 
@@ -8,7 +10,7 @@ public class OperandStack {
   }
 
   public void pushInt(Integer val) {
-    this.slots.push(new Slot(val, Slot.INT));
+    this.slots.push(new Slot(val));
   }
 
   public Integer popInt() {
@@ -18,8 +20,8 @@ public class OperandStack {
   public void pushLong(Long val) {
     int low = (int) (val & 0x000000ffffffffL); //低32位
     int high = (int) (val >> 32); //高32位
-    this.slots.push(new Slot(low, Slot.LONG_LOW));
-    this.slots.push(new Slot(high, Slot.LONG_HIGH));
+    this.slots.push(new Slot(low));
+    this.slots.push(new Slot(high));
   }
 
   public Long popLong() {
@@ -33,7 +35,7 @@ public class OperandStack {
 
   public void pushFloat(Float val) {
     int tmp = Float.floatToIntBits(val);
-    this.slots.push(new Slot(tmp, Slot.FLOAT));
+    this.slots.push(new Slot(tmp));
   }
 
   public Float popFloat() {
@@ -46,8 +48,8 @@ public class OperandStack {
 
     int low = (int) (tmp& 0x000000ffffffffL); //低32位
     int high = (int) (tmp>> 32); //高32位
-    this.slots.push(new Slot(low, Slot.DOUBLE_LOW));
-    this.slots.push(new Slot(high, Slot.DOUBLE_HIGH));
+    this.slots.push(new Slot(low));
+    this.slots.push(new Slot(high));
   }
 
   public Double popDouble() {
@@ -55,7 +57,7 @@ public class OperandStack {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void pushRef(Object val) {
+  public void pushRef(KObject val) {
     this.slots.push(new Slot(val));
   }
 

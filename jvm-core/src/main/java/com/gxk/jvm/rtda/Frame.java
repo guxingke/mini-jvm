@@ -83,7 +83,7 @@ public class Frame {
     return this.operandStack.popDouble();
   }
 
-  public void pushRef(Object val) {
+  public void pushRef(KObject val) {
     this.operandStack.pushRef(val);
   }
 
@@ -133,7 +133,7 @@ public class Frame {
     return this.localVars.getDouble(index);
   }
 
-  public void setRef(Integer index, Object ref) {
+  public void setRef(Integer index, KObject ref) {
     this.localVars.setRef(index, ref);
   }
 

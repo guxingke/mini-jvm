@@ -32,7 +32,7 @@ public abstract class UnsafeBridge {
 
       Field field = obj.getField("value", "I");
       Integer val = field.val[0].num + delta;
-      field.val = new Slot[]{new Slot(val, Slot.INT)};
+      field.val = new Slot[]{new Slot(val)};
       frame.pushInt(val - delta);
     });
 
