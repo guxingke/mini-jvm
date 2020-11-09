@@ -1,10 +1,9 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
-import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.Heap;
 
 public class PutStaticInst implements Instruction {
 
@@ -30,14 +29,7 @@ public class PutStaticInst implements Instruction {
       aClass = frame.method.clazz.classLoader.loadClass(clazz);
     }
     Field field = aClass.getField(fieldName, fieldDescriptor);
-
-    if (fieldDescriptor.equals("J")) {
-      Slot low = frame.popSlot();
-      Slot high = frame.popSlot();
-      field.val = new Slot[]{high, low};
-      return;
-    }
-    field.val = new Slot[]{frame.popSlot()};
+    field.set(frame);
   }
 
   @Override

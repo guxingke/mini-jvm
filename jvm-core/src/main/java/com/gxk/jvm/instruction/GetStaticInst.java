@@ -1,7 +1,6 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
@@ -102,10 +101,7 @@ public class GetStaticInst implements Instruction {
       throw new IllegalStateException();
     }
 
-    Slot[] val = field.val;
-    for (Slot slot : val) {
-      frame.pushSlot(slot);
-    }
+    field.get(frame);
   }
 
 

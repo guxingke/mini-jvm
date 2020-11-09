@@ -48,6 +48,7 @@ public class Interpreter {
       Frame frame = env.topFrame();
       Instruction instruction = frame.getInst();
       frame.nextPc += instruction.offset();
+      traceBefore(instruction, frame);
       instruction.execute(frame);
 //      if (env.exception != null) {
 //        Utils.handleException(env.exception);

@@ -110,26 +110,8 @@ public class ClassLoader {
 
     // field interfaceInit
     for (Field it : fields) {
-      switch (it.descriptor) {
-        case "Z":
-        case "C":
-        case "B":
-        case "S":
-        case "I":
-          it.val = new Slot[]{new Slot(0)};
-          break;
-        case "F":
-          it.val = new Slot[]{new Slot(0)};
-          break;
-        case "D":
-          it.val = new Slot[]{new Slot(0), new Slot(0)};
-          break;
-        case "J":
-          it.val = new Slot[]{new Slot(0), new Slot(0)};
-          break;
-        default:
-          it.val = new Slot[]{new Slot(null)};
-          break;
+      if (it.isStatic()) {
+        it.init();
       }
     }
 

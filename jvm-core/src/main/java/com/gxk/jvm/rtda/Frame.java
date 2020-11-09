@@ -87,7 +87,7 @@ public class Frame {
     this.operandStack.pushRef(val);
   }
 
-  public Object popRef() {
+  public KObject popRef() {
     return this.operandStack.popRef();
   }
 

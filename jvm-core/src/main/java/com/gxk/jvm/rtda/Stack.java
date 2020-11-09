@@ -1,6 +1,7 @@
 package com.gxk.jvm.rtda;
 
 public class Stack<E> extends java.util.Stack<E> {
+
   public final int maxSize;
 
   public Stack(int maxSize) {
@@ -10,6 +11,9 @@ public class Stack<E> extends java.util.Stack<E> {
   @Override
   public E push(E item) {
     if (this.size() >= maxSize) {
+      for (int i = 0; i < this.maxSize; i++) {
+        System.err.println(this.get(i));
+      }
       throw new IllegalStateException("stack overflow");
     }
     return super.push(item);

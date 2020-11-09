@@ -176,27 +176,9 @@ public class Class {
     if (source.isStatic()) {
       return source;
     }
-    switch (source.descriptor) {
-      case "Z":
-      case "C":
-      case "B":
-      case "S":
-      case "I":
-        return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0)});
-      case "F":
-        return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0)});
-      case "D":
-        return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0), new Slot(0)});
-      case "J":
-        return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(0), new Slot(0)});
-      default:
-        return new Field(source.accessFlags, source.name, source.descriptor,
-            new Slot[]{new Slot(null)});
-    }
+    final Field field = new Field(source.accessFlags, source.name, source.descriptor);
+    field.init();
+    return field;
   }
 
   public boolean getStat() {

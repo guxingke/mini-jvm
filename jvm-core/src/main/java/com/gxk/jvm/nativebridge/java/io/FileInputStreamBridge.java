@@ -29,7 +29,7 @@ public abstract class FileInputStreamBridge {
     Heap.registerMethod("java/io/FileInputStream_<init>_(Ljava/io/FileDescriptor;)V", frame -> {
       KObject fd = (KObject) frame.popRef();
       KObject thisObj = (KObject) frame.popRef();
-      Integer fdInt = fd.getField("fd", "I").val[0].num;
+      int fdInt = fd.getField("fd", "I").val.getInt();
       try {
         if (fdInt == 0) {
           FileInputStream fis = new FileInputStream(FileDescriptor.in);

@@ -31,8 +31,8 @@ public abstract class FileOutputStreamBridge {
       Integer val = frame.popInt();
       KObject thisObj = (KObject) frame.popRef();
       Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val[0].ref;
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = (KObject) fd.val.getRef();
+      int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {
         try {
@@ -63,8 +63,8 @@ public abstract class FileOutputStreamBridge {
 
       KObject thisObj = (KObject) frame.popRef();
       Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val[0].ref;
-      Integer realFd = fdObj.getField("fd", "I").val[0].num;
+      KObject fdObj = (KObject) fd.val.getRef();
+      int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {
         try {

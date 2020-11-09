@@ -30,14 +30,13 @@ import com.gxk.jvm.nativebridge.java.util.concurrent.AtomicLongBridge;
 import com.gxk.jvm.nativebridge.sun.misc.UnsafeBridge;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.Method;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Utils;
 
@@ -113,7 +112,7 @@ public class VirtualMachine {
 
     Class sysCls = classLoader.loadClass("java/lang/System");
     Field outField = sysCls.getField("err", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
+    outField.val = UnionSlot.of(psObj);
 
   }
 
@@ -145,7 +144,7 @@ public class VirtualMachine {
 
     Class sysCls = classLoader.loadClass("java/lang/System");
     Field outField = sysCls.getField("out", "Ljava/io/PrintStream;");
-    outField.val = new Slot[]{new Slot(psObj)};
+    outField.val = UnionSlot.of(psObj);
   }
 
   public static void loadLibrary() {

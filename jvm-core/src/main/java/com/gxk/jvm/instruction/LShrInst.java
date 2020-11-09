@@ -6,10 +6,8 @@ public class LShrInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer v2 = frame.popInt();
-    long v1 = frame.popInt();
-    int s = v2 & 0x1f;
-    long ret = v1 >> s;
-    frame.pushLong(ret);
+    final int v2 = frame.popInt();
+    final long v1 = frame.popLong();
+    frame.pushLong(v1 >> v2);
   }
 }

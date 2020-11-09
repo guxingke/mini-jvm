@@ -2,6 +2,7 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
@@ -27,7 +28,7 @@ public abstract class ClassBridge {
         characters[i] = chars[i];
       }
       KArray kArray = new KArray(Heap.findClass("java/lang/Character"), characters);
-      nameObj.setField("value", "[C", new Slot[]{new Slot(kArray)});
+      nameObj.setField("value", "[C", UnionSlot.of(kArray));
       frame.pushRef(nameObj);
     });
     Heap.registerMethod(
@@ -160,7 +161,7 @@ public abstract class ClassBridge {
     Heap.registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;",
         (frame) -> {
           Character[] values = (Character[]) ((KArray) ((KObject) frame.popRef())
-              .getField("value", "[C").val[0].ref).items;
+              .getField("value", "[C").val.getRef()).items;
           char[] v2 = new char[values.length];
           for (int i = 0; i < values.length; i++) {
             v2[i] = values[i];

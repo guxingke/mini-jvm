@@ -3,8 +3,8 @@ package com.gxk.jvm.rtda;
 import com.gxk.jvm.rtda.heap.KObject;
 
 public class Slot {
-  public final Integer num;
-  public final KObject ref;
+  public Integer num;
+  public KObject ref;
 
   public Slot(int num) {
     this.num = num;

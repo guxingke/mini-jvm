@@ -1,6 +1,7 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -24,7 +25,7 @@ public abstract class DoubleBridge {
       KObject kObject = clazz.newObject();
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();
-      kObject.setField("value", "D", new Slot[]{v1, v2});
+      kObject.setField("value", "D", UnionSlot.of(v1, v2));
       frame.pushRef(kObject);
     });
   }

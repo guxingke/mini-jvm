@@ -61,7 +61,7 @@ public class OperandStack {
     this.slots.push(new Slot(val));
   }
 
-  public Object popRef() {
+  public KObject popRef() {
     return this.slots.pop().ref;
   }
 

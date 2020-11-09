@@ -2,6 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
@@ -56,7 +57,7 @@ public class LdcWInst implements Instruction {
           characters[i] = chars[i];
         }
         KArray arr = new KArray(arrClazz, characters);
-        field.val = new Slot[] {new Slot(arr)};
+        field.val = UnionSlot.of(arr);
         frame.pushRef(object);
         break;
       default:

@@ -15,6 +15,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
@@ -28,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class Utils {
@@ -238,7 +238,7 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Object[] values = ((KArray) name.getField("value", "[C").val[0].ref).items;
+    Object[] values = ((KArray) name.getField("value", "[C").val.getRef()).items;
     char[] chars = new char[values.length];
     for (int i = 0; i < values.length; i++) {
       chars[i] = (char) values[i];
@@ -258,7 +258,7 @@ public abstract class Utils {
       characters[i] = chars[i];
     }
     KArray arr = new KArray(arrClazz, characters);
-    field.val = new Slot[]{new Slot(arr)};
+    field.val = UnionSlot.of(arr);
     return object;
   }
 

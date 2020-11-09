@@ -19,7 +19,7 @@ public abstract class UnixFileSystemBridge {
       KObject fileObj = (KObject) frame.popRef();
       Object thisObj = frame.popRef();
 
-      KObject pathObj = (KObject) fileObj.getField("path", "Ljava/lang/String;").val[0].ref;
+      KObject pathObj = (KObject) fileObj.getField("path", "Ljava/lang/String;").val.getRef();
       String path = Utils.obj2Str(pathObj);
       File file = new File(path);
       boolean exists = file.exists();
@@ -44,7 +44,7 @@ public abstract class UnixFileSystemBridge {
       KObject file = (KObject) frame.popRef();
       frame.popRef();
       Field path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      String pathStr = Utils.obj2Str(((KObject) path.val.getRef()));
       long lm = new File(pathStr).lastModified();
       frame.pushLong(lm);
     });
@@ -64,7 +64,7 @@ public abstract class UnixFileSystemBridge {
       KObject file = (KObject) frame.popRef();
       frame.popRef();
       Field path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val[0].ref));
+      String pathStr = Utils.obj2Str(((KObject) path.val.getRef()));
       String[] list = new File(pathStr).list();
 
       KObject[] items = new KObject[list.length];

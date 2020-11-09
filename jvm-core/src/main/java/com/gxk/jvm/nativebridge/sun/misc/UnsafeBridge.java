@@ -1,6 +1,6 @@
 package com.gxk.jvm.nativebridge.sun.misc;
 
-import com.gxk.jvm.rtda.Slot;
+import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.KObject;
@@ -31,8 +31,8 @@ public abstract class UnsafeBridge {
       Object thisObj = frame.popRef();
 
       Field field = obj.getField("value", "I");
-      Integer val = field.val[0].num + delta;
-      field.val = new Slot[]{new Slot(val)};
+      int val = field.val.getInt() + delta;
+      field.val = UnionSlot.of(val);
       frame.pushInt(val - delta);
     });
 
