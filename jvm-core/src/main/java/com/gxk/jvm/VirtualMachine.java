@@ -35,6 +35,7 @@ import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
+import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.KObject;
 import com.gxk.jvm.util.EnvHolder;
@@ -72,7 +73,7 @@ public class VirtualMachine {
       throw new IllegalStateException("not found main method");
     }
 
-    new Interpreter().interpret(method, cmd.args);
+    Interpreter.runMain(method, cmd.args);
   }
 
   public static void initVm(ClassLoader classLoader) {
@@ -91,7 +92,7 @@ public class VirtualMachine {
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 2);
-    new Interpreter().doInterpret(f1);
+    Interpreter.execute(f1);
 
     Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
@@ -99,7 +100,7 @@ public class VirtualMachine {
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
-    new Interpreter().doInterpret(f2);
+    Interpreter.execute(f2);
 
     Class psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
@@ -108,7 +109,7 @@ public class VirtualMachine {
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
-    new Interpreter().doInterpret(frame);
+    Interpreter.execute(frame);
 
     Class sysCls = classLoader.loadClass("java/lang/System");
     Field outField = sysCls.getField("err", "Ljava/io/PrintStream;");
@@ -123,7 +124,7 @@ public class VirtualMachine {
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
     f1.setInt(1, 1);
-    new Interpreter().doInterpret(f1);
+    Interpreter.execute(f1);
 
     Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
     KObject fosObj = fosCls.newObject();
@@ -131,7 +132,7 @@ public class VirtualMachine {
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
     f2.setRef(1, outFdObj);
-    new Interpreter().doInterpret(f2);
+    Interpreter.execute(f2);
 
     Class psCls = classLoader.loadClass("java/io/PrintStream");
     KObject psObj = psCls.newObject();
@@ -140,7 +141,7 @@ public class VirtualMachine {
     frame.setRef(0, psObj);
     frame.setRef(1, fosObj);
     frame.setInt(2, 1);
-    new Interpreter().doInterpret(frame);
+    Interpreter.execute(frame);
 
     Class sysCls = classLoader.loadClass("java/lang/System");
     Field outField = sysCls.getField("out", "Ljava/io/PrintStream;");
@@ -207,7 +208,7 @@ public class VirtualMachine {
     classLoader.loadClass("java/lang/Integer");
     classLoader.loadClass("java/lang/Long");
     classLoader.loadClass("java/lang/Float");
-//    classLoader.loadClass("java/lang/Double");
+    classLoader.loadClass("java/lang/Double");
     classLoader.loadClass("java/lang/Void");
 
     // primitvie Arry class

@@ -15,10 +15,26 @@ import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
 import com.gxk.jvm.util.Utils;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Interpreter {
+
+  /**
+   * 同步执行指定方法
+   */
+  public static void execute(Method method) {
+    final Thread env = MetaSpace.getMainEnv();
+    Frame newFrame = new Frame(method);
+    // 传参
+    final int slots = method.getArgSlotSize();
+    if (slots > 0) {
+      final Frame old = env.topFrame();
+      for (int i = slots - 1; i >= 0; i--) {
+        newFrame.set(i, old.pop());
+      }
+    }
+    execute(newFrame);
+  }
 
   /**
    * 同步执行栈帧
@@ -40,19 +56,8 @@ public class Interpreter {
     } while (newFrame.stat == Const.FAKE_FRAME);
   }
 
-  public void interpret(Method method) {
-    interpret(method, null);
-  }
-
-  public void interpret(Method method, String[] args) {
-    if (MetaSpace.main == null) {
-      MetaSpace.main = new Thread(1024);
-    }
+  public static void runMain(Method method, String[] args) {
     Frame frame = new Frame(method);
-    if (args == null) {
-      doInterpret(frame);
-      return;
-    }
 
     KObject[] kargs = new KObject[args.length];
     for (int i = 0; i < args.length; i++) {
@@ -66,20 +71,10 @@ public class Interpreter {
     KArray array = new KArray(arrClazz, kargs);
     frame.setRef(0, array);
 
-    doInterpret(frame);
+    execute(frame);
   }
 
-  public void doInterpret(Frame frame) {
-    final Thread thread = MetaSpace.getMainEnv();
-    thread.pushFrame(frame);
-
-    Class clazz = frame.method.clazz;
-    Utils.clinit(clazz);
-
-    loop(thread);
-  }
-
-  public void loop(Thread thread) {
+  public static void loop(Thread thread) {
     if (EnvHolder.debug) {
       try {
         System.out.println("正在初始化jdb...");
@@ -203,7 +198,7 @@ public class Interpreter {
 //    return true;
 //  }
 
-  private void traceBefore(Instruction inst, Frame frame) {
+  private static void traceBefore(Instruction inst, Frame frame) {
     if (EnvHolder.verboseDebug) {
       debugBefore(inst, frame);
     }
@@ -217,7 +212,7 @@ public class Interpreter {
     }
   }
 
-  private void call(Instruction inst, Frame frame) {
+  private static void call(Instruction inst, Frame frame) {
     if (!inst.format().startsWith("invoke")) {
       return;
     }
@@ -225,12 +220,12 @@ public class Interpreter {
     Logger.trace(space + frame.getPc() + " " + inst.format());
   }
 
-  private void trace(Instruction inst, Frame frame) {
+  private static void trace(Instruction inst, Frame frame) {
     String space = genSpace((frame.thread.size() - 1) * 2);
     Logger.trace(space + frame.getPc() + " " + inst.format());
   }
 
-  void debugBefore(Instruction inst, Frame frame) {
+  static void debugBefore(Instruction inst, Frame frame) {
     String space = genSpace(frame.thread.size() * 2);
     Logger.debug(
         space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor
@@ -243,7 +238,7 @@ public class Interpreter {
     Logger.debug(space + "\n");
   }
 
-  public String genSpace(int size) {
+  public static String genSpace(int size) {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < size; i++) {
       sb.append(" ");

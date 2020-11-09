@@ -35,13 +35,13 @@ public class InterpreterMiscTest extends BaseInterpreterTest {
   @Test
   public void test_array_0() {
     Method method = loadAndGetMainMethod("HelloWorld");
-    new Interpreter().interpret(method, new String[]{"hello", "mini-jvm"});
+    Interpreter.runMain(method, new String[]{"hello", "mini-jvm"});
   }
 
   @Test
   public void test_array_1() {
     Method method = loadAndGetMainMethod("HelloWorld");
-    new Interpreter().interpret(method, new String[0]);
+    Interpreter.runMain(method, new String[0]);
   }
 
   @Test

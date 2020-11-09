@@ -23,7 +23,7 @@ public abstract class BaseInterpreterTest {
 
   protected void testMain(String hello) {
     Method method = loadAndGetMainMethod(hello);
-    new Interpreter().interpret(method);
+    Interpreter.runMain(method, new String[0]);
   }
 
   protected Method loadAndGetMainMethod(String clazzName) {
