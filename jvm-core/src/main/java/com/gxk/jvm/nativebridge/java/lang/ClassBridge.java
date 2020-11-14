@@ -2,12 +2,13 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.UnionSlot;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.Method;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.InstanceArray;
+import com.gxk.jvm.rtda.heap.Method;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import com.gxk.jvm.util.Utils;
 import java.util.List;
 
@@ -21,13 +22,14 @@ public abstract class ClassBridge {
       String name = obj.getMetaClass().name;
       Class strClazz = Heap.findClass("java/lang/String");
       Instance nameObj = strClazz.newInstance();
+
       char[] chars = Utils.replace(name, '/', '.').toCharArray();
-      Character[] characters = new Character[chars.length];
+      final PrimitiveArray array = PrimitiveArray.charArray(chars.length);
       for (int i = 0; i < chars.length; i++) {
-        characters[i] = chars[i];
+        array.ints[i] = chars[i];
       }
-      KArray kArray = new KArray(Heap.findClass("java/lang/Character"), characters);
-      nameObj.setField("value", "[C", UnionSlot.of(kArray));
+
+      nameObj.setField("value", "[C", UnionSlot.of(array));
       frame.pushRef(nameObj);
     });
     Heap.registerMethod(
@@ -159,13 +161,8 @@ public abstract class ClassBridge {
     });
     Heap.registerMethod("java/lang/Class_getPrimitiveClass_(Ljava/lang/String;)Ljava/lang/Class;",
         (frame) -> {
-          Character[] values = (Character[]) ((KArray) ((Instance) frame.popRef())
-              .getField("value", "[C").val.getRef()).items;
-          char[] v2 = new char[values.length];
-          for (int i = 0; i < values.length; i++) {
-            v2[i] = values[i];
-          }
-          String val = new String(v2);
+          final Instance instance = frame.popRef();
+          final String val = Utils.obj2Str(instance);
           Class cls = Heap.findClass(val);
           frame.pushRef(cls.getRuntimeClass());
         });
@@ -218,8 +215,8 @@ public abstract class ClassBridge {
         objs[i] = interfaces.get(i).getRuntimeClass();
       }
 
-      KArray kArray = new KArray(clazz, objs);
-      frame.pushRef(kArray);
+      InstanceArray instanceArray = new InstanceArray(clazz, objs);
+      frame.pushRef(instanceArray);
     });
 
     Heap.registerMethod("java/lang/Class_newInstance_()Ljava/lang/Object;", frame -> {

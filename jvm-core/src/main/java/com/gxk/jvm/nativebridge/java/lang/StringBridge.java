@@ -1,8 +1,8 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import com.gxk.jvm.util.Utils;
 
 public abstract class StringBridge {
@@ -12,16 +12,15 @@ public abstract class StringBridge {
     });
 
     Heap.registerMethod("java/lang/String_getBytes_()[B", frame -> {
-      Instance obj = (Instance) frame.popRef();
+      Instance obj = frame.popRef();
       String str = Utils.obj2Str(obj);
       byte[] bytes = str.getBytes();
-      Byte[] byteObj = new Byte[bytes.length];
-      for (int i = 0; i < bytes.length; i++) {
-        byteObj[i] = bytes[i];
-      }
-      KArray arr = new KArray(Heap.findClass("[B"), byteObj);
 
-      frame.pushRef(arr);
+      final PrimitiveArray array = PrimitiveArray.byteArray(bytes.length);
+      for (int i = 0; i < bytes.length; i++) {
+        array.ints[i] = bytes[i];
+      }
+      frame.pushRef(array);
     });
   }
 }

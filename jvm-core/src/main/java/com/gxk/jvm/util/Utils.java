@@ -11,19 +11,17 @@ import com.gxk.jvm.classfile.cp.Utf8;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.interpret.Interpreter;
 import com.gxk.jvm.rtda.Frame;
-
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.UnionSlot;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.Method;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Instance;
-
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.NativeMethod;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -238,10 +236,10 @@ public abstract class Utils {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
-    Object[] values = ((KArray) name.getField("value", "[C").val.getRef()).items;
-    char[] chars = new char[values.length];
-    for (int i = 0; i < values.length; i++) {
-      chars[i] = (char) values[i];
+    PrimitiveArray pa = ((PrimitiveArray) name.getField("value", "[C").val.getRef());
+    char[] chars = new char[pa.len];
+    for (int i = 0; i < pa.len; i++) {
+      chars[i] = (char) pa.ints[i];
     }
     return new String(chars);
   }
@@ -250,14 +248,12 @@ public abstract class Utils {
     Class klass = Heap.findClass("java/lang/String");
     Instance object = klass.newInstance();
     Field field = object.getField("value", "[C");
-    Class arrClazz = new Class(1, "[C", classLoader, null);
-
     char[] chars = str.toCharArray();
-    Character[] characters = new Character[chars.length];
+    final PrimitiveArray arr = PrimitiveArray.charArray(chars.length);
     for (int i = 0; i < chars.length; i++) {
-      characters[i] = chars[i];
+      arr.ints[i] = chars[i];
     }
-    KArray arr = new KArray(arrClazz, characters);
+
     field.val = UnionSlot.of(arr);
     return object;
   }
@@ -303,7 +299,7 @@ public abstract class Utils {
   }
 
   public static String replace(String src, char target, char replacement) {
-    char[] sources= src.toCharArray();
+    char[] sources = src.toCharArray();
     for (int i = 0; i < sources.length; i++) {
       if (sources[i] == target) {
         sources[i] = replacement;
@@ -313,6 +309,7 @@ public abstract class Utils {
   }
 
   // ============
+
   /**
    * 返回操作
    * @param slotSize 返回值占用 slot 大小

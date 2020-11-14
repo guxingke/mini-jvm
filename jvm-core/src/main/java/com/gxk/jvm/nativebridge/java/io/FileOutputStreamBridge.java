@@ -1,9 +1,9 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,13 +52,13 @@ public abstract class FileOutputStreamBridge {
 
     Heap.registerMethod("java/io/FileOutputStream_writeBytes_([BIIZ)V", frame -> {
       boolean append = frame.popInt() == 1;
-      Integer len= frame.popInt();
-      Integer off= frame.popInt();
-      KArray arg1 = (KArray) frame.popRef();
+      int len= frame.popInt();
+      int off= frame.popInt();
+      PrimitiveArray arg1 = (PrimitiveArray) frame.popRef();
 
       byte[] bytes = new byte[len];
       for (int i = off; i < len; i++) {
-        bytes[i - off] = (byte) arg1.items[i];
+        bytes[i - off] = (byte) arg1.ints[i];
       }
 
       Instance thisObj = (Instance) frame.popRef();

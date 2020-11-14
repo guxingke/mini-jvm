@@ -5,7 +5,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.InstanceArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.rtda.heap.Instance;
@@ -69,7 +69,7 @@ public class Interpreter {
       arrClazz = new Class(1, "[Ljava/lang/String;", method.clazz.classLoader, null);
       Heap.registerClass(arrClazz.name, arrClazz);
     }
-    KArray array = new KArray(arrClazz, kargs);
+    InstanceArray array = new InstanceArray(arrClazz, kargs);
     frame.setRef(0, array);
 
     execute(frame);

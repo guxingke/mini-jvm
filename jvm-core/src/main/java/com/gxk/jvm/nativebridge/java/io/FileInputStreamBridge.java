@@ -1,8 +1,8 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import com.gxk.jvm.util.Utils;
 
 import java.io.FileDescriptor;
@@ -89,15 +89,15 @@ public abstract class FileInputStreamBridge {
     Heap.registerMethod("java/io/FileInputStream_readBytes_([BII)I", frame -> {
       Integer v3 = frame.popInt();
       Integer v2 = frame.popInt();
-      KArray v1 = (KArray) frame.popRef();
-      byte[] ba = new byte[v1.items.length];
+      PrimitiveArray v1 = (PrimitiveArray) frame.popRef();
+      byte[] ba = new byte[v1.len];
       Instance thisObj = (Instance) frame.popRef();
       FileInputStream extra = (FileInputStream) thisObj.getExtra();
       try {
         int read = extra.read(ba, v2, v3);
 
         for (int i = v2; i < v2 + v3; i++) {
-          v1.items[i] = ba[i];
+          v1.ints[i] = ba[i];
         }
 
         frame.pushInt(read);

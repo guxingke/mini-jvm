@@ -1,8 +1,9 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.InstanceArray;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.PrimitiveArray;
 import com.gxk.jvm.util.Utils;
 
 public abstract class SystemBridge {
@@ -20,14 +21,31 @@ public abstract class SystemBridge {
     Heap.registerMethod("java/lang/System_currentTimeMillis_()J", (frame) -> frame.pushLong(java.lang.System.currentTimeMillis()));
     Heap.registerMethod("java/lang/System_nanoTime_()J", (frame) -> frame.pushLong(java.lang.System.nanoTime()));
     Heap.registerMethod("java/lang/System_arraycopy_(Ljava/lang/Object;ILjava/lang/Object;II)V", (frame) -> {
-      Integer len = frame.popInt();
-      Integer dsp = frame.popInt();
-      KArray dest = (KArray) frame.popRef();
-      Integer ssp = frame.popInt();
-      KArray source = (KArray) frame.popRef();
-
-      for (int i = 0; i < len; i++) {
-        dest.items[dsp++] = source.items[ssp++];
+      int len = frame.popInt();
+      int dsp = frame.popInt();
+      final Instance dest = frame.popRef();
+      if (dest instanceof InstanceArray) {
+        final InstanceArray da = (InstanceArray) dest;
+        int ssp = frame.popInt();
+        final InstanceArray sa = (InstanceArray) frame.popRef();
+        for (int i = 0; i < len; i++) {
+          da.items[dsp++] = sa.items[ssp++];
+        }
+      } else {
+        final PrimitiveArray da = (PrimitiveArray) dest;
+        int ssp = frame.popInt();
+        final PrimitiveArray sa = (PrimitiveArray) frame.popRef();
+        for (int i = 0; i < len; i++) {
+          if (da.ints != null) {
+            da.ints[dsp++] = sa.ints[ssp++];
+          } else if (da.longs != null) {
+            da.longs[dsp++] = sa.longs[ssp++];
+          } else if (da.floats != null) {
+            da.floats[dsp++] = sa.floats[ssp++];
+          } else {
+            da.doubles[dsp++] = sa.doubles[ssp++];
+          }
+        }
       }
     });
     Heap.registerMethod("java/lang/System_identityHashCode_(Ljava/lang/Object;)I", (frame) -> frame.pushInt(frame.popRef().hashCode()));

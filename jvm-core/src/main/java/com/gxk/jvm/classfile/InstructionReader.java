@@ -10,6 +10,16 @@ import com.gxk.jvm.classfile.cp.InvokeDynamic;
 import com.gxk.jvm.classfile.cp.LongCp;
 import com.gxk.jvm.classfile.cp.StringCp;
 import com.gxk.jvm.instruction.*;
+import com.gxk.jvm.instruction.comparisons.*;
+import com.gxk.jvm.instruction.constants.*;
+import com.gxk.jvm.instruction.control.*;
+import com.gxk.jvm.instruction.conversions.*;
+import com.gxk.jvm.instruction.extended.*;
+import com.gxk.jvm.instruction.loads.*;
+import com.gxk.jvm.instruction.math.*;
+import com.gxk.jvm.instruction.references.*;
+import com.gxk.jvm.instruction.stack.*;
+import com.gxk.jvm.instruction.stores.*;
 import com.gxk.jvm.util.Utils;
 
 import java.io.IOException;
@@ -101,9 +111,9 @@ public abstract class InstructionReader {
         }
         throw new IllegalStateException(ldwInfo.toString());
       case 0x15:
-        return new IloadNInst(stm.readUnsignedByte());
+        return new ILoadNInst(stm.readUnsignedByte());
       case 0x16:
-        return new LloadInst(stm.readUnsignedByte());
+        return new LLoadInst(stm.readUnsignedByte());
       case 0x17:
         return new FLoadInst(stm.readUnsignedByte());
       case 0x18:
@@ -557,13 +567,13 @@ public abstract class InstructionReader {
           case 0x84:
             return new WideInst(6, new IIncInst(stm.readUnsignedShort(), stm.readShort()));
           case 0x15:
-            return new WideInst(4, new IloadNInst(stm.readUnsignedShort()));
+            return new WideInst(4, new ILoadNInst(stm.readUnsignedShort()));
           case 0x17:
             return new WideInst(4, new FLoadInst(stm.readUnsignedShort()));
           case 0x19:
             return new WideInst(4, new ALoadInst(stm.readUnsignedShort()));
           case 0x16:
-            return new WideInst(4, new LloadInst(stm.readUnsignedShort()));
+            return new WideInst(4, new LLoadInst(stm.readUnsignedShort()));
           case 0x18:
             return new WideInst(4, new DLoadInst(stm.readUnsignedShort()));
           case 0x36:

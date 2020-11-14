@@ -1,11 +1,11 @@
 //package com.gxk.jvm.interpret.misc;
 //
-//import com.gxk.jvm.instruction.BiPushInst;
+//import com.gxk.jvm.instruction.constants.BiPushInst;
 //import com.gxk.jvm.instruction.GotoInst;
 //import com.gxk.jvm.instruction.IAddInst;
 //import com.gxk.jvm.instruction.IConst0Inst;
 //import com.gxk.jvm.instruction.IConst1Inst;
-//import com.gxk.jvm.instruction.IIncInst;
+//import com.gxk.jvm.instruction.math.IIncInst;
 //import com.gxk.jvm.instruction.ILoad1Inst;
 //import com.gxk.jvm.instruction.ILoad2Inst;
 //import com.gxk.jvm.instruction.IReturnInst;

@@ -1,7 +1,7 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.rtda.heap.InstanceArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Instance;
@@ -81,7 +81,7 @@ public abstract class UnixFileSystemBridge {
         Heap.registerClass(name, clazz);
       }
 
-      KArray arr = new KArray(clazz, items);
+      InstanceArray arr = new InstanceArray(clazz, items);
       frame.pushRef(arr);
     });
     Heap.registerMethod("java/io/UnixFileSystem_createDirectory_(Ljava/io/File;)Z", frame -> {
