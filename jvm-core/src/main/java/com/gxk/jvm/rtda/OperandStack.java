@@ -1,6 +1,6 @@
 package com.gxk.jvm.rtda;
 
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class OperandStack {
   private final Stack<Slot> slots;
@@ -57,11 +57,11 @@ public class OperandStack {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void pushRef(KObject val) {
+  public void pushRef(Instance val) {
     this.slots.push(new Slot(val));
   }
 
-  public KObject popRef() {
+  public Instance popRef() {
     return this.slots.pop().ref;
   }
 

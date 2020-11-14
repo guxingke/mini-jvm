@@ -2,7 +2,7 @@ package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class AALoadInst implements Instruction {
 
@@ -11,7 +11,7 @@ public class AALoadInst implements Instruction {
     Integer index = frame.popInt();
     KArray array = (KArray) frame.popRef();
     Object item = array.items[index];
-    frame.pushRef((KObject) item);
+    frame.pushRef((Instance) item);
   }
 
   @Override

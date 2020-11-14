@@ -3,7 +3,7 @@ package com.gxk.jvm.nativebridge.sun.misc;
 import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public abstract class UnsafeBridge {
     Heap.registerMethod("sun/misc/Unsafe_getAndAddInt_(Ljava/lang/Object;JI)I", frame -> {
       Integer delta = frame.popInt();
       Long offset = frame.popLong();
-      KObject obj = (KObject) frame.popRef();
+      Instance obj = (Instance) frame.popRef();
       Object thisObj = frame.popRef();
 
       Field field = obj.getField("value", "I");

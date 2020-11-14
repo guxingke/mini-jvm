@@ -1,6 +1,6 @@
 package com.gxk.jvm.rtda;
 
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class LocalVars {
   private final Slot[] slots;
@@ -67,7 +67,7 @@ public class LocalVars {
     return Double.longBitsToDouble(tmp);
   }
 
-  public void setRef(Integer index, KObject ref) {
+  public void setRef(Integer index, Instance ref) {
     slots[index] = new Slot(ref);
   }
 

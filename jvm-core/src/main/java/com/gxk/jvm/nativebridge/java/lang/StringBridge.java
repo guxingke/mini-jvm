@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.util.Utils;
 
 public abstract class StringBridge {
@@ -12,7 +12,7 @@ public abstract class StringBridge {
     });
 
     Heap.registerMethod("java/lang/String_getBytes_()[B", frame -> {
-      KObject obj = (KObject) frame.popRef();
+      Instance obj = (Instance) frame.popRef();
       String str = Utils.obj2Str(obj);
       byte[] bytes = str.getBytes();
       Byte[] byteObj = new Byte[bytes.length];

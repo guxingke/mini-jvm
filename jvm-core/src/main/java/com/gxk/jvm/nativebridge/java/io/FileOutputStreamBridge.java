@@ -3,7 +3,7 @@ package com.gxk.jvm.nativebridge.java.io;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,9 +29,9 @@ public abstract class FileOutputStreamBridge {
     Heap.registerMethod("java/io/FileOutputStream_write_(IZ)V", frame -> {
       boolean append = frame.popInt() == 1;
       Integer val = frame.popInt();
-      KObject thisObj = (KObject) frame.popRef();
+      Instance thisObj = (Instance) frame.popRef();
       Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val.getRef();
+      Instance fdObj = (Instance) fd.val.getRef();
       int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {
@@ -61,9 +61,9 @@ public abstract class FileOutputStreamBridge {
         bytes[i - off] = (byte) arg1.items[i];
       }
 
-      KObject thisObj = (KObject) frame.popRef();
+      Instance thisObj = (Instance) frame.popRef();
       Field fd = thisObj.getField("fd", "Ljava/io/FileDescriptor;");
-      KObject fdObj = (KObject) fd.val.getRef();
+      Instance fdObj = (Instance) fd.val.getRef();
       int realFd = fdObj.getField("fd", "I").val.getInt();
       // out
       if (realFd == 1) {

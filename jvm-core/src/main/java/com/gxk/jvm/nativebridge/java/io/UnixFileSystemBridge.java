@@ -4,7 +4,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.util.Utils;
 
 import java.io.File;
@@ -16,10 +16,10 @@ public abstract class UnixFileSystemBridge {
     });
 
     Heap.registerMethod("java/io/UnixFileSystem_getBooleanAttributes0_(Ljava/io/File;)I", frame -> {
-      KObject fileObj = (KObject) frame.popRef();
+      Instance fileObj = (Instance) frame.popRef();
       Object thisObj = frame.popRef();
 
-      KObject pathObj = (KObject) fileObj.getField("path", "Ljava/lang/String;").val.getRef();
+      Instance pathObj = (Instance) fileObj.getField("path", "Ljava/lang/String;").val.getRef();
       String path = Utils.obj2Str(pathObj);
       File file = new File(path);
       boolean exists = file.exists();
@@ -41,10 +41,10 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/io/UnixFileSystem_getLastModifiedTime_(Ljava/io/File;)J", frame -> {
-      KObject file = (KObject) frame.popRef();
+      Instance file = (Instance) frame.popRef();
       frame.popRef();
       Field path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val.getRef()));
+      String pathStr = Utils.obj2Str(((Instance) path.val.getRef()));
       long lm = new File(pathStr).lastModified();
       frame.pushLong(lm);
     });
@@ -61,13 +61,13 @@ public abstract class UnixFileSystemBridge {
       throw new UnsupportedOperationException();
     });
     Heap.registerMethod("java/io/UnixFileSystem_list_(Ljava/io/File;)[Ljava/lang/String;", frame -> {
-      KObject file = (KObject) frame.popRef();
+      Instance file = (Instance) frame.popRef();
       frame.popRef();
       Field path = file.getField("path", "Ljava/lang/String;");
-      String pathStr = Utils.obj2Str(((KObject) path.val.getRef()));
+      String pathStr = Utils.obj2Str(((Instance) path.val.getRef()));
       String[] list = new File(pathStr).list();
 
-      KObject[] items = new KObject[list.length];
+      Instance[] items = new Instance[list.length];
       for (int i = 0; i < list.length; i++) {
         items[i] = Utils.str2Obj(list[i], frame.method.clazz.classLoader);
       }

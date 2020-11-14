@@ -1,7 +1,7 @@
 package com.gxk.jvm.nativebridge.java.lang;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public abstract class ObjectBridge {
 
@@ -9,17 +9,17 @@ public abstract class ObjectBridge {
     Heap.registerMethod("java/lang/Object_registerNatives_()V", (frame) -> {
     });
     Heap.registerMethod("java/lang/Object_clone_()Ljava/lang/Object;", (frame) -> {
-      KObject obj = (KObject) frame.popRef();
+      Instance obj = frame.popRef();
       java.lang.Object newObj = null;
       try {
         newObj = obj.clone();
       } catch (CloneNotSupportedException e) {
         e.printStackTrace();
       }
-      frame.pushRef((KObject) newObj);
+      frame.pushRef((Instance) newObj);
     });
     Heap.registerMethod("java/lang/Object_getClass_()Ljava/lang/Class;", (frame) -> {
-      KObject val = (KObject) frame.popRef();
+      Instance val = frame.popRef();
       frame.pushRef(val.clazz.getRuntimeClass());
     });
 

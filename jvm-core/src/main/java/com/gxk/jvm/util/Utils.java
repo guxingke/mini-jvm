@@ -21,7 +21,7 @@ import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import java.io.DataInputStream;
@@ -204,7 +204,7 @@ public abstract class Utils {
         ret++;
         break;
       default:
-        frame.setRef(idx, (KObject) val);
+        frame.setRef(idx, (Instance) val);
         break;
     }
     return ret;
@@ -229,12 +229,12 @@ public abstract class Utils {
         frame.pushDouble(((Double) obj));
         break;
       default:
-        frame.pushRef((KObject) obj);
+        frame.pushRef((Instance) obj);
         break;
     }
   }
 
-  public static String obj2Str(KObject name) {
+  public static String obj2Str(Instance name) {
     if (!name.clazz.name.equals("java/lang/String")) {
       throw new IllegalStateException();
     }
@@ -246,9 +246,9 @@ public abstract class Utils {
     return new String(chars);
   }
 
-  public static KObject str2Obj(String str, ClassLoader classLoader) {
+  public static Instance str2Obj(String str, ClassLoader classLoader) {
     Class klass = Heap.findClass("java/lang/String");
-    KObject object = klass.newObject();
+    Instance object = klass.newInstance();
     Field field = object.getField("value", "[C");
     Class arrClazz = new Class(1, "[C", classLoader, null);
 
@@ -398,7 +398,7 @@ public abstract class Utils {
     final NativeMethod nm = MetaSpace.findNativeMethod(clinitMethod.getKey());
     if (nm != null) {
       clazz.stat = Const.CLASS_INITING;
-      nm.invoke(MetaSpace.getMainEnv().currentFrame());
+      nm.invoke(MetaSpace.getMainEnv().topFrame());
       clazz.stat = Const.CLASS_INITED;
       return;
     }

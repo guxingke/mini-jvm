@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.java.util;
 
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.util.Utils;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.zip.ZipFile;
 public abstract class ZipFileBridge {
   public static void registerNatives0() {
     Heap.registerMethod("java/util/zip/ZipFile_init_(Ljava/lang/String;)V", frame -> {
-      KObject path = (KObject) frame.popRef();
+      Instance path = (Instance) frame.popRef();
       String pathStr = Utils.obj2Str(path);
 
       ZipFile file;
@@ -23,11 +23,11 @@ public abstract class ZipFileBridge {
         throw new UnsupportedOperationException("zip file not found");
       }
 
-      ((KObject) frame.popRef()).setExtra(file);
+      ((Instance) frame.popRef()).setExtra(file);
     });
     Heap.registerMethod("java/util/zip/ZipFile_getEntry_(Ljava/lang/String;)Ljava/util/zip/ZipEntry;", frame -> {
-      KObject obj = (KObject) frame.popRef();
-      ZipFile file = (ZipFile) ((KObject) frame.popRef()).getExtra();
+      Instance obj = (Instance) frame.popRef();
+      ZipFile file = (ZipFile) ((Instance) frame.popRef()).getExtra();
       String entry = Utils.obj2Str(obj);
 
       ZipEntry zipEntry = file.getEntry(entry);
@@ -40,20 +40,20 @@ public abstract class ZipFileBridge {
       if (cls == null) {
         cls = frame.method.clazz.classLoader.loadClass("java/util/zip/ZipEntry");
       }
-      KObject entryObj = cls.newObject();
+      Instance entryObj = cls.newInstance();
       entryObj.setExtra(zipEntry);
       frame.pushRef(entryObj);
     });
     Heap.registerMethod("java/util/zip/ZipFile_getInputStream_(Ljava/util/zip/ZipEntry;)Ljava/io/InputStream;", frame -> {
-      ZipEntry entry = (ZipEntry) ((KObject) frame.popRef()).getExtra();
-      ZipFile file = (ZipFile) ((KObject) frame.popRef()).getExtra();
+      ZipEntry entry = (ZipEntry) ((Instance) frame.popRef()).getExtra();
+      ZipFile file = (ZipFile) ((Instance) frame.popRef()).getExtra();
       try {
         InputStream is = file.getInputStream(entry);
         Class cls = Heap.findClass("java/io/NativeInputStream");
         if (cls == null) {
           cls = frame.method.clazz.classLoader.loadClass("java/io/NativeInputStream");
        }
-        KObject obj = cls.newObject();
+        Instance obj = cls.newInstance();
         obj.setExtra(is);
         frame.pushRef(obj);
       } catch (IOException e) {
@@ -63,7 +63,7 @@ public abstract class ZipFileBridge {
     });
 
     Heap.registerMethod("java/util/zip/ZipFile_close_()V", frame -> {
-      ZipFile file = (ZipFile) ((KObject) frame.popRef()).getExtra();
+      ZipFile file = (ZipFile) ((Instance) frame.popRef()).getExtra();
       try {
         file.close();
       } catch (IOException e) {

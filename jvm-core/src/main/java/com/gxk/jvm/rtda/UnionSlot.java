@@ -1,6 +1,6 @@
 package com.gxk.jvm.rtda;
 
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 /**
  * 用于字段的联合 Slot
@@ -24,7 +24,7 @@ public class UnionSlot {
     return new UnionSlot(high, null);
   }
 
-  public static UnionSlot of(KObject instance) {
+  public static UnionSlot of(Instance instance) {
     return new UnionSlot(new Slot(instance), null);
   }
 
@@ -47,7 +47,7 @@ public class UnionSlot {
   }
 
   // 存
-  public void setRef(KObject val) {
+  public void setRef(Instance val) {
     high.ref = val;
   }
 
@@ -76,7 +76,7 @@ public class UnionSlot {
   }
 
   // 取
-  public KObject getRef() {
+  public Instance getRef() {
     return high.ref;
   }
 

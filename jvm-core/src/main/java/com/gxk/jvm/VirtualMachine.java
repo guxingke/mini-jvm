@@ -35,7 +35,7 @@ import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Utils;
@@ -86,7 +86,7 @@ public class VirtualMachine {
 
   private static void initSystemErr(ClassLoader classLoader) {
     Class fdCls = classLoader.loadClass("java/io/FileDescriptor");
-    KObject outFdObj = fdCls.newObject();
+    Instance outFdObj = fdCls.newInstance();
     Method fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
@@ -94,7 +94,7 @@ public class VirtualMachine {
     Interpreter.execute(f1);
 
     Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
-    KObject fosObj = fosCls.newObject();
+    Instance fosObj = fosCls.newInstance();
     Method fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
@@ -102,7 +102,7 @@ public class VirtualMachine {
     Interpreter.execute(f2);
 
     Class psCls = classLoader.loadClass("java/io/PrintStream");
-    KObject psObj = psCls.newObject();
+    Instance psObj = psCls.newInstance();
     Method psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
@@ -118,7 +118,7 @@ public class VirtualMachine {
 
   private static void initSystemOut(ClassLoader classLoader) {
     Class fdCls = classLoader.loadClass("java/io/FileDescriptor");
-    KObject outFdObj = fdCls.newObject();
+    Instance outFdObj = fdCls.newInstance();
     Method fdInitMethod = fdCls.getMethod("<init>", "(I)V");
     Frame f1 = new Frame(fdInitMethod);
     f1.setRef(0, outFdObj);
@@ -126,7 +126,7 @@ public class VirtualMachine {
     Interpreter.execute(f1);
 
     Class fosCls = classLoader.loadClass("java/io/FileOutputStream");
-    KObject fosObj = fosCls.newObject();
+    Instance fosObj = fosCls.newInstance();
     Method fosInitMethod = fosCls.getMethod("<init>", "(Ljava/io/FileDescriptor;)V");
     Frame f2 = new Frame(fosInitMethod);
     f2.setRef(0, fosObj);
@@ -134,7 +134,7 @@ public class VirtualMachine {
     Interpreter.execute(f2);
 
     Class psCls = classLoader.loadClass("java/io/PrintStream");
-    KObject psObj = psCls.newObject();
+    Instance psObj = psCls.newInstance();
     Method psInitMethod = psCls.getMethod("<init>", "(Ljava/io/OutputStream;Z)V");
     Frame frame = new Frame(psInitMethod);
     frame.setRef(0, psObj);
@@ -179,7 +179,7 @@ public class VirtualMachine {
     Class metaClass = classLoader.loadClass("java/lang/Class");
     for (Class cls : Heap.getClasses()) {
       if (cls.getRuntimeClass() == null) {
-        KObject obj = metaClass.newObject();
+        Instance obj = metaClass.newInstance();
         cls.setRuntimeClass(obj);
         obj.setMetaClass(cls);
       }

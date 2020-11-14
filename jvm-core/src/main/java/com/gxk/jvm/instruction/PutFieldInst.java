@@ -4,7 +4,7 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class PutFieldInst implements Instruction {
   public final String clazz;
@@ -33,7 +33,7 @@ public class PutFieldInst implements Instruction {
       us = UnionSlot.of(frame.pop());
     }
 
-    final KObject self = frame.popRef();
+    final Instance self = frame.popRef();
     Field field = self.getField(fieldName, fieldDescriptor);
     field.set(us);
   }

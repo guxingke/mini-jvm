@@ -7,8 +7,8 @@ public class BAStoreInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    byte val = frame.popInt().byteValue();
-    Integer index = frame.popInt();
+    byte val = ((byte) frame.popInt());
+    int index = frame.popInt();
     KArray array = (KArray) frame.popRef();
     if (array.items instanceof Boolean[]) {
       array.items[index] = val != 0;

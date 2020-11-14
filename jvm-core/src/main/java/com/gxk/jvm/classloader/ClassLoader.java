@@ -7,12 +7,11 @@ import com.gxk.jvm.classfile.MethodInfo;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classfile.attribute.Code;
 import com.gxk.jvm.classpath.Entry;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
@@ -35,7 +34,7 @@ public class ClassLoader {
       return;
     }
     Class cls = new Class(1, name, this);
-    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    Instance metaCls = Heap.findClass("java/lang/Class").newInstance();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
 
@@ -48,7 +47,7 @@ public class ClassLoader {
       return;
     }
     Class cls = new Class(1, name, this);
-    KObject metaCls = Heap.findClass("java/lang/Class").newObject();
+    Instance metaCls = Heap.findClass("java/lang/Class").newInstance();
     cls.setRuntimeClass(metaCls);
     metaCls.setMetaClass(cls);
 
@@ -90,7 +89,7 @@ public class ClassLoader {
     }
 
     if (Heap.findClass("java/lang/Class") != null) {
-      KObject rcs = Heap.findClass("java/lang/Class").newObject();
+      Instance rcs = Heap.findClass("java/lang/Class").newInstance();
       aClass.setRuntimeClass(rcs);
       rcs.setMetaClass(aClass);
     }

@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class InstanceofInst implements Instruction {
 
@@ -18,7 +18,7 @@ public class InstanceofInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    KObject obj = (KObject) frame.popRef();
+    Instance obj = (Instance) frame.popRef();
     if (obj == null) {
       frame.pushInt(0);
       return;

@@ -4,7 +4,7 @@ import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public abstract class DoubleBridge {
 
@@ -22,11 +22,11 @@ public abstract class DoubleBridge {
 
     Heap.registerMethod("java/lang/Double_valueOf_(D)Ljava/lang/Double;", frame -> {
       Class clazz = Heap.findClass("java/lang/Double");
-      KObject kObject = clazz.newObject();
+      Instance instance = clazz.newInstance();
       Slot v2 = frame.popSlot();
       Slot v1 = frame.popSlot();
-      kObject.setField("value", "D", UnionSlot.of(v1, v2));
-      frame.pushRef(kObject);
+      instance.setField("value", "D", UnionSlot.of(v1, v2));
+      frame.pushRef(instance);
     });
   }
 }

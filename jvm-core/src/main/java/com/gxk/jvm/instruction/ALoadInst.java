@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class ALoadInst implements Instruction {
   public final int index;
@@ -18,7 +18,7 @@ public class ALoadInst implements Instruction {
   @Override
   public void execute(Frame frame) {
     Object tmp = frame.getRef(index);
-    frame.pushRef((KObject) tmp);
+    frame.pushRef((Instance) tmp);
   }
 
   @Override

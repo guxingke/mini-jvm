@@ -3,7 +3,7 @@ package com.gxk.jvm.instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.util.Utils;
 
 public class GetFieldInst implements Instruction {
@@ -28,14 +28,14 @@ public class GetFieldInst implements Instruction {
   public void execute(Frame frame) {
     // hack for java/nio/charset/Charset name Ljava/lang/String;
     if (clazz.equals("java/nio/charset/Charset") && fieldName.equals("name")) {
-      KObject obj = ((KObject) frame.popRef());
+      Instance obj = ((Instance) frame.popRef());
       Field field = obj.getField(fieldName, fieldDescriptor);
       field.val = UnionSlot.of(Utils.str2Obj("UTF-8", obj.clazz.classLoader));
       field.get(frame);
       return;
     }
 
-    KObject obj = ((KObject) frame.popRef());
+    Instance obj = ((Instance) frame.popRef());
     Field field = obj.getField(fieldName, fieldDescriptor);
     field.get(frame);
   }

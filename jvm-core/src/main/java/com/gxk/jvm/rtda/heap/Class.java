@@ -5,7 +5,6 @@ import com.gxk.jvm.classfile.ConstantPool;
 import com.gxk.jvm.classfile.attribute.BootstrapMethods;
 import com.gxk.jvm.classloader.ClassLoader;
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ public class Class {
   private List<Class> interfaces;
   public int stat = 0;
 
-  private KObject runtimeClass;
+  private Instance runtimeClass;
 
   public Class(int accessFlags, String name, ClassLoader classLoader, ClassFile classFile) {
     this.accessFlags = accessFlags;
@@ -156,14 +155,14 @@ public class Class {
     return this.superClass;
   }
 
-  public KObject newObject() {
+  public Instance newInstance() {
     List<Field> newFields = new ArrayList<>();
     for (Field field : fields) {
       newFields.add(this.map(field));
     }
-    KObject object = new KObject(newFields, this);
+    Instance object = new Instance(newFields, this);
     if (this.superClass != null) {
-      object.setSuperObject(this.superClass.newObject());
+      object.setSuperInstance(this.superClass.newInstance());
     }
     return object;
   }
@@ -267,11 +266,11 @@ public class Class {
     return (accessFlags & 0x0200) != 0;
   }
 
-  public KObject getRuntimeClass() {
+  public Instance getRuntimeClass() {
     return runtimeClass;
   }
 
-  public void setRuntimeClass(KObject runtimeClass) {
+  public void setRuntimeClass(Instance runtimeClass) {
     this.runtimeClass = runtimeClass;
   }
 

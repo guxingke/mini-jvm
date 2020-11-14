@@ -2,7 +2,7 @@ package com.gxk.jvm.nativebridge.java.sum.misc;
 
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public abstract class ReflectionBridge {
 
@@ -10,7 +10,7 @@ public abstract class ReflectionBridge {
     Heap.registerMethod("sun/reflect/Reflection_getCallerClass_()Ljava/lang/Class;", frame -> {
       Frame callerFrame = frame.thread.callerFrame();
       Object cls = callerFrame.method.clazz.getRuntimeClass();
-      frame.pushRef((KObject) cls);
+      frame.pushRef((Instance) cls);
     });
   }
 }

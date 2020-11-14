@@ -4,13 +4,10 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -76,7 +73,7 @@ public class InvokeVirtualInst implements Instruction {
     // super method
     // fill args
     final int size = method.getArgSlotSize();
-    KObject self = frame.getThis(size);
+    Instance self = frame.getThis(size);
     Method implMethod = self.clazz.getMethod(methodName, methodDescriptor);
 
     NativeMethod nm = Heap.findMethod(Utils.genNativeMethodKey(implMethod));

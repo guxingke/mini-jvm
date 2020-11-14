@@ -1,7 +1,7 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class SwapInst implements Instruction {
 
@@ -9,7 +9,7 @@ public class SwapInst implements Instruction {
   public void execute(Frame frame) {
     Object v2 = frame.popRef();
     Object v1 = frame.popRef();
-    frame.pushRef((KObject) v2);
-    frame.pushRef((KObject) v1);
+    frame.pushRef((Instance) v2);
+    frame.pushRef((Instance) v1);
   }
 }

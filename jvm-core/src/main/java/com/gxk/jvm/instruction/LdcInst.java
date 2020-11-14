@@ -1,13 +1,12 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.Slot;
 import com.gxk.jvm.rtda.UnionSlot;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Field;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 
 public class LdcInst implements Instruction {
   public final String descriptor;
@@ -47,7 +46,7 @@ public class LdcInst implements Instruction {
           frame.nextPc = frame.getPc();
           return;
         }
-        KObject object = klass.newObject();
+        Instance object = klass.newInstance();
         Field field = object.getField("value", "[C");
         Class arrClazz = new Class(1, "[C", frame.method.clazz.classLoader, null);
 
@@ -68,7 +67,7 @@ public class LdcInst implements Instruction {
         frame.pushRef(klass2.getRuntimeClass());
         break;
       default:
-        frame.pushRef((KObject) val);
+        frame.pushRef((Instance) val);
         break;
     }
   }

@@ -1,6 +1,6 @@
 package com.gxk.jvm.rtda;
 
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -53,7 +53,7 @@ public class LocalVarsTest {
   @Test
   public void test_ref() {
     LocalVars vars = new LocalVars(1);
-    KObject val = new KObject(null);
+    Instance val = new Instance(null);
 
     vars.setRef(0, val);
     Object ret = vars.getRef(0);

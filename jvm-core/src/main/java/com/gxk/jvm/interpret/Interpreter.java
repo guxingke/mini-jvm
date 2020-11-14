@@ -8,7 +8,7 @@ import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.util.Const;
 import com.gxk.jvm.util.DebugContextHolder;
 import com.gxk.jvm.util.EnvHolder;
@@ -60,7 +60,7 @@ public class Interpreter {
   public static void runMain(Method method, String[] args) {
     Frame frame = new Frame(method);
 
-    KObject[] kargs = new KObject[args.length];
+    Instance[] kargs = new Instance[args.length];
     for (int i = 0; i < args.length; i++) {
       kargs[i] = Utils.str2Obj(args[i], frame.method.clazz.classLoader);
     }
@@ -86,7 +86,7 @@ public class Interpreter {
     }
 
     do {
-      Frame frame = thread.currentFrame();
+      Frame frame = thread.topFrame();
       int pc = frame.nextPc;
 
       Instruction inst = frame.getInst();

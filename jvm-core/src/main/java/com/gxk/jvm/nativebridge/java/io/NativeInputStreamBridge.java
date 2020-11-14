@@ -1,7 +1,6 @@
 package com.gxk.jvm.nativebridge.java.io;
 
 import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +8,7 @@ import java.io.InputStream;
 public abstract class NativeInputStreamBridge {
   public static void registerNatives0() {
     Heap.registerMethod("java/io/NativeInputStream_read_()I", frame -> {
-      InputStream is = (InputStream) ((KObject) frame.popRef()).getExtra();
+      InputStream is = (InputStream) (frame.popRef()).getExtra();
       try {
         int read = is.read();
         frame.pushInt(read);
@@ -18,7 +17,7 @@ public abstract class NativeInputStreamBridge {
       }
     });
     Heap.registerMethod("java/io/NativeInputStream_available_()I", frame -> {
-      InputStream is = (InputStream) ((KObject) frame.popRef()).getExtra();
+      InputStream is = (InputStream) (frame.popRef()).getExtra();
       try {
         int available = is.available();
         frame.pushInt(available);
@@ -27,7 +26,7 @@ public abstract class NativeInputStreamBridge {
       }
     });
     Heap.registerMethod("java/io/NativeInputStream_close_()V", frame -> {
-      InputStream is = (InputStream) ((KObject) frame.popRef()).getExtra();
+      InputStream is = (InputStream) (frame.popRef()).getExtra();
       try {
         is.close();
       } catch (IOException e) {

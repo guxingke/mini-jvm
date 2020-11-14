@@ -50,7 +50,7 @@ public class Field {
         val = UnionSlot.of(0d);
         break;
       default: // ref
-        val = UnionSlot.of((KObject) null);
+        val = UnionSlot.of((Instance) null);
         break;
     }
   }

@@ -4,12 +4,9 @@ import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 import com.gxk.jvm.util.Utils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class InvokeInterfaceInst implements Instruction {
 
@@ -78,7 +75,7 @@ public class InvokeInterfaceInst implements Instruction {
       throw new IllegalStateException("un impl native method call, " + method);
     }
 
-    final KObject ref = frame.getThis(method.getArgSlotSize());
+    final Instance ref = frame.getThis(method.getArgSlotSize());
     Method implMethod = ref.clazz.getMethod(methodName, methodDescriptor);
     // method is default method
     if (implMethod == null) {

@@ -1,11 +1,11 @@
 package com.gxk.jvm.instruction;
 
 import com.gxk.jvm.rtda.Frame;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.KArray;
 import com.gxk.jvm.rtda.heap.Class;
-import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Heap;
+import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.KArray;
+import com.gxk.jvm.util.Utils;
 
 public class ANewArrayInst implements Instruction {
 
@@ -22,24 +22,10 @@ public class ANewArrayInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Class aClass = Heap.findClass(className);
-    if (aClass == null) {
-      aClass = frame.method.clazz.classLoader.loadClass(className);
-    }
-    if (!aClass.getStat()) {
-      Method method = aClass.getMethod("<clinit>", "V()");
-      if (method != null) {
-        Frame newFrame = new Frame(method);
-        aClass.setStat(1);
-        Class finalClass = aClass;
-        newFrame.setOnPop(() -> finalClass.setStat(2));
-        frame.thread.pushFrame(frame);
-        return;
-      }
-      aClass.setStat(2);
-    }
+    Class aClass = frame.method.clazz.classLoader.loadClass(className);
+    Utils.clinit(aClass);
 
-    Integer count = frame.popInt();
+    int count = frame.popInt();
     String name = "[L" + aClass.name + ";";
 
     Class clazz = Heap.findClass(name);
@@ -49,7 +35,7 @@ public class ANewArrayInst implements Instruction {
       clazz.setStat(2);
       Heap.registerClass(name, clazz);
     }
-    KObject[] objs = new KObject[count];
+    Instance[] objs = new Instance[count];
     KArray kArray = new KArray(clazz, objs);
     frame.pushRef(kArray);
   }

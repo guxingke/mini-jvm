@@ -5,7 +5,7 @@ import com.gxk.jvm.rtda.*;
 import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Class;
 import com.gxk.jvm.rtda.heap.Method;
-import com.gxk.jvm.rtda.heap.KObject;
+import com.gxk.jvm.rtda.heap.Instance;
 import com.gxk.jvm.rtda.heap.NativeMethod;
 
 public class NewInst implements Instruction {
@@ -59,7 +59,7 @@ public class NewInst implements Instruction {
       }
     }
 
-    KObject obj = aClass.newObject();
+    Instance obj = aClass.newInstance();
     frame.pushRef(obj);
   }
 
