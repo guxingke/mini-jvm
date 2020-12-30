@@ -53,80 +53,86 @@ public class Args {
       return args;
     }
 
-    int idx = 0;
-    int tries = 0;
-    while (true) {
-      String tmp = cliArgs[idx];
-      if (Objects.equals(MINUS_CP, tmp)) {
+    if (cliArgs.length == 1) {
+      args.clazz = cliArgs[0];
+      return args;
+    }
+
+    int pi = 0;
+    for (int i = 0; i < cliArgs.length; i++) {
+      final String tmp = cliArgs[i];
+      if (tmp.equals(MINUS_CP)) {
+        final String cp = cliArgs[++i];
+        if (args.classpath.equals(".")) {
+          args.classpath = cp;
+        } else {
+          args.classpath = args.classpath.concat(":").concat(cp);
+        }
+        args.clazz = cliArgs[++i];
+        pi = ++i;
         break;
       }
-      if (Objects.equals(MINUS_JAR, tmp)) {
+      if (tmp.equals(MINUS_JAR)) {
+        final String jar = cliArgs[++i];
+        args.classpath = args.classpath.concat(":").concat(jar);
+        args.clazz = parseMainClass(jar);
+        pi = ++i;
         break;
       }
-      if (tries > 200) {
-        System.out.println("parse args in loop. check input args.");
-        throw new IllegalArgumentException();
+
+      if (!tmp.startsWith("-")) {
+        args.clazz = tmp;
+        pi = ++i;
+        break;
       }
-      if (Objects.equals(MINUS_VERBOSE, cliArgs[idx])) {
-        idx++;
+
+      if (Objects.equals(MINUS_VERBOSE, tmp)) {
         args.verbose = true;
+        continue;
       }
 
-      if (Objects.equals(MINUS_VERBOSE_TRACE, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_VERBOSE_TRACE, tmp)) {
         args.verboseTrace = true;
+        continue;
       }
 
-      if (Objects.equals(MINUS_VERBOSE_CALL, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_VERBOSE_CALL, tmp)) {
         args.verboseCall = true;
+        continue;
       }
 
-      if (Objects.equals(MINUS_VERBOSE_CLASS, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_VERBOSE_CLASS, tmp)) {
         args.verboseClass = true;
+        continue;
       }
 
-      if (Objects.equals(MINUS_VERBOSE_DEBUG, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_VERBOSE_DEBUG, tmp)) {
         args.verboseDebug = true;
+        continue;
       }
 
-      if (Objects.equals(MINUS_COLOR_RED, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_COLOR_RED, tmp)) {
         Logger.fg = Logger.ANSI_RED;
+        Logger.trace("testtest");
+        continue;
       }
 
-      if (Objects.equals(MINUS_COLOR_GREEN, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_COLOR_GREEN, tmp)) {
+        Logger.PREFIX = "G";
         Logger.fg = Logger.ANSI_GREEN;
+        continue;
       }
 
-      if (Objects.equals(MINUS_COLOR_YELLOW, cliArgs[idx])) {
-        idx++;
+      if (Objects.equals(MINUS_COLOR_YELLOW, tmp)) {
+        Logger.PREFIX = "Y";
         Logger.fg = Logger.ANSI_YELLOW;
+        continue;
       }
-
-      tries++;
     }
 
-    if (MINUS_CP.equals(cliArgs[idx])) {
-      idx++;
-      args.classpath = cliArgs[idx++];
-    }
-
-    if (MINUS_JAR.equals(cliArgs[idx])) {
-      idx++;
-      String mainJar = cliArgs[idx++];
-      args.classpath = args.classpath + ":" + mainJar;
-      args.clazz = parseMainClass(mainJar);
-    } else {
-      args.clazz = cliArgs[idx++];
-    }
-
-    if (cliArgs.length > idx) {
-      String[] programArgs = new String[cliArgs.length - idx];
-      System.arraycopy(cliArgs, idx, programArgs, 0, programArgs.length);
+    if (cliArgs.length > pi) {
+      String[] programArgs = new String[cliArgs.length - pi];
+      System.arraycopy(cliArgs, pi, programArgs, 0, programArgs.length);
       args.args = programArgs;
     }
 

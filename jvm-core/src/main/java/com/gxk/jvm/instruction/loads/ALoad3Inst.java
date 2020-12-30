@@ -8,8 +8,8 @@ public class ALoad3Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.getRef(3);
-    frame.pushRef((Instance) tmp);
+    Instance tmp = frame.getRef(3);
+    frame.pushRef(tmp);
   }
 
   @Override

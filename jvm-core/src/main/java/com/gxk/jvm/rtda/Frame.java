@@ -136,7 +136,7 @@ public class Frame {
     this.localVars.setRef(index, ref);
   }
 
-  public Object getRef(int index) {
+  public Instance getRef(int index) {
     return this.localVars.getRef(index);
   }
 
@@ -153,21 +153,19 @@ public class Frame {
   }
 
   public String debugNextPc(String space) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(space + "nextPc = " + nextPc).append("\n");
-    return sb.toString();
+    return space.concat("nextPc = ").concat(Integer.toString(nextPc)).concat("\n");
   }
 
   public String debugLocalVars(String space) {
     StringBuilder sb = new StringBuilder();
     sb.append(localVars.debug(space));
-    return sb.append("\n").toString();
+    return sb.toString();
   }
 
   public String debugOperandStack(String space) {
     StringBuilder sb = new StringBuilder();
     sb.append(operandStack.debug(space));
-    return sb.append("\n").toString();
+    return sb.toString();
   }
 
   public String getCurrentMethodFullName() {
@@ -195,7 +193,7 @@ public class Frame {
   }
 
   public Instance getThis(int size) {
-    final Stack<Slot> slots = this.operandStack.getSlots();
-    return slots.get(slots.size() - size).ref;
+    final Slot[] slots = this.operandStack.getSlots();
+    return slots[this.operandStack.getTop() - size].ref;
   }
 }

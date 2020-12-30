@@ -9,7 +9,7 @@ public class LUShrInst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Integer v2 = frame.popInt();
+    int v2 = frame.popInt();
     long v1 = frame.popLong();
     int s = v2 & 0x3f;
 

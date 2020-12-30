@@ -3,85 +3,100 @@ package com.gxk.jvm.rtda;
 import com.gxk.jvm.rtda.heap.Instance;
 
 public class OperandStack {
-  private final Stack<Slot> slots;
+
+  //  private final Stack<Slot> slots;
+  private final Slot[] slots;
+  private int top;
 
   public OperandStack(Integer size) {
-    slots = new Stack<>(size);
+    slots = new Slot[size];
+    top = 0;
   }
 
-  public void pushInt(Integer val) {
-    this.slots.push(new Slot(val));
+  public void push(Slot slot) {
+    this.slots[top++] = slot;
   }
 
-  public Integer popInt() {
-    return this.slots.pop().num;
+  public Slot pop() {
+    top--;
+    final Slot slot = this.slots[top];
+    this.slots[top] = null; // gc
+    return slot;
   }
 
-  public void pushLong(Long val) {
+  public void pushInt(int val) {
+    this.slots[top++] = new Slot(val);
+  }
+
+  public int popInt() {
+    return this.pop().num;
+  }
+
+  public void pushLong(long val) {
     int low = (int) (val & 0x000000ffffffffL); //低32位
     int high = (int) (val >> 32); //高32位
-    this.slots.push(new Slot(low));
-    this.slots.push(new Slot(high));
+    this.push(new Slot(high));
+    this.push(new Slot(low));
   }
 
-  public Long popLong() {
-    Integer high = this.slots.pop().num;
-    Integer low = this.slots.pop().num;
+  public long popLong() {
+    int low = this.pop().num;
+    int high = this.pop().num;
 
     long l1 = (high & 0x000000ffffffffL) << 32;
     long l2 = low & 0x00000000ffffffffL;
     return l1 | l2;
   }
 
-  public void pushFloat(Float val) {
+  public void pushFloat(float val) {
     int tmp = Float.floatToIntBits(val);
-    this.slots.push(new Slot(tmp));
+    this.push(new Slot(tmp));
   }
 
-  public Float popFloat() {
-    Integer tmp = this.slots.pop().num;
+  public float popFloat() {
+    int tmp = this.pop().num;
     return Float.intBitsToFloat(tmp);
   }
 
-  public void pushDouble(Double val) {
+  public void pushDouble(double val) {
     long tmp = Double.doubleToLongBits(val);
 
-    int low = (int) (tmp& 0x000000ffffffffL); //低32位
-    int high = (int) (tmp>> 32); //高32位
-    this.slots.push(new Slot(low));
-    this.slots.push(new Slot(high));
+    int low = (int) (tmp & 0x000000ffffffffL); //低32位
+    int high = (int) (tmp >> 32); //高32位
+    this.push(new Slot(high));
+    this.push(new Slot(low));
   }
 
-  public Double popDouble() {
-    Long tmp = this.popLong();
+  public double popDouble() {
+    long tmp = this.popLong();
     return Double.longBitsToDouble(tmp);
   }
 
   public void pushRef(Instance val) {
-    this.slots.push(new Slot(val));
+    this.push(new Slot(val));
   }
 
   public Instance popRef() {
-    return this.slots.pop().ref;
+    return this.pop().ref;
   }
 
   public Slot popSlot() {
-    return this.slots.pop();
+    return this.pop();
   }
 
   public void pushSlot(Slot val) {
-    this.slots.push(val);
+    this.push(val);
   }
 
-  public Stack<Slot> getSlots() {
+  public Slot[] getSlots() {
     return this.slots;
   }
 
   public String debug(String space) {
     StringBuilder sb = new StringBuilder();
-    sb.append(space).append(String.format("OperandStack: %d", this.slots.maxSize)).append("\n");
-    for (int i = 0; i < this.slots.size(); i++) {
-      Slot slot = this.slots.get(i);
+    sb.append(space).append(String.format("OperandStack: %d", this.slots.length)).append("\n");
+    for (int i = 0; i < this.slots.length; i++) {
+      Slot slot = this.slots[i];
       if (slot == null) {
         sb.append(space).append(String.format("%d | null      | null", i)).append("\n");
         continue;
@@ -93,5 +108,9 @@ public class OperandStack {
       sb.append(space).append(String.format("%d | primitive | %s ", i, slot.num)).append("\n");
     }
     return sb.append("\n").toString();
+  }
+
+  public int getTop() {
+    return top;
   }
 }

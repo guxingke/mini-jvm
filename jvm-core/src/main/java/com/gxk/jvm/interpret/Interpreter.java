@@ -4,17 +4,16 @@ import com.gxk.jvm.instruction.Instruction;
 import com.gxk.jvm.rtda.Frame;
 import com.gxk.jvm.rtda.MetaSpace;
 import com.gxk.jvm.rtda.Thread;
-import com.gxk.jvm.rtda.heap.Heap;
-import com.gxk.jvm.rtda.heap.InstanceArray;
 import com.gxk.jvm.rtda.heap.Class;
-import com.gxk.jvm.rtda.heap.Method;
+import com.gxk.jvm.rtda.heap.Heap;
 import com.gxk.jvm.rtda.heap.Instance;
+import com.gxk.jvm.rtda.heap.InstanceArray;
+import com.gxk.jvm.rtda.heap.Method;
 import com.gxk.jvm.util.Const;
 import com.gxk.jvm.util.DebugContextHolder;
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
 import com.gxk.jvm.util.Utils;
-
 import java.util.Scanner;
 
 public class Interpreter {
@@ -218,19 +217,20 @@ public class Interpreter {
       return;
     }
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace(space + frame.getPc() + " " + inst.format());
+    Logger.trace(space.concat(Integer.toString(frame.getPc()).concat(" ").concat(inst.format())));
   }
 
   private static void trace(Instruction inst, Frame frame) {
     String space = genSpace((frame.thread.size() - 1) * 2);
-    Logger.trace(space + frame.getPc() + " " + inst.format());
+    Logger.trace(space.concat(Integer.toString(frame.getPc()).concat(" ").concat(inst.format())));
   }
 
   static void debugBefore(Instruction inst, Frame frame) {
-    String space = genSpace(frame.thread.size() * 2);
+    String space = genSpace((frame.thread.size() - 1) * 2);
     Logger.debug(
-        space + frame.thread.size() + " <> " + frame.method.name + "_" + frame.method.descriptor
-            + " ==============================" + "\n");
+        space.concat(Integer.toString(frame.thread.size()))
+            .concat(" <> ").concat(frame.method.name).concat("_").concat(frame.method.descriptor).concat(
+            " =============================="));
     Logger.debug(inst.debug(space + frame.getPc() + " "));
     Logger.debug(frame.debugNextPc(space));
     Logger.debug(frame.debugLocalVars(space));
@@ -240,10 +240,10 @@ public class Interpreter {
   }
 
   public static String genSpace(int size) {
-    StringBuilder sb = new StringBuilder();
+    String x = "";
     for (int i = 0; i < size; i++) {
-      sb.append(" ");
+      x = x.concat(" ");
     }
-    return sb.toString();
+    return x;
   }
 }

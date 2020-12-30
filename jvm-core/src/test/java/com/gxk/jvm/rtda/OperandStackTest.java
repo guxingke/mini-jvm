@@ -44,6 +44,18 @@ public class OperandStackTest {
   }
 
   @Test
+  public void test_long_1() {
+    OperandStack stack = new OperandStack(2);
+
+    long val = 1L;
+
+    stack.pushLong(val);
+    Long ret = stack.popLong();
+
+    assertEquals(ret, val, 0L);
+  }
+
+  @Test
   public void test_double() {
     OperandStack stack = new OperandStack(2);
 

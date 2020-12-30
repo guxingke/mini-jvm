@@ -8,8 +8,8 @@ public class ALoad1Inst implements Instruction {
 
   @Override
   public void execute(Frame frame) {
-    Object tmp = frame.getRef(1);
-    frame.pushRef((Instance) tmp);
+    Instance tmp = frame.getRef(1);
+    frame.pushRef(tmp);
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.gxk.jvm.rtda;
 import com.gxk.jvm.rtda.heap.Instance;
 
 public class LocalVars {
+
   private final Slot[] slots;
 
   public LocalVars(int size) {
@@ -17,34 +18,34 @@ public class LocalVars {
     return this.slots;
   }
 
-  public void setInt(Integer index, Integer val) {
+  public void setInt(int index, int val) {
     slots[index] = new Slot(val);
   }
 
-  public Integer getInt(Integer index) {
+  public int getInt(int index) {
     return slots[index].num;
   }
 
-  public void setFloat(Integer index, Float val) {
+  public void setFloat(int index, float val) {
     int tmp = Float.floatToIntBits(val);
     slots[index] = new Slot(tmp);
   }
 
-  public Float getFloat(Integer index) {
-    Integer num = slots[index].num;
+  public float getFloat(int index) {
+    int num = slots[index].num;
     return Float.intBitsToFloat(num);
   }
 
-  public Long getLong(Integer index) {
-    Integer high = slots[index].num;
-    Integer low = slots[index + 1].num;
+  public long getLong(int index) {
+    int high = slots[index].num;
+    int low = slots[index + 1].num;
 
     long l1 = (high & 0x000000ffffffffL) << 32;
     long l2 = low & 0x00000000ffffffffL;
     return l1 | l2;
   }
 
-  public void setLong(Integer index, Long val) {
+  public void setLong(int index, long val) {
     int high = (int) (val >> 32); //高32位
     int low = (int) (val & 0x000000ffffffffL); //低32位
 
@@ -52,7 +53,7 @@ public class LocalVars {
     slots[index + 1] = new Slot(low);
   }
 
-  public void setDouble(int index, Double val) {
+  public void setDouble(int index, double val) {
     long tmp = Double.doubleToLongBits(val);
 
     int high = (int) (tmp >> 32); //高32位
@@ -62,16 +63,16 @@ public class LocalVars {
     slots[index + 1] = new Slot(low);
   }
 
-  public Double getDouble(int index) {
-    Long tmp = this.getLong(index);
+  public double getDouble(int index) {
+    long tmp = this.getLong(index);
     return Double.longBitsToDouble(tmp);
   }
 
-  public void setRef(Integer index, Instance ref) {
+  public void setRef(int index, Instance ref) {
     slots[index] = new Slot(ref);
   }
 
-  public Object getRef(Integer index) {
+  public Instance getRef(int index) {
     return slots[index].ref;
   }
 

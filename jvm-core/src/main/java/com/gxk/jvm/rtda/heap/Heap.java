@@ -2,7 +2,6 @@ package com.gxk.jvm.rtda.heap;
 
 import com.gxk.jvm.util.EnvHolder;
 import com.gxk.jvm.util.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,7 @@ import java.util.Map;
  * jvm heap
  */
 public abstract class Heap {
+
   private static final Map<String, NativeMethod> NATIVE_METHOD_MAP;
   private static final Map<String, Class> STRING_K_CLASS_MAP;
 
@@ -41,7 +41,7 @@ public abstract class Heap {
       if (clazz.classFile != null && clazz.classFile.getSource() != null) {
         source = clazz.classFile.getSource();
       }
-      Logger.clazz("[Loaded " + name + " from " + source + "]");
+      Logger.clazz("[Loaded ".concat(name).concat(" from ").concat(source) + "]");
     }
     STRING_K_CLASS_MAP.putIfAbsent(name, clazz);
   }

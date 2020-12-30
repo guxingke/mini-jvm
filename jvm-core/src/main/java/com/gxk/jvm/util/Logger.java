@@ -16,33 +16,22 @@ public abstract class Logger {
   public static final String ANSI_WHITE = "\u001B[37m";
 
   public static String fg = ANSI_RESET;
+  public static String PREFIX = "X";
 
   public static void trace(String msg) {
-    log("!T " + msg);
+    log("!T".concat(PREFIX).concat(" ").concat(msg));
   }
 
   public static void clazz(String msg) {
-    log("!C " + msg);
+    log("!C".concat(PREFIX).concat(" ").concat(msg));
   }
 
-  public static void debug(String tpl, Object... args) {
-    log("!D ", tpl, args);
+  public static void debug(String tpl) {
+    log("!D " + tpl);
   }
 
   private static void log(String msg) {
-    System.out.println(fg + msg + ANSI_RESET);
-  }
-
-  private static void log(String prefix, String tpl, Object... args) {
-//    String msg = format(tpl, args);
-//    String[] lines = msg.split("\n");
-//
-//    StringBuilder sb = new StringBuilder();
-//    for (String line : lines) {
-//      sb.append(prefix).append(line).append("\n");
-//    }
-//    System.out.println(sb.toString());
-    System.out.println("xxxxxxx");
+    System.out.println(fg.concat(msg).concat(ANSI_RESET));
   }
 
   public static void error(String msg) {

@@ -18,8 +18,8 @@ function run_one() {
   if [[ 0 -eq $? ]]; then
     echo -e "${GREEN} Passed${NO_COLOR}"
   else
-    echo -e "${RED} Failed $2. Aborting.${NO_COLOR}"
-#    exit 1
+    echo -e "${RED} Failed ${NO_COLOR} \nAborting."
+    exit 1
   fi
   popd > /dev/null
 }
@@ -28,13 +28,13 @@ function main() {
   export EXE=${ROOT_PATH}/bin/java
   run_one $EXE basic "basic retur 1"
   run_one $EXE sum10 "sum10 with loop"
-#  run_one $EXE constants "constants instructions"
+  run_one $EXE constants "constants instructions"
   run_one $EXE load_store "load & store instructions"
 #  run_one $EXE math "math instructions"
 #  run_one $EXE comparisons "comparions instructions"
   run_one $EXE static_call "static call"
 #  run_one $EXE class_init "class init"
-  run_one $EXE static_field "static field"
+#  run_one $EXE static_field "static field"
   run_one $EXE object_init "object init"
   run_one $EXE object_field "object field"
   run_one $EXE object_override "object override"
