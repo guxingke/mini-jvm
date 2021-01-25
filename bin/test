@@ -38,12 +38,12 @@ function main() {
   run_one $EXE object_init "object init"
   run_one $EXE object_field "object field"
   run_one $EXE object_override "object override"
-  run_one $EXE interface_override "interface override"
+#  run_one $EXE interface_override "interface override"
   run_one $EXE interface_init "interface init"
   run_one $EXE instance_array "instance array"
-  run_one $EXE primitive_array "primitive array"
+#  run_one $EXE primitive_array "primitive array"
   run_one $EXE hello "hello"
-  run_one $EXE npe "null pointer exception"
+#  run_one $EXE npe "null pointer exception"
 }
 
 main
