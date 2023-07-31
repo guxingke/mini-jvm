@@ -82,10 +82,10 @@ mini-jvm HelloWold hello mini-jvm
 - Hello World 级别可用
 
 ## 个人记录
-- [如何构建你自己的 JVM (2) Hello World](https://www.guxingke.com/post/how-to-build-your-own-jvm-3.html)
-- [如何构建你自己的 JVM (1) 解释器](https://www.guxingke.com/post/how-to-build-your-own-jvm-2.html)
-- [如何构建你自己的 JVM (0) 概述](https://www.guxingke.com/post/how-to-build-your-own-jvm-1.html)
-- [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/post/mini-jvm-intro.html)
+- [如何构建你自己的 JVM (2) Hello World](https://www.guxingke.com/how-to-build-your-own-jvm-3/)
+- [如何构建你自己的 JVM (1) 解释器](https://www.guxingke.com/how-to-build-your-own-jvm-2/)
+- [如何构建你自己的 JVM (0) 概述](https://www.guxingke.com/how-to-build-your-own-jvm-1/)
+- [用 Java 实现一个简单的虚拟机 ?](https://www.guxingke.com/mini-jvm-intro/)
 
 ## 建议
 - 在JDK1.8.0_121环境下发现编译不过的情况，详情见[#25](https://github.com/guxingke/mini-jvm/issues/25)，本项目的目的是学习JVM，为了项目足够小，清晰和易于理解，并不打算做各种适配工作，建议大家在MacOSX，Maven 3.3+,JDK 1.8.0_192+下学习；
